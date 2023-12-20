@@ -14,10 +14,11 @@ import java.util.List;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.Idea;
 import kr.co.conceptbe.member.Member;
-import kr.co.conceptbe.comment.nested.NestedComment;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,6 +34,11 @@ public class Comment extends BaseTimeEntity {
     private String content;
 
     @ManyToOne
+    @JoinColumn(name = "parent_comment_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Comment parentComment;
+
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member creator;
 
@@ -44,6 +50,23 @@ public class Comment extends BaseTimeEntity {
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "parentComment")
-    private List<NestedComment> nestedComments = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
+    public Comment(
+            Long id,
+            String content,
+            Comment parentComment,
+            Member creator,
+            Idea idea,
+            List<Comment> comments,
+            List<CommentLike> commentLikes
+    ) {
+        this.id = id;
+        this.content = content;
+        this.parentComment = parentComment;
+        this.creator = creator;
+        this.idea = idea;
+        this.comments = comments;
+        this.commentLikes = commentLikes;
+    }
 }

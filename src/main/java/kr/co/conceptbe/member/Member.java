@@ -11,17 +11,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
-import kr.co.conceptbe.common.entity.Branch;
-import kr.co.conceptbe.common.entity.Purpose;
-import kr.co.conceptbe.common.entity.Skill;
 import kr.co.conceptbe.idea.Idea;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +32,7 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private OauthId oauthId;
 
-    @Column(nullable = true)
+    @Column
     private String imageUrl;
 
     @Column(nullable = false)
@@ -56,29 +50,14 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "USER_SKILL",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "SKILL_ID")
-    )
-    private final List<Skill> skills = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private final List<MemberSkillCategory> skills = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "USER_BRANCH",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "BRANCH_ID")
-    )
-    private final List<Branch> branches = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private final List<MemberBranch> branches = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "USER_PURPOSE",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "PURPOSE_ID")
-    )
-    private final List<Purpose> purposes = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    private final List<MemberPurpose> purposes = new ArrayList<>();
 
     public Member(
             Long id,
