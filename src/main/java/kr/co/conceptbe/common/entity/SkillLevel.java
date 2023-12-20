@@ -3,7 +3,7 @@ package kr.co.conceptbe.common.entity;
 import lombok.Getter;
 
 @Getter
-public enum Level {
+public enum SkillLevel {
 
     HIGH("상"),
     MIDDLE("중"),
@@ -12,7 +12,7 @@ public enum Level {
 
     private String name;
 
-    Level(String name) {
+    SkillLevel(String name) {
         this.name = name;
     }
 

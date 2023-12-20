@@ -32,20 +32,20 @@ public class MemberSkillCategory {
     @JoinColumn(name = "skill_category_id")
     private SkillCategory skillCategory;
 
-    @Column()
+    @Column
     @Enumerated(EnumType.STRING)
-    private Level level;
+    private SkillLevel skillLevel;
 
     public MemberSkillCategory(
             Long id,
             Member member,
             SkillCategory skillCategory,
-            Level level
+            SkillLevel skillLevel
     ) {
         this.id = id;
         this.member = member;
         this.skillCategory = skillCategory;
-        this.level = level;
+        this.skillLevel = skillLevel;
     }
 
 }
