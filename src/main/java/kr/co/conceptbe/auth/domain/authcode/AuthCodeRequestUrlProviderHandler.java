@@ -24,11 +24,10 @@ public class AuthCodeRequestUrlProviderHandler {
     }
 
     public String provideUrl(OauthServerType oauthServerType) {
-        return getHandler(oauthServerType).getUrl();
+        return getProvider(oauthServerType).getUrl();
     }
 
-    private AuthCodeRequestUrlProvider getHandler(OauthServerType oauthServerType) {
-        return Optional.ofNullable(mapping.get(oauthServerType))
-                .orElseThrow(NotFoundOauthServerTypeException::new);
+    private AuthCodeRequestUrlProvider getProvider(OauthServerType oauthServerType) {
+        return Optional.ofNullable(mapping.get(oauthServerType)).orElseThrow(NotFoundOauthServerTypeException::new);
     }
 }
