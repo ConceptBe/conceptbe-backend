@@ -14,3 +14,12 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+
+# TODO 등록 후 키 값 추가
+
+oauth:
+  kakao:
+    client_id: # REST API 키
+    redirect_uri: # redirect urk
+    client_secret: # Client Secret 키
+    scope: # scope(nickname, image)
