@@ -2,10 +2,10 @@ package kr.co.conceptbe.auth.presentation;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import kr.co.conceptbe.auth.application.OauthService;
 import kr.co.conceptbe.auth.application.dto.OauthMemberResponse;
 import kr.co.conceptbe.auth.presentation.dto.TokenResponse;
 import kr.co.conceptbe.member.OauthServerType;
-import kr.co.conceptbe.auth.application.OauthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

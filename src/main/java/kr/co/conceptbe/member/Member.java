@@ -48,7 +48,10 @@ public class Member extends BaseTimeEntity {
     private String nickname;
 
     @Column(nullable = false)
-    private String imageUrl;
+    private String profileImageUrl;
+
+    @Column(nullable = false)
+    private String email;
 
     @Column(nullable = true)
     private String introduce;
@@ -75,18 +78,18 @@ public class Member extends BaseTimeEntity {
     private final List<MemberPurpose> purposes = new ArrayList<>();
 
     public Member(
-            Long id,
             OauthId oauthId,
             String nickname,
-            String imageUrl,
+            String profileImageUrl,
+            String email,
             String introduce,
             String workingPlace,
             String livingPlace
     ) {
-        this.id = id;
         this.oauthId = oauthId;
         this.nickname = nickname;
-        this.imageUrl = imageUrl;
+        this.profileImageUrl = profileImageUrl;
+        this.email = email;
         this.introduce = introduce;
         this.workingPlace = workingPlace;
         this.livingPlace = livingPlace;
