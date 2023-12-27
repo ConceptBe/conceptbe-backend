@@ -23,3 +23,8 @@ oauth:
     redirect_uri: # redirect urk
     client_secret: # Client Secret 키
     scope: # scope(nickname, image)
+
+# TODO 테스트 후 변경
+jwt:
+  secret-key: test-key
+  access-token-expiration-time: 604800000
