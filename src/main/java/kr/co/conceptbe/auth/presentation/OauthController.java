@@ -3,6 +3,7 @@ package kr.co.conceptbe.auth.presentation;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import kr.co.conceptbe.auth.application.dto.OauthMemberResponse;
+import kr.co.conceptbe.auth.presentation.dto.TokenResponse;
 import kr.co.conceptbe.member.OauthServerType;
 import kr.co.conceptbe.auth.application.OauthService;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,14 @@ public class OauthController {
     ) {
         OauthMemberResponse oauthMemberResponse = oauthService.getOauthMemberInformationBy(oauthServerType, code);
         return ResponseEntity.ok(oauthMemberResponse);
+    }
+
+    @GetMapping("/{oauthServerType}/login")
+    ResponseEntity<TokenResponse> login(
+        @PathVariable OauthServerType oauthServerType,
+        @RequestParam("oauthId") String oauthId
+    ) {
+        String accessToken = oauthService.login(oauthId, oauthServerType);
+        return ResponseEntity.ok(TokenResponse.from(accessToken));
     }
 }
