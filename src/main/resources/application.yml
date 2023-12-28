@@ -1,8 +1,8 @@
 spring:
   datasource:
     username: root
-    password: Sksk5839!
-    url: jdbc:mysql://localhost:3306/conceptBe?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&rewriteBatchedStatements=true
+    password: root
+    url: jdbc:mysql://localhost:13306/conceptBe?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&rewriteBatchedStatements=true
 #  h2:
 #    console:
 #      enabled: true
@@ -26,5 +26,5 @@ oauth:
 
 # TODO 테스트 후 변경
 jwt:
-  secret-key: test-key
+  secret-key: this1-is2-conceptbe3-test4-secret5-key6
   access-token-expiration-time: 604800000
