@@ -34,6 +34,7 @@ public class KakaoMemberClient implements OauthMemberClient {
         Profile profile = kakaoAccount.profile();
         return new OauthMemberInformation(
             String.valueOf(kakaoMemberResponse.id()),
+            OauthServerType.KAKAO,
             kakaoAccount.email(),
             profile.nickname(),
             profile.profileImageUrl()
