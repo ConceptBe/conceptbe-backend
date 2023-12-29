@@ -8,6 +8,7 @@ import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.TeamRecruitmentRepository;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
+import kr.co.conceptbe.idea.presentation.dto.BestIdeaResponse;
 import kr.co.conceptbe.idea.presentation.dto.IdeaRequest;
 import kr.co.conceptbe.idea.presentation.dto.IdeaResponse;
 import kr.co.conceptbe.member.Member;
@@ -49,12 +50,16 @@ public class IdeaService {
         return ideaRepository.save(idea).getId();
     }
 
-    public List<IdeaResponse> findAllBestIdea() {
+    public List<BestIdeaResponse> findAllBestIdea() {
         return ideaRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparing(Idea::getLikesCount).reversed())
-                .map(IdeaResponse::from)
+                .map(BestIdeaResponse::from)
                 .toList();
+    }
+
+    public List<IdeaResponse> findAll() {
+        return null;
     }
 
 }

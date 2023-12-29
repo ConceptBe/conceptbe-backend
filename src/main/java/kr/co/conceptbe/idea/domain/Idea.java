@@ -135,4 +135,16 @@ public class Idea extends BaseTimeEntity {
         return likes.size();
     }
 
+    public int getHitsCount() {
+        return hits.size();
+    }
+
+    public int getBookmarksCount() {
+        return bookmarks.size();
+    }
+
+    public int getCommentsCount() {
+        return comments.size();
+    }
+
 }

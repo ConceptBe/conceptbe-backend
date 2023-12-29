@@ -3,6 +3,7 @@ package kr.co.conceptbe.idea.presentation;
 import java.net.URI;
 import java.util.List;
 import kr.co.conceptbe.idea.application.IdeaService;
+import kr.co.conceptbe.idea.presentation.dto.BestIdeaResponse;
 import kr.co.conceptbe.idea.presentation.dto.IdeaRequest;
 import kr.co.conceptbe.idea.presentation.dto.IdeaResponse;
 import kr.co.conceptbe.member.Member;
@@ -35,8 +36,15 @@ public class IdeaController {
     }
 
     @GetMapping("/bests")
-    public ResponseEntity<List<IdeaResponse>> findBestsIdea() {
-        List<IdeaResponse> responses = ideaService.findAllBestIdea();
+    public ResponseEntity<List<BestIdeaResponse>> findBestsIdea() {
+        List<BestIdeaResponse> responses = ideaService.findAllBestIdea();
+
+        return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<IdeaResponse>> findAll() {
+        List<IdeaResponse> responses = ideaService.findAll();
 
         return ResponseEntity.ok(responses);
     }
