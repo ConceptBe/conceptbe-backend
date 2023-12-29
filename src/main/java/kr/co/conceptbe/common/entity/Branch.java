@@ -23,13 +23,13 @@ public class Branch {
     }
 
     public static Branch from(String branch) {
-        validateBranchNull(branch);
-        validateBranchLength(branch);
+        validateNull(branch);
+        validateLength(branch);
 
         return new Branch(branch);
     }
 
-    private static void validateBranchNull(String branch) {
+    private static void validateNull(String branch) {
         if (Objects.nonNull(branch)) {
             return;
         }
@@ -37,7 +37,7 @@ public class Branch {
         throw new IllegalArgumentException("분야는 필수로 입력되어야 합니다.");
     }
 
-    private static void validateBranchLength(String branch) {
+    private static void validateLength(String branch) {
         if (BRANCH_LENGTH_LOWER_BOUND_INCLUSIVE <= branch.length()) {
             return;
         }

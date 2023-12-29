@@ -1,5 +1,6 @@
 package kr.co.conceptbe.idea;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,18 +21,20 @@ public class IdeaPurpose {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Embedded
+    private Purpose purpose;
+
     @ManyToOne
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    @ManyToOne
-    @JoinColumn(name = "purpose_id")
-    private Purpose purpose;
-
-    public IdeaPurpose(Long id, Idea idea, Purpose purpose) {
-        this.id = id;
-        this.idea = idea;
+    private IdeaPurpose(Purpose purpose, Idea idea) {
         this.purpose = purpose;
+        this.idea = idea;
+    }
+
+    public static IdeaPurpose of(String purpose, Idea idea) {
+        return new IdeaPurpose(Purpose.from(purpose), idea);
     }
 
 }

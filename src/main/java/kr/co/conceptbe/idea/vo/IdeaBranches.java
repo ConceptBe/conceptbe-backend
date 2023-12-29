@@ -19,10 +19,10 @@ public class IdeaBranches {
     private static final int BRANCHES_SIZE_LOWER_BOUND_INCLUSIVE = 1;
 
     @OneToMany(mappedBy = "idea")
-    private List<IdeaBranch> branches;
+    private List<IdeaBranch> ideaBranches;
 
-    private IdeaBranches(List<IdeaBranch> branches) {
-        this.branches = branches;
+    private IdeaBranches(List<IdeaBranch> ideaBranches) {
+        this.ideaBranches = ideaBranches;
     }
 
     public static IdeaBranches of(List<String> branches, Idea idea) {

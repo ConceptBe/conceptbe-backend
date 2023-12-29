@@ -15,6 +15,7 @@ import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.vo.IdeaBranches;
+import kr.co.conceptbe.idea.vo.IdeaPurposes;
 import kr.co.conceptbe.idea.vo.Introduce;
 import kr.co.conceptbe.idea.vo.Title;
 import kr.co.conceptbe.member.Member;
@@ -50,11 +51,11 @@ public class Idea extends BaseTimeEntity {
     @Embedded
     private IdeaBranches branches;
 
+    @Embedded
+    private IdeaPurposes purposes;
+
     @OneToMany(mappedBy = "idea")
     private final List<IdeaTeamRecruitment> teamRecruitments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "idea") // TODO : 1개 이상 필수 선택
-    private final List<IdeaPurpose> purposes = new ArrayList<>();
 
     @OneToMany(mappedBy = "idea")
     private List<Hit> hits = new ArrayList<>();
