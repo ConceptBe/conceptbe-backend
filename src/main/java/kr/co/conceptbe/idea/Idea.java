@@ -14,6 +14,7 @@ import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
+import kr.co.conceptbe.idea.vo.Introduce;
 import kr.co.conceptbe.idea.vo.Title;
 import kr.co.conceptbe.member.Member;
 import lombok.AccessLevel;
@@ -32,8 +33,8 @@ public class Idea extends BaseTimeEntity {
     @Embedded
     private Title title;
 
-    @Column(nullable = false)
-    private String introduce;
+    @Embedded
+    private Introduce introduce;
 
     @Column(nullable = false)
     private String cooperationWay;
@@ -69,7 +70,7 @@ public class Idea extends BaseTimeEntity {
     public Idea(
             Long id,
             Title title,
-            String introduce,
+            Introduce introduce,
             String cooperationWay,
             String recruitmentPlace,
             Member creator,

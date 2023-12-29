@@ -16,7 +16,7 @@ public class Title {
     private static final int TITLE_LENGTH_LOWER_BOUND_INCLUSIVE = 1;
     private static final int TITLE_LENGTH_UPPER_BOUND_INCLUSIVE = 20;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 20)
     private String title;
 
     private Title(String title) {
