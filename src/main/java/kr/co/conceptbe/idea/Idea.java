@@ -14,6 +14,7 @@ import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
+import kr.co.conceptbe.idea.vo.IdeaBranches;
 import kr.co.conceptbe.idea.vo.Introduce;
 import kr.co.conceptbe.idea.vo.Title;
 import kr.co.conceptbe.member.Member;
@@ -46,6 +47,15 @@ public class Idea extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member creator;
 
+    @Embedded
+    private IdeaBranches branches;
+
+    @OneToMany(mappedBy = "idea")
+    private final List<IdeaTeamRecruitment> teamRecruitments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "idea") // TODO : 1개 이상 필수 선택
+    private final List<IdeaPurpose> purposes = new ArrayList<>();
+
     @OneToMany(mappedBy = "idea")
     private List<Hit> hits = new ArrayList<>();
 
@@ -58,17 +68,7 @@ public class Idea extends BaseTimeEntity {
     @OneToMany(mappedBy = "idea")
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "idea")
-    private final List<IdeaBranch> branches = new ArrayList<>();
-
-    @OneToMany(mappedBy = "idea")
-    private final List<IdeaPurpose> purposes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "idea")
-    private final List<IdeaTeamRecruitment> teamRecruitments = new ArrayList<>();
-
     public Idea(
-            Long id,
             Title title,
             Introduce introduce,
             String cooperationWay,
@@ -76,7 +76,6 @@ public class Idea extends BaseTimeEntity {
             Member creator,
             List<Hit> hits
     ) {
-        this.id = id;
         this.title = title;
         this.introduce = introduce;
         this.cooperationWay = cooperationWay;
