@@ -1,6 +1,7 @@
 package kr.co.conceptbe.idea;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +14,7 @@ import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
+import kr.co.conceptbe.idea.vo.Title;
 import kr.co.conceptbe.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,8 +29,8 @@ public class Idea extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true)
-    private String title;
+    @Embedded
+    private Title title;
 
     @Column(nullable = false)
     private String introduce;
@@ -66,7 +68,7 @@ public class Idea extends BaseTimeEntity {
 
     public Idea(
             Long id,
-            String title,
+            Title title,
             String introduce,
             String cooperationWay,
             String recruitmentPlace,
