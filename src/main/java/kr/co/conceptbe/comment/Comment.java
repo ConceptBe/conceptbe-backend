@@ -12,7 +12,7 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
-import kr.co.conceptbe.idea.Idea;
+import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;

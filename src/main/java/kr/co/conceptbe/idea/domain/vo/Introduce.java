@@ -1,4 +1,4 @@
-package kr.co.conceptbe.idea.vo;
+package kr.co.conceptbe.idea.domain.vo;
 
 import static lombok.AccessLevel.PROTECTED;
 

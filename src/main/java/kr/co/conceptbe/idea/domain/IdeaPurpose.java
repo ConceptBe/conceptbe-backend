@@ -1,4 +1,4 @@
-package kr.co.conceptbe.idea;
+package kr.co.conceptbe.idea.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -8,14 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import kr.co.conceptbe.common.entity.Branch;
+import kr.co.conceptbe.common.entity.domain.Purpose;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class IdeaBranch {
+public class IdeaPurpose {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +26,16 @@ public class IdeaBranch {
     private Idea idea;
 
     @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private Branch branch;
+    @JoinColumn(name = "purpose_id")
+    private Purpose purpose;
 
-    private IdeaBranch(Idea idea, Branch branch) {
+    private IdeaPurpose(Idea idea, Purpose purpose) {
         this.idea = idea;
-        this.branch = branch;
+        this.purpose = purpose;
     }
 
-    public static IdeaBranch of(Idea idea, Branch branch) {
-        return new IdeaBranch(idea, branch);
+    public static IdeaPurpose of(Idea idea, Purpose purpose) {
+        return new IdeaPurpose(idea, purpose);
     }
 
 }

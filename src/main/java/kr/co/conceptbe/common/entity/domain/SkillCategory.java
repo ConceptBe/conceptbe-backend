@@ -1,39 +1,37 @@
-package kr.co.conceptbe.idea;
+package kr.co.conceptbe.common.entity.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
-import kr.co.conceptbe.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class Hit extends BaseTimeEntity {
+public class SkillCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "parent_skill_category")
+    private SkillCategory parentSkillCategory;
 
-    @ManyToOne
-    @JoinColumn(name = "idea_id")
-    private Idea idea;
+    @Column(nullable = false)
+    private String name;
 
-    public Hit(Long id, Member member, Idea idea) {
+    public SkillCategory(Long id, SkillCategory parentSkillCategory, String name) {
         this.id = id;
-        this.member = member;
-        this.idea = idea;
+        this.parentSkillCategory = parentSkillCategory;
+        this.name = name;
     }
 
 }

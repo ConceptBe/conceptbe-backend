@@ -1,13 +1,13 @@
-package kr.co.conceptbe.idea.vo;
+package kr.co.conceptbe.idea.domain.vo;
 
 import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
-import kr.co.conceptbe.common.entity.TeamRecruitment;
-import kr.co.conceptbe.idea.Idea;
-import kr.co.conceptbe.idea.IdeaTeamRecruitment;
+import kr.co.conceptbe.common.entity.domain.TeamRecruitment;
+import kr.co.conceptbe.idea.domain.Idea;
+import kr.co.conceptbe.idea.domain.IdeaTeamRecruitment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

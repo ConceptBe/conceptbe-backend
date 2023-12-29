@@ -1,16 +1,14 @@
-package kr.co.conceptbe.common.entity;
+package kr.co.conceptbe.idea.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class MemberSkillCategory {
+public class Hit extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,23 +27,13 @@ public class MemberSkillCategory {
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "skill_category_id")
-    private SkillCategory skillCategory;
+    @JoinColumn(name = "idea_id")
+    private Idea idea;
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    private SkillLevel skillLevel;
-
-    public MemberSkillCategory(
-            Long id,
-            Member member,
-            SkillCategory skillCategory,
-            SkillLevel skillLevel
-    ) {
+    public Hit(Long id, Member member, Idea idea) {
         this.id = id;
         this.member = member;
-        this.skillCategory = skillCategory;
-        this.skillLevel = skillLevel;
+        this.idea = idea;
     }
 
 }

@@ -1,4 +1,4 @@
-package kr.co.conceptbe.idea;
+package kr.co.conceptbe.idea.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import kr.co.conceptbe.common.entity.TeamRecruitment;
+import kr.co.conceptbe.common.entity.domain.TeamRecruitment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

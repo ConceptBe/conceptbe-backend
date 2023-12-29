@@ -1,4 +1,4 @@
-package kr.co.conceptbe.common.entity;
+package kr.co.conceptbe.common.entity.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
-public class Purpose {
+public class Branch {
 
-    private static final int PURPOSE_LENGTH_LOWER_BOUND_INCLUSIVE = 1;
+    private static final int BRANCH_LENGTH_LOWER_BOUND_INCLUSIVE = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,31 +25,31 @@ public class Purpose {
     @Column(nullable = false)
     private String name;
 
-    private Purpose(String name) {
+    private Branch(String name) {
         this.name = name;
     }
 
-    public static Purpose from(String name) {
+    public static Branch from(String name) {
         validateNull(name);
         validateLength(name);
 
-        return new Purpose(name);
+        return new Branch(name);
     }
 
-    private static void validateNull(String purpose) {
-        if (Objects.nonNull(purpose)) {
+    private static void validateNull(String name) {
+        if (Objects.nonNull(name)) {
             return;
         }
 
-        throw new IllegalArgumentException("목적은 필수로 입력되어야 합니다.");
+        throw new IllegalArgumentException("분야는 필수로 입력되어야 합니다.");
     }
 
-    private static void validateLength(String purpose) {
-        if (PURPOSE_LENGTH_LOWER_BOUND_INCLUSIVE <= purpose.length()) {
+    private static void validateLength(String name) {
+        if (BRANCH_LENGTH_LOWER_BOUND_INCLUSIVE <= name.length()) {
             return;
         }
 
-        throw new IllegalArgumentException("목적의 이름은 최소 1자 이상이어야 합니다.");
+        throw new IllegalArgumentException("분야의 이름은 최소 1자 이상이어야 합니다.");
     }
 
 }

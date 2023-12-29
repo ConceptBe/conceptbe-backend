@@ -1,4 +1,4 @@
-package kr.co.conceptbe.idea;
+package kr.co.conceptbe.idea.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -15,15 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.comment.Comment;
-import kr.co.conceptbe.common.entity.Branch;
-import kr.co.conceptbe.common.entity.Purpose;
-import kr.co.conceptbe.common.entity.TeamRecruitment;
+import kr.co.conceptbe.common.entity.domain.Branch;
+import kr.co.conceptbe.common.entity.domain.Purpose;
+import kr.co.conceptbe.common.entity.domain.TeamRecruitment;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
-import kr.co.conceptbe.idea.vo.IdeaBranches;
-import kr.co.conceptbe.idea.vo.IdeaPurposes;
-import kr.co.conceptbe.idea.vo.IdeaTeamRecruitments;
-import kr.co.conceptbe.idea.vo.Introduce;
-import kr.co.conceptbe.idea.vo.Title;
+import kr.co.conceptbe.idea.domain.vo.IdeaBranches;
+import kr.co.conceptbe.idea.domain.vo.IdeaPurposes;
+import kr.co.conceptbe.idea.domain.vo.IdeaTeamRecruitments;
+import kr.co.conceptbe.idea.domain.vo.Introduce;
+import kr.co.conceptbe.idea.domain.vo.Title;
 import kr.co.conceptbe.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
