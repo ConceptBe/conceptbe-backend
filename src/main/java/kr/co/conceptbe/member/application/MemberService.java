@@ -22,6 +22,6 @@ public class MemberService {
         memberRepository.save(member);
         String accessToken = jwtProvider.createAccessToken(member.getId());
         //TODO 대표스킬, 스킬들, 목적 저장 추가
-        return TokenResponse.from(accessToken);
+        return new TokenResponse(accessToken);
     }
 }

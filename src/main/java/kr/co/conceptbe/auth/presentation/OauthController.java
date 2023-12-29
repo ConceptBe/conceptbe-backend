@@ -46,6 +46,6 @@ public class OauthController {
         @RequestParam("oauthId") String oauthId
     ) {
         String accessToken = oauthService.login(oauthId, oauthServerType);
-        return ResponseEntity.ok(TokenResponse.from(accessToken));
+        return ResponseEntity.ok(new TokenResponse(accessToken));
     }
 }
