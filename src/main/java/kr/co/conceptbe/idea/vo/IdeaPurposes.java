@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class IdeaPurposes {
 
-    private static final int PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE = 1;
+    private static final int IDEA_PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE = 1;
 
     @OneToMany(mappedBy = "idea")
     private List<IdeaPurpose> ideaPurposes;
@@ -37,7 +37,7 @@ public class IdeaPurposes {
     }
 
     private static void validateSize(List<String> purposes) {
-        if (PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE <= purposes.size()) {
+        if (IDEA_PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE <= purposes.size()) {
             return;
         }
 

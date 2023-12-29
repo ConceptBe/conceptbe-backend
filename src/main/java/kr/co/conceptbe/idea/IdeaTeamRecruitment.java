@@ -28,10 +28,13 @@ public class IdeaTeamRecruitment {
     @JoinColumn(name = "team_recruitment")
     private TeamRecruitment teamRecruitment;
 
-    public IdeaTeamRecruitment(Long id, Idea idea, TeamRecruitment teamRecruitment) {
-        this.id = id;
+    private IdeaTeamRecruitment(Idea idea, TeamRecruitment teamRecruitment) {
         this.idea = idea;
         this.teamRecruitment = teamRecruitment;
+    }
+
+    public static IdeaTeamRecruitment of(Idea idea, TeamRecruitment teamRecruitment) {
+        return new IdeaTeamRecruitment(idea, teamRecruitment);
     }
 
 }

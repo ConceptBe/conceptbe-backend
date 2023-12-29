@@ -27,8 +27,7 @@ public class TeamRecruitment {
     @JoinColumn(name = "team_recruitment_category_id")
     private TeamRecruitmentCategory teamRecruitmentCategory;
 
-    public TeamRecruitment(Long id, String name, TeamRecruitmentCategory teamRecruitmentCategory) {
-        this.id = id;
+    public TeamRecruitment(String name, TeamRecruitmentCategory teamRecruitmentCategory) {
         this.name = name;
         this.teamRecruitmentCategory = teamRecruitmentCategory;
     }
