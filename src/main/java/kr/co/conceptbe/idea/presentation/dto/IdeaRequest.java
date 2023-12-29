@@ -5,7 +5,7 @@ import java.util.List;
 public record IdeaRequest(
         String title,
         String introduce,
-        String workingPlace,
+        String recruitmentPlace,
         String cooperationWay,
         List<Long> branchIds,
         List<Long> purposeIds,

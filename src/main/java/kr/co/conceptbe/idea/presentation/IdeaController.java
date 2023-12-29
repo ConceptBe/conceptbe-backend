@@ -3,6 +3,7 @@ package kr.co.conceptbe.idea.presentation;
 import java.net.URI;
 import kr.co.conceptbe.idea.application.IdeaService;
 import kr.co.conceptbe.idea.presentation.dto.IdeaRequest;
+import kr.co.conceptbe.member.Member;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +21,11 @@ public class IdeaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> addIdea(@RequestBody IdeaRequest request) {
-        Long savedId = ideaService.save(request);
+    public ResponseEntity<Void> addIdea(
+            @RequestBody Member member,
+            @RequestBody IdeaRequest request
+    ) {
+        Long savedId = ideaService.save(member, request);
 
         return ResponseEntity.created(URI.create("/idea/" + savedId))
                 .build();
