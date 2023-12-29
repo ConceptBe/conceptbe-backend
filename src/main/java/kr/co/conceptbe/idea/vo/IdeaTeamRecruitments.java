@@ -25,7 +25,7 @@ public class IdeaTeamRecruitments {
         this.ideaTeamRecruitments = ideaTeamRecruitments;
     }
 
-    public static IdeaTeamRecruitments of(List<TeamRecruitment> teamRecruitments, Idea idea) {
+    public static IdeaTeamRecruitments of(Idea idea, List<TeamRecruitment> teamRecruitments) {
         validateSize(teamRecruitments);
 
         List<IdeaTeamRecruitment> ideaTeamRecruitments = teamRecruitments.stream()

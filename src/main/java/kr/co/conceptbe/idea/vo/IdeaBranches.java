@@ -5,7 +5,6 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
-import java.util.stream.Collectors;
 import kr.co.conceptbe.common.entity.Branch;
 import kr.co.conceptbe.idea.Idea;
 import kr.co.conceptbe.idea.IdeaBranch;
@@ -26,7 +25,7 @@ public class IdeaBranches {
         this.ideaBranches = ideaBranches;
     }
 
-    public static IdeaBranches of(List<Branch> branches, Idea idea) {
+    public static IdeaBranches of(Idea idea, List<Branch> branches) {
         validateSize(branches);
 
         List<IdeaBranch> ideaBranches = branches.stream()

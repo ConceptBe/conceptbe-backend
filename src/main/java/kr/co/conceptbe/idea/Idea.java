@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.comment.Comment;
+import kr.co.conceptbe.common.entity.Branch;
+import kr.co.conceptbe.common.entity.Purpose;
+import kr.co.conceptbe.common.entity.TeamRecruitment;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.vo.IdeaBranches;
 import kr.co.conceptbe.idea.vo.IdeaPurposes;
@@ -59,7 +62,7 @@ public class Idea extends BaseTimeEntity {
     private IdeaTeamRecruitments teamRecruitments;
 
     @OneToMany(mappedBy = "idea")
-    private List<Hit> hits = new ArrayList<>();
+    private final List<Hit> hits = new ArrayList<>();
 
     @OneToMany(mappedBy = "idea")
     private final List<Comment> comments = new ArrayList<>();
@@ -70,20 +73,41 @@ public class Idea extends BaseTimeEntity {
     @OneToMany(mappedBy = "idea")
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
-    public Idea(
+    private Idea(
             Title title,
             Introduce introduce,
             String cooperationWay,
             String recruitmentPlace,
-            Member creator,
-            List<Hit> hits
+            Member creator
     ) {
         this.title = title;
         this.introduce = introduce;
         this.cooperationWay = cooperationWay;
         this.recruitmentPlace = recruitmentPlace;
         this.creator = creator;
-        this.hits = hits;
+    }
+
+    public static Idea of(
+            String title,
+            String introduce,
+            String cooperationWay,
+            String recruitmentPlace,
+            Member creator,
+            List<Branch> branches,
+            List<Purpose> purposes,
+            List<TeamRecruitment> teamRecruitments
+    ) {
+        Idea idea = new Idea(
+                Title.from(title),
+                Introduce.from(introduce),
+                cooperationWay,
+                recruitmentPlace,
+                creator
+        );
+        idea.branches = IdeaBranches.of(idea, branches);
+        idea.purposes = IdeaPurposes.of(idea, purposes);
+        idea.teamRecruitments = IdeaTeamRecruitments.of(idea, teamRecruitments);
+        return idea;
     }
 
 }
