@@ -3,30 +3,37 @@ package kr.co.conceptbe.common.entity;
 import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Embeddable
+@Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
 public class Purpose {
 
     private static final int PURPOSE_LENGTH_LOWER_BOUND_INCLUSIVE = 1;
 
-    @Column(nullable = false)
-    private String purpose;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private Purpose(String purpose) {
-        this.purpose = purpose;
+    @Column(nullable = false)
+    private String name;
+
+    private Purpose(String name) {
+        this.name = name;
     }
 
-    public static Purpose from(String purpose) {
-        validateNull(purpose);
-        validateLength(purpose);
+    public static Purpose from(String name) {
+        validateNull(name);
+        validateLength(name);
 
-        return new Purpose(purpose);
+        return new Purpose(name);
     }
 
     private static void validateNull(String purpose) {

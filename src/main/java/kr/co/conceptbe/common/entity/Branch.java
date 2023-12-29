@@ -3,42 +3,49 @@ package kr.co.conceptbe.common.entity;
 import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Embeddable
+@Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
 public class Branch {
 
     private static final int BRANCH_LENGTH_LOWER_BOUND_INCLUSIVE = 1;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(nullable = false)
-    private String branch;
+    private String name;
 
-    private Branch(String branch) {
-        this.branch = branch;
+    private Branch(String name) {
+        this.name = name;
     }
 
-    public static Branch from(String branch) {
-        validateNull(branch);
-        validateLength(branch);
+    public static Branch from(String name) {
+        validateNull(name);
+        validateLength(name);
 
-        return new Branch(branch);
+        return new Branch(name);
     }
 
-    private static void validateNull(String branch) {
-        if (Objects.nonNull(branch)) {
+    private static void validateNull(String name) {
+        if (Objects.nonNull(name)) {
             return;
         }
 
         throw new IllegalArgumentException("분야는 필수로 입력되어야 합니다.");
     }
 
-    private static void validateLength(String branch) {
-        if (BRANCH_LENGTH_LOWER_BOUND_INCLUSIVE <= branch.length()) {
+    private static void validateLength(String name) {
+        if (BRANCH_LENGTH_LOWER_BOUND_INCLUSIVE <= name.length()) {
             return;
         }
 

@@ -1,6 +1,5 @@
 package kr.co.conceptbe.idea;
 
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,20 +20,21 @@ public class IdeaBranch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
-    private Branch branch;
-
     @ManyToOne
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    private IdeaBranch(Branch branch, Idea idea) {
-        this.branch = branch;
+    @ManyToOne
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
+
+    private IdeaBranch(Idea idea, Branch branch) {
         this.idea = idea;
+        this.branch = branch;
     }
 
-    public static IdeaBranch of(String branch, Idea idea) {
-        return new IdeaBranch(Branch.from(branch), idea);
+    public static IdeaBranch of(Idea idea, Branch branch) {
+        return new IdeaBranch(idea, branch);
     }
 
 }

@@ -5,7 +5,6 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
-import java.util.stream.Collectors;
 import kr.co.conceptbe.common.entity.TeamRecruitment;
 import kr.co.conceptbe.idea.Idea;
 import kr.co.conceptbe.idea.IdeaTeamRecruitment;
@@ -31,7 +30,7 @@ public class IdeaTeamRecruitments {
 
         List<IdeaTeamRecruitment> ideaTeamRecruitments = teamRecruitments.stream()
                 .map(teamRecruitment -> IdeaTeamRecruitment.of(idea, teamRecruitment))
-                .collect(Collectors.toList());
+                .toList();
 
         return new IdeaTeamRecruitments(ideaTeamRecruitments);
     }

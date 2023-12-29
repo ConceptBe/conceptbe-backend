@@ -6,7 +6,7 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
-import java.util.stream.Collectors;
+import kr.co.conceptbe.common.entity.Purpose;
 import kr.co.conceptbe.idea.Idea;
 import kr.co.conceptbe.idea.IdeaPurpose;
 import lombok.Getter;
@@ -26,17 +26,17 @@ public class IdeaPurposes {
         this.ideaPurposes = ideaPurposes;
     }
 
-    public static IdeaPurposes of(List<String> purposes, Idea idea) {
+    public static IdeaPurposes of(Idea idea, List<Purpose> purposes) {
         validateSize(purposes);
 
         List<IdeaPurpose> ideaPurposes = purposes.stream()
-                .map(branch -> IdeaPurpose.of(branch, idea))
-                .collect(Collectors.toList());
+                .map(purpose -> IdeaPurpose.of(idea, purpose))
+                .toList();
 
         return new IdeaPurposes(ideaPurposes);
     }
 
-    private static void validateSize(List<String> purposes) {
+    private static void validateSize(List<Purpose> purposes) {
         if (IDEA_PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE <= purposes.size()) {
             return;
         }

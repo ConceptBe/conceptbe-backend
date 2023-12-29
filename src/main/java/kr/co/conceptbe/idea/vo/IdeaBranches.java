@@ -6,6 +6,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
 import java.util.stream.Collectors;
+import kr.co.conceptbe.common.entity.Branch;
 import kr.co.conceptbe.idea.Idea;
 import kr.co.conceptbe.idea.IdeaBranch;
 import lombok.Getter;
@@ -25,17 +26,17 @@ public class IdeaBranches {
         this.ideaBranches = ideaBranches;
     }
 
-    public static IdeaBranches of(List<String> branches, Idea idea) {
+    public static IdeaBranches of(List<Branch> branches, Idea idea) {
         validateSize(branches);
 
         List<IdeaBranch> ideaBranches = branches.stream()
-                .map(branch -> IdeaBranch.of(branch, idea))
-                .collect(Collectors.toList());
+                .map(branch -> IdeaBranch.of(idea, branch))
+                .toList();
 
         return new IdeaBranches(ideaBranches);
     }
 
-    private static void validateSize(List<String> branches) {
+    private static void validateSize(List<Branch> branches) {
         if (IDEA_BRANCHES_SIZE_LOWER_BOUND_INCLUSIVE <= branches.size()) {
             return;
         }
