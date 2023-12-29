@@ -3,6 +3,9 @@ package kr.co.conceptbe.idea.application;
 import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.domain.persistence.BranchRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.TeamRecruitmentRepository;
@@ -58,8 +61,20 @@ public class IdeaService {
                 .toList();
     }
 
-    public List<IdeaResponse> findAll() {
-        return null;
+    public List<IdeaResponse> findAll(Member member) {
+        Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
+
+        return ideaRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(idea -> IdeaResponse.of(idea, ideasBookmarkedByMember.contains(idea)))
+                .toList();
+    }
+
+    private Set<Idea> getIdeasBookmarkedByMember(Member member) {
+        return member.getBookmarks()
+                .stream()
+                .map(Bookmark::getIdea)
+                .collect(Collectors.toSet());
     }
 
 }

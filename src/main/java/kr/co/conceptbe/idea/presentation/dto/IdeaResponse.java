@@ -22,7 +22,7 @@ public record IdeaResponse(
         List<String> teamRecruitments
 ) {
 
-    public IdeaResponse of(Idea idea, boolean isBookmarked) {
+    public static IdeaResponse of(Idea idea, boolean isBookmarked) {
         List<String> branches = idea.getBranches()
                 .stream()
                 .map(IdeaBranch::getBranch)

@@ -35,16 +35,18 @@ public class IdeaController {
                 .build();
     }
 
-    @GetMapping("/bests")
-    public ResponseEntity<List<BestIdeaResponse>> findBestsIdea() {
-        List<BestIdeaResponse> responses = ideaService.findAllBestIdea();
+    @GetMapping
+    public ResponseEntity<List<IdeaResponse>> findAll(
+            @RequestBody Member member
+    ) {
+        List<IdeaResponse> responses = ideaService.findAll(member);
 
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping
-    public ResponseEntity<List<IdeaResponse>> findAll() {
-        List<IdeaResponse> responses = ideaService.findAll();
+    @GetMapping("/bests")
+    public ResponseEntity<List<BestIdeaResponse>> findBestsIdea() {
+        List<BestIdeaResponse> responses = ideaService.findAllBestIdea();
 
         return ResponseEntity.ok(responses);
     }
