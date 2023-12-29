@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.comment.Comment;
+import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.common.entity.domain.Branch;
 import kr.co.conceptbe.common.entity.domain.Purpose;
 import kr.co.conceptbe.common.entity.domain.TeamRecruitment;
-import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.domain.vo.IdeaBranches;
 import kr.co.conceptbe.idea.domain.vo.IdeaPurposes;
 import kr.co.conceptbe.idea.domain.vo.IdeaTeamRecruitments;
@@ -109,6 +109,26 @@ public class Idea extends BaseTimeEntity {
         idea.purposes = IdeaPurposes.of(idea, purposes);
         idea.teamRecruitments = IdeaTeamRecruitments.of(idea, teamRecruitments);
         return idea;
+    }
+
+    public String getTitle() {
+        return title.getTitle();
+    }
+
+    public String getIntroduce() {
+        return introduce.getIntroduce();
+    }
+
+    public List<IdeaBranch> getBranches() {
+        return branches.getIdeaBranches();
+    }
+
+    public List<IdeaPurpose> getPurposes() {
+        return purposes.getIdeaPurposes();
+    }
+
+    public List<IdeaTeamRecruitment> getTeamRecruitments() {
+        return teamRecruitments.getIdeaTeamRecruitments();
     }
 
 }
