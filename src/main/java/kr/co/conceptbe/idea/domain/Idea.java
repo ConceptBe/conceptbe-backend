@@ -131,4 +131,8 @@ public class Idea extends BaseTimeEntity {
         return teamRecruitments.getIdeaTeamRecruitments();
     }
 
+    public int getLikesCount() {
+        return likes.size();
+    }
+
 }

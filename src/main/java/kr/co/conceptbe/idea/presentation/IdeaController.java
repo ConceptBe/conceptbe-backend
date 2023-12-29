@@ -1,10 +1,13 @@
 package kr.co.conceptbe.idea.presentation;
 
 import java.net.URI;
+import java.util.List;
 import kr.co.conceptbe.idea.application.IdeaService;
 import kr.co.conceptbe.idea.presentation.dto.IdeaRequest;
+import kr.co.conceptbe.idea.presentation.dto.IdeaResponse;
 import kr.co.conceptbe.member.Member;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +32,13 @@ public class IdeaController {
 
         return ResponseEntity.created(URI.create("/idea/" + savedId))
                 .build();
+    }
+
+    @GetMapping("/bests")
+    public ResponseEntity<List<IdeaResponse>> findBestsIdea() {
+        List<IdeaResponse> responses = ideaService.findAllBestIdea();
+
+        return ResponseEntity.ok(responses);
     }
 
 }
