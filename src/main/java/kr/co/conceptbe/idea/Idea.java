@@ -1,5 +1,7 @@
 package kr.co.conceptbe.idea;
 
+import static lombok.AccessLevel.PROTECTED;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -23,12 +25,11 @@ import kr.co.conceptbe.idea.vo.IdeaTeamRecruitments;
 import kr.co.conceptbe.idea.vo.Introduce;
 import kr.co.conceptbe.idea.vo.Title;
 import kr.co.conceptbe.member.Member;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class Idea extends BaseTimeEntity {
 
