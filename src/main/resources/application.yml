@@ -1,8 +1,8 @@
 spring:
   datasource:
     username: root
-    password: Sksk5839!
-    url: jdbc:mysql://localhost:3306/conceptBe?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&rewriteBatchedStatements=true
+    password: root
+    url: jdbc:mysql://localhost:13306/conceptBe?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&rewriteBatchedStatements=true
 #  h2:
 #    console:
 #      enabled: true
@@ -14,3 +14,17 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+
+# TODO 등록 후 키 값 추가
+
+oauth:
+  kakao:
+    client_id: # REST API 키
+    redirect_uri: # redirect urk
+    client_secret: # Client Secret 키
+    scope: # scope(nickname, image)
+
+# TODO 테스트 후 변경
+jwt:
+  secret-key: this1-is2-conceptbe3-test4-secret5-key6
+  access-token-expiration-time: 604800000
