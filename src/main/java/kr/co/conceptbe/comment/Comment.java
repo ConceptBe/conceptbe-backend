@@ -15,6 +15,7 @@ import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.Idea;
 import kr.co.conceptbe.member.Member;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -52,6 +53,7 @@ public class Comment extends BaseTimeEntity {
     @OneToMany(mappedBy = "parentComment")
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder
     public Comment(
             Long id,
             String content,
@@ -68,5 +70,14 @@ public class Comment extends BaseTimeEntity {
         this.idea = idea;
         this.comments = comments;
         this.commentLikes = commentLikes;
+    }
+
+    public void addComment(Comment comment) {
+        if(this.comments == null) this.comments = new ArrayList<>();
+        this.comments.add(comment);
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
     }
 }

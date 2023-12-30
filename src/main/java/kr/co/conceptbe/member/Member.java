@@ -33,6 +33,9 @@ public class Member extends BaseTimeEntity {
     private OauthId oauthId;
 
     @Column
+    private String nickname;
+
+    @Column
     private String imageUrl;
 
     @Column(nullable = false)
@@ -62,6 +65,7 @@ public class Member extends BaseTimeEntity {
     public Member(
             Long id,
             OauthId oauthId,
+            String nickname,
             String imageUrl,
             String introduce,
             String workingPlace,
@@ -69,6 +73,7 @@ public class Member extends BaseTimeEntity {
     ) {
         this.id = id;
         this.oauthId = oauthId;
+        this.nickname = nickname;
         this.imageUrl = imageUrl;
         this.introduce = introduce;
         this.workingPlace = workingPlace;
