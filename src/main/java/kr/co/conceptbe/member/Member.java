@@ -3,15 +3,14 @@ package kr.co.conceptbe.member;
 import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
@@ -23,7 +22,20 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @Getter
+@Table(name = "member",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "oauth_id_unique",
+            columnNames = {
+                "oauth_server_id",
+                "oauth_server_type"
+            }
+        ),
+    }
+)
 public class Member extends BaseTimeEntity {
+
+    //TODO 패키지 변경
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,19 +44,22 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private OauthId oauthId;
 
-    @Column
+    @Column(nullable = false)
     private String nickname;
 
-    @Column
-    private String imageUrl;
+    @Column(nullable = false)
+    private String profileImageUrl;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = true)
     private String introduce;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String workingPlace;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String livingPlace;
 
     @OneToMany(mappedBy = "creator")
@@ -63,43 +78,20 @@ public class Member extends BaseTimeEntity {
     private final List<MemberPurpose> purposes = new ArrayList<>();
 
     public Member(
-            Long id,
             OauthId oauthId,
             String nickname,
-            String imageUrl,
+            String profileImageUrl,
+            String email,
             String introduce,
             String workingPlace,
             String livingPlace
     ) {
-        this.id = id;
         this.oauthId = oauthId;
         this.nickname = nickname;
-        this.imageUrl = imageUrl;
+        this.profileImageUrl = profileImageUrl;
+        this.email = email;
         this.introduce = introduce;
         this.workingPlace = workingPlace;
         this.livingPlace = livingPlace;
     }
-
-    @Embeddable
-    @NoArgsConstructor(access = PROTECTED)
-    @Getter
-    static class OauthId {
-
-        @Column(nullable = false)
-        private Long oauthServerId;
-
-        @Enumerated(EnumType.STRING)
-        private OauthServerType oauthServerType;
-
-        public OauthId(Long oauthServerId, OauthServerType oauthServerType) {
-            this.oauthServerId = oauthServerId;
-            this.oauthServerType = oauthServerType;
-        }
-
-        public enum OauthServerType {
-            KAKAO, NAVER
-        }
-
-    }
-
 }

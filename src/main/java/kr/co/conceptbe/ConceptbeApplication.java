@@ -11,5 +11,4 @@ public class ConceptbeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ConceptbeApplication.class, args);
 	}
-
 }
