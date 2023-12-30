@@ -1,4 +1,4 @@
-package kr.co.conceptbe.dnd.repository;
+package kr.co.conceptbe.idea.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

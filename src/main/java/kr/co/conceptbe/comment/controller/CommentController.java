@@ -1,4 +1,4 @@
-package kr.co.conceptbe.dnd.controller;
+package kr.co.conceptbe.comment.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.conceptbe.common.entity.utils.CommonResponse;
-import kr.co.conceptbe.dnd.dto.request.CommentCreateRequest;
-import kr.co.conceptbe.dnd.dto.response.CommentResponse;
-import kr.co.conceptbe.dnd.dto.request.CommentUpdateRequest;
-import kr.co.conceptbe.dnd.service.CommentService;
+import kr.co.conceptbe.comment.dto.CommentCreateRequest;
+import kr.co.conceptbe.comment.dto.CommentResponse;
+import kr.co.conceptbe.comment.dto.CommentUpdateRequest;
+import kr.co.conceptbe.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 
 @RestController

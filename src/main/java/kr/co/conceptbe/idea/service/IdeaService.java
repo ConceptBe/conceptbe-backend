@@ -1,4 +1,4 @@
-package kr.co.conceptbe.dnd.service;
+package kr.co.conceptbe.idea.service;
 
 import static kr.co.conceptbe.common.entity.utils.CommonResponse.*;
 
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.common.entity.utils.CommonResponse;
-import kr.co.conceptbe.dnd.dto.response.CommentResponse;
-import kr.co.conceptbe.dnd.dto.response.IdeaDetailResponse;
-import kr.co.conceptbe.dnd.repository.IdeaRepository;
+import kr.co.conceptbe.comment.dto.CommentResponse;
+import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
+import kr.co.conceptbe.idea.repository.IdeaRepository;
 import kr.co.conceptbe.idea.Idea;
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +29,7 @@ public class IdeaService {
 	public ResponseEntity<CommonResponse.SingleResponse<IdeaDetailResponse>> getDetailIdeaResponse(Long ideaId) {
 		Idea idea = ideaRepository.findById(ideaId).orElseThrow(() -> new IllegalArgumentException("Not Found ID : " + ideaId));
 		IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.builder()
-			.imageUrl(idea.getCreator().getImageUrl())
+			.imageUrl(idea.getCreator().getProfileImageUrl())
 			.nickname(idea.getCreator().getNickname())
 			.skillList(idea.getCreator().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList())
 			.title(idea.getTitle())

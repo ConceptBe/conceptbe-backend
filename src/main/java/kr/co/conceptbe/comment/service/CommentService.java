@@ -1,4 +1,4 @@
-package kr.co.conceptbe.dnd.service;
+package kr.co.conceptbe.comment.service;
 
 import static kr.co.conceptbe.common.entity.utils.CommonResponse.*;
 
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.common.entity.utils.CommonResponse;
-import kr.co.conceptbe.dnd.dto.request.CommentCreateRequest;
-import kr.co.conceptbe.dnd.dto.response.CommentResponse;
-import kr.co.conceptbe.dnd.dto.request.CommentUpdateRequest;
-import kr.co.conceptbe.dnd.repository.CommentRepository;
-import kr.co.conceptbe.dnd.repository.IdeaRepository;
+import kr.co.conceptbe.comment.dto.CommentCreateRequest;
+import kr.co.conceptbe.comment.dto.CommentResponse;
+import kr.co.conceptbe.comment.dto.CommentUpdateRequest;
+import kr.co.conceptbe.comment.repository.CommentRepository;
+import kr.co.conceptbe.idea.repository.IdeaRepository;
 import kr.co.conceptbe.idea.Idea;
 import lombok.RequiredArgsConstructor;
 

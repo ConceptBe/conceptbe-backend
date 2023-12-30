@@ -1,4 +1,4 @@
-package kr.co.conceptbe.dnd.controller;
+package kr.co.conceptbe.idea.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.conceptbe.common.entity.utils.CommonResponse;
-import kr.co.conceptbe.dnd.dto.response.IdeaDetailResponse;
-import kr.co.conceptbe.dnd.service.IdeaService;
+import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
+import kr.co.conceptbe.idea.service.IdeaService;
 import lombok.RequiredArgsConstructor;
 
 @RestController

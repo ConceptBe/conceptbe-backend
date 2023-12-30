@@ -1,10 +1,11 @@
-package kr.co.conceptbe.dnd.dto.response;
+package kr.co.conceptbe.idea.dto;
 
 import java.util.List;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import kr.co.conceptbe.comment.dto.CommentResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

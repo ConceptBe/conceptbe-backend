@@ -1,4 +1,4 @@
-package kr.co.conceptbe.dnd.dto.response;
+package kr.co.conceptbe.comment.dto;
 
 import java.util.List;
 
