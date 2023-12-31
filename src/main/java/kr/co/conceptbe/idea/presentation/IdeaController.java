@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/idea")
+@RequestMapping("/ideas")
 public class IdeaController {
 
     private final IdeaService ideaService;
@@ -31,7 +31,7 @@ public class IdeaController {
     ) {
         Long savedId = ideaService.save(member, request);
 
-        return ResponseEntity.created(URI.create("/idea/" + savedId))
+        return ResponseEntity.created(URI.create("/ideas/" + savedId))
                 .build();
     }
 
