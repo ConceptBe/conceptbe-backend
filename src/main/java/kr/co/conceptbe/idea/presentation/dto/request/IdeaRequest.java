@@ -1,4 +1,4 @@
-package kr.co.conceptbe.idea.presentation.dto;
+package kr.co.conceptbe.idea.presentation.dto.request;
 
 import java.util.List;
 

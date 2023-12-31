@@ -3,10 +3,11 @@ package kr.co.conceptbe.idea.presentation;
 import java.net.URI;
 import java.util.List;
 import kr.co.conceptbe.idea.application.IdeaService;
-import kr.co.conceptbe.idea.presentation.dto.BestIdeaResponse;
-import kr.co.conceptbe.idea.presentation.dto.IdeaRequest;
-import kr.co.conceptbe.idea.presentation.dto.IdeaResponse;
+import kr.co.conceptbe.idea.presentation.dto.response.BestIdeaResponse;
+import kr.co.conceptbe.idea.presentation.dto.request.IdeaRequest;
+import kr.co.conceptbe.idea.presentation.dto.response.IdeaResponse;
 import kr.co.conceptbe.member.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,14 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/ideas")
 public class IdeaController {
 
     private final IdeaService ideaService;
-
-    public IdeaController(IdeaService ideaService) {
-        this.ideaService = ideaService;
-    }
 
     @PostMapping
     public ResponseEntity<Void> addIdea(

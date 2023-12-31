@@ -1,6 +1,5 @@
 package kr.co.conceptbe.idea.application;
 
-import jakarta.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -11,13 +10,16 @@ import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.TeamRecruitmentRepository;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
-import kr.co.conceptbe.idea.presentation.dto.BestIdeaResponse;
-import kr.co.conceptbe.idea.presentation.dto.IdeaRequest;
-import kr.co.conceptbe.idea.presentation.dto.IdeaResponse;
+import kr.co.conceptbe.idea.presentation.dto.response.BestIdeaResponse;
+import kr.co.conceptbe.idea.presentation.dto.request.IdeaRequest;
+import kr.co.conceptbe.idea.presentation.dto.response.IdeaResponse;
 import kr.co.conceptbe.member.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class IdeaService {
 
@@ -25,18 +27,6 @@ public class IdeaService {
     private final PurposeRepository purposeRepository;
     private final TeamRecruitmentRepository teamRecruitmentRepository;
     private final IdeaRepository ideaRepository;
-
-    public IdeaService(
-            BranchRepository branchRepository,
-            PurposeRepository purposeRepository,
-            TeamRecruitmentRepository teamRecruitmentRepository,
-            IdeaRepository ideaRepository
-    ) {
-        this.branchRepository = branchRepository;
-        this.purposeRepository = purposeRepository;
-        this.teamRecruitmentRepository = teamRecruitmentRepository;
-        this.ideaRepository = ideaRepository;
-    }
 
     public Long save(Member member, IdeaRequest request) {
         Idea idea = Idea.of(
@@ -53,6 +43,7 @@ public class IdeaService {
         return ideaRepository.save(idea).getId();
     }
 
+    @Transactional(readOnly = true)
     public List<BestIdeaResponse> findAllBestIdea() {
         return ideaRepository.findAll()
                 .stream()
@@ -61,6 +52,7 @@ public class IdeaService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<IdeaResponse> findAll(Member member) {
         Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
 

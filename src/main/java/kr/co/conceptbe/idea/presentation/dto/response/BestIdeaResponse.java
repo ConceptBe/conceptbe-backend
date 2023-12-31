@@ -1,4 +1,4 @@
-package kr.co.conceptbe.idea.presentation.dto;
+package kr.co.conceptbe.idea.presentation.dto.response;
 
 import java.util.List;
 import kr.co.conceptbe.common.entity.domain.Branch;

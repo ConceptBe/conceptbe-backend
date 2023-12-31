@@ -1,4 +1,4 @@
-package kr.co.conceptbe.idea.presentation.dto;
+package kr.co.conceptbe.idea.presentation.dto.response;
 
 import java.util.List;
 import kr.co.conceptbe.common.entity.domain.SkillCategory;
@@ -19,7 +19,7 @@ public record MemberResponse(
                 .toList();
 
         return new MemberResponse(
-                member.getImageUrl(),
+                member.getProfileImageUrl(),
                 member.getIntroduce(), // TODO : 이름이어야 하는데, 이름이 없네 지금은...
                 skills
         );
