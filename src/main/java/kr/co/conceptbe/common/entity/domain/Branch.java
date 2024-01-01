@@ -12,8 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = PROTECTED)
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class Branch {
 
     private static final int BRANCH_LENGTH_LOWER_BOUND_INCLUSIVE = 1;

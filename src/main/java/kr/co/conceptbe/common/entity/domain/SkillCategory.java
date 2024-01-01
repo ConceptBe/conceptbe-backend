@@ -13,8 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = PROTECTED)
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class SkillCategory {
 
     @Id

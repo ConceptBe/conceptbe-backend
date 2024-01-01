@@ -13,8 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@NoArgsConstructor(access = PROTECTED)
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class IdeaPurposes {
 
     private static final int IDEA_PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE = 1;

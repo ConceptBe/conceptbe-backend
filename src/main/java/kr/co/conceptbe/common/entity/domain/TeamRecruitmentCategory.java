@@ -13,8 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamRecruitmentCategory {
 
     @Id
@@ -25,7 +25,7 @@ public class TeamRecruitmentCategory {
     private String name;
 
     @OneToMany(mappedBy = "teamRecruitmentCategory")
-    private List<TeamRecruitment> teamRecruitments = new ArrayList<>();
+    private final List<TeamRecruitment> teamRecruitments = new ArrayList<>();
 
     public TeamRecruitmentCategory(Long id, String name) {
         this.id = id;

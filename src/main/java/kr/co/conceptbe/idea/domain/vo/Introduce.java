@@ -10,8 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@NoArgsConstructor(access = PROTECTED)
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class Introduce {
 
     private static final int INTRODUCE_LENGTH_LOWER_BOUND_INCLUSIVE = 10;

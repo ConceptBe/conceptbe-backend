@@ -23,18 +23,6 @@ public record IdeaResponse(
 ) {
 
     public static IdeaResponse of(Idea idea, boolean isBookmarked) {
-        List<String> branches = idea.getBranches()
-                .stream()
-                .map(IdeaBranch::getBranch)
-                .map(Branch::getName)
-                .toList();
-
-        List<String> teamRecruitments = idea.getTeamRecruitments()
-                .stream()
-                .map(IdeaTeamRecruitment::getTeamRecruitment)
-                .map(TeamRecruitment::getName)
-                .toList();
-
         return new IdeaResponse(
                 idea.getTitle(),
                 idea.getIntroduce(),
@@ -45,8 +33,23 @@ public record IdeaResponse(
                 isBookmarked,
                 idea.getCreatedAt(),
                 MemberResponse.from(idea.getCreator()),
-                branches,
-                teamRecruitments
+                getBranches(idea.getBranches()),
+                getTeamRecruitments(idea.getTeamRecruitments())
         );
     }
+
+    private static List<String> getBranches(List<IdeaBranch> branches) {
+        return branches.stream()
+                .map(IdeaBranch::getBranch)
+                .map(Branch::getName)
+                .toList();
+    }
+
+    private static List<String> getTeamRecruitments(List<IdeaTeamRecruitment> teamRecruitments) {
+        return teamRecruitments.stream()
+                .map(IdeaTeamRecruitment::getTeamRecruitment)
+                .map(TeamRecruitment::getName)
+                .toList();
+    }
+
 }

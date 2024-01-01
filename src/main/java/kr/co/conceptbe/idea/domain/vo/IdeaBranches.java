@@ -12,8 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@NoArgsConstructor(access = PROTECTED)
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class IdeaBranches {
 
     private static final int IDEA_BRANCHES_SIZE_LOWER_BOUND_INCLUSIVE = 1;

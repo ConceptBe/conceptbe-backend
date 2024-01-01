@@ -12,8 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = PROTECTED)
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class Purpose {
 
     private static final int PURPOSE_LENGTH_LOWER_BOUND_INCLUSIVE = 1;

@@ -12,17 +12,19 @@ public record BestIdeaResponse(
 ) {
 
     public static BestIdeaResponse from(Idea idea) {
-        List<String> branches = idea.getBranches()
-                .stream()
-                .map(IdeaBranch::getBranch)
-                .map(Branch::getName)
-                .toList();
 
         return new BestIdeaResponse(
                 idea.getId(),
-                branches,
+                getBranches(idea.getBranches()),
                 idea.getTitle()
         );
+    }
+
+    private static List<String> getBranches(List<IdeaBranch> branches) {
+        return branches.stream()
+                .map(IdeaBranch::getBranch)
+                .map(Branch::getName)
+                .toList();
     }
 
 }

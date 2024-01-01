@@ -12,8 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@NoArgsConstructor(access = PROTECTED)
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 public class IdeaTeamRecruitments {
 
     private static final int IDEA_TEAM_RECRUITMENTS_SIZE_UPPER_BOUND_INCLUSIVE = 10;
