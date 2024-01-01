@@ -1,4 +1,6 @@
-package kr.co.conceptbe.idea;
+package kr.co.conceptbe.idea.domain;
+
+import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -6,32 +8,32 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import kr.co.conceptbe.common.entity.Purpose;
-import lombok.AccessLevel;
+import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
+import kr.co.conceptbe.member.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class IdeaPurpose {
+@NoArgsConstructor(access = PROTECTED)
+public class Hit extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @ManyToOne
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    @ManyToOne
-    @JoinColumn(name = "purpose_id")
-    private Purpose purpose;
-
-    public IdeaPurpose(Long id, Idea idea, Purpose purpose) {
+    public Hit(Long id, Member member, Idea idea) {
         this.id = id;
+        this.member = member;
         this.idea = idea;
-        this.purpose = purpose;
     }
 
 }

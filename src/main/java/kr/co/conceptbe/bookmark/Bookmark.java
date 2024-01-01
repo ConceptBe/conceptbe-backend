@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
-import kr.co.conceptbe.idea.Idea;
+import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;

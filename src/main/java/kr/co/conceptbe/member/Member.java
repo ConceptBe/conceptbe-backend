@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
-import kr.co.conceptbe.idea.Idea;
+import kr.co.conceptbe.idea.domain.Idea;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

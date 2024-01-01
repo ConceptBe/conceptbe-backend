@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import kr.co.conceptbe.common.entity.Purpose;
+import kr.co.conceptbe.common.entity.domain.Purpose;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
