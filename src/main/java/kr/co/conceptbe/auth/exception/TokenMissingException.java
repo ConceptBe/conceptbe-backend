@@ -8,6 +8,6 @@ import kr.co.conceptbe.common.exception.ErrorCode;
 public class TokenMissingException extends ConceptBeException {
 
     public TokenMissingException() {
-        super(new ErrorCode(UNAUTHORIZED, "토큰이 필요합니다."));
+        super(new ErrorCode(UNAUTHORIZED, "토큰이 누락되었습니다."));
     }
 }
