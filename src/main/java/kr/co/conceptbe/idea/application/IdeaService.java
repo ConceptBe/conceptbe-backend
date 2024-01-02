@@ -91,7 +91,7 @@ public class IdeaService {
         return IdeaDetailResponse.of(idea, commentParentResponses);
     }
 
-    public ResponseEntity<Void> likesIdea(Long ideaId, Long memberId) {
+    public Long likesIdea(Long ideaId, Long memberId) {
         Idea idea = ideaRepository.getById(ideaId);
         // TODO
         // Token 통해서 유저 id 가져올 시 수정될 예정
@@ -101,13 +101,11 @@ public class IdeaService {
         Optional<IdeaLike> optionalIdeaLike = ideaLikesRepository.findById(ideaLikeID);
         if(optionalIdeaLike.isPresent()) {
             ideaLikesRepository.deleteById(ideaLikeID);
-            return ResponseEntity.noContent().build();
         } else {
             IdeaLike ideaLike = new IdeaLike(ideaLikeID, member, idea);
             ideaLikesRepository.save(ideaLike);
             idea.addIdeaLikes(ideaLike);
-            return ResponseEntity.created(URI.create("/ideas/" + idea.getId()))
-                .build();
         }
+        return idea.getId();
     }
 }

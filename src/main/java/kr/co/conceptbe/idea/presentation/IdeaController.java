@@ -64,6 +64,8 @@ public class IdeaController {
     public ResponseEntity<Void> likesIdea(
         @PathVariable(name = "idea_id") Long ideaId,
         @RequestParam(name = "member_id") Long memberId) {
-        return ideaService.likesIdea(ideaId, memberId);
+        Long id = ideaService.likesIdea(ideaId, memberId);
+        return ResponseEntity.created(URI.create("/ideas/" + id))
+            .build();
     }
 }
