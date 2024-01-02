@@ -5,16 +5,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import kr.co.conceptbe.bookmark.Bookmark;
+import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.common.entity.domain.persistence.BranchRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.TeamRecruitmentRepository;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
+import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.presentation.dto.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.presentation.dto.request.IdeaRequest;
 import kr.co.conceptbe.idea.presentation.dto.response.IdeaResponse;
 import kr.co.conceptbe.member.Member;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +70,16 @@ public class IdeaService {
                 .stream()
                 .map(Bookmark::getIdea)
                 .collect(Collectors.toSet());
+    }
+
+    public IdeaDetailResponse getDetailIdeaResponse(Long ideaId) {
+        Idea idea = ideaRepository.getById(ideaId);
+        List<CommentParentResponse> commentParentResponses = idea.getComments()
+            .stream()
+            .map(CommentParentResponse::of)
+            .toList();
+
+        return IdeaDetailResponse.of(idea, commentParentResponses);
     }
 
 }

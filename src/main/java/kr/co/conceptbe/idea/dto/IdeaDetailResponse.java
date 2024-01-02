@@ -1,38 +1,47 @@
 package kr.co.conceptbe.idea.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import kr.co.conceptbe.comment.dto.CommentParentResponse;
+import kr.co.conceptbe.idea.domain.Idea;
 
-import kr.co.conceptbe.comment.dto.CommentResponse;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class IdeaDetailResponse {
-	private String imageUrl;
-	private String nickname;
-	private List<String> skillList;
-	private String title;
-	private String date;
-	private String introduce;
-	private List<String> branchList;
-	private List<String> purposeList;
-	private String cooperationWay;
-	private String recruitmentPlace;
-	private List<String> teamRecruitmentsList;
-	private Integer likesCount;
-	private Integer commentsCount;
-	private Integer bookmarksCount;
-	private Integer hits;
-	private List<CommentResponse.CommentParentResponse> commentParentResponseList;
+public record IdeaDetailResponse (
+	String imageUrl,
+	String nickname,
+	List<String> skillList,
+	String title,
+	LocalDateTime date,
+	String introduce,
+	List<String> branchList,
+	List<String> purposeList,
+	String cooperationWay,
+	String recruitmentPlace,
+	List<String> teamRecruitmentsList,
+	Integer likesCount,
+	Integer commentsCount,
+	Integer bookmarksCount,
+	Integer hits,
+	List<CommentParentResponse> commentParentResponseList
+) {
+	public static IdeaDetailResponse of(Idea idea, List<CommentParentResponse> commentParentResponses) {
+		return new IdeaDetailResponse(
+			idea.getCreator().getProfileImageUrl(),
+			idea.getCreator().getNickname(),
+			idea.getCreator().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList(),
+			idea.getTitle(),
+			idea.getCreatedAt(),
+			idea.getIntroduce(),
+			idea.getBranches().stream().map(e -> e.getBranch().getName()).toList(),
+			idea.getPurposes().stream().map(e -> e.getPurpose().getName()).toList(),
+			idea.getCooperationWay(),
+			idea.getRecruitmentPlace(),
+			idea.getTeamRecruitments().stream().map(e -> e.getTeamRecruitment().getName()).toList(),
+			idea.getLikesCount(),
+			idea.getCommentsCount(),
+			idea.getBookmarksCount(),
+			idea.getHitsCount(),
+			commentParentResponses
+		);
+	}
 }

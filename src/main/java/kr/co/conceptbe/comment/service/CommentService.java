@@ -1,100 +1,78 @@
 package kr.co.conceptbe.comment.service;
 
-import static kr.co.conceptbe.common.entity.utils.CommonResponse.*;
-
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 import kr.co.conceptbe.comment.Comment;
-import kr.co.conceptbe.common.entity.utils.CommonResponse;
 import kr.co.conceptbe.comment.dto.CommentCreateRequest;
 import kr.co.conceptbe.comment.dto.CommentResponse;
 import kr.co.conceptbe.comment.dto.CommentUpdateRequest;
 import kr.co.conceptbe.comment.repository.CommentRepository;
-import kr.co.conceptbe.idea.repository.IdeaRepository;
-import kr.co.conceptbe.idea.Idea;
+import kr.co.conceptbe.idea.domain.Idea;
+import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
+import kr.co.conceptbe.member.Member;
+import kr.co.conceptbe.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class CommentService {
 
+	private final MemberRepository memberRepository;
 	private final IdeaRepository ideaRepository;
 	private final CommentRepository commentRepository;
 
-	public ResponseEntity<ListResponse<CommentResponse>> getChildCommentList(Long commentId) {
-		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new IllegalArgumentException("Not Found ID : " + commentId));
-		List<CommentResponse> commentResponseList = new ArrayList<>();
-		for (Comment childComment : comment.getComments()) {
-			int likesCnt = childComment.getCommentLikes().size();
-
-			CommentResponse commentResponse = CommentResponse.builder()
-				.nickname(childComment.getCreator().getNickname())
-				.memberSkillList(childComment.getCreator().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList())
-				.content(childComment.getContent())
-				.build();
-			commentResponse.setLikesCount(likesCnt > 999 ? "999+" : String.valueOf(likesCnt));
-
-			commentResponseList.add(commentResponse);
-		}
-		return toListResponse("댓글 조회 성공", HttpStatus.OK.value(), commentResponseList);
+	@Transactional(readOnly = true)
+	public List<CommentResponse> getChildCommentList(Long commentId) {
+		return commentRepository.getById(commentId).getComments()
+			.stream()
+			.sorted(Comparator.comparing(Comment::getCreatedAt))
+			.map(CommentResponse::of)
+			.toList();
 	}
 
-	@Transactional
-	public ResponseEntity<CommonResponse> createComment(CommentCreateRequest commentCreateRequest) {
-		Idea idea = ideaRepository.findById(commentCreateRequest.getIdeaId())
-			.orElseThrow(() -> new IllegalArgumentException("Not Found ID : " + commentCreateRequest.getIdeaId()));
+	public Long createComment(CommentCreateRequest commentCreateRequest) {
+		Idea idea = ideaRepository.getById(commentCreateRequest.ideaId());
+		Member member = memberRepository.getById(commentCreateRequest.userId());
 
-		if(commentCreateRequest.getParentId() != null) {
-			Comment parentComment = commentRepository.findById(commentCreateRequest.getIdeaId())
-				.orElseThrow(() -> new IllegalArgumentException("Not Found ID : " + commentCreateRequest.getParentId()));
-
-			Comment comment = Comment.builder()
-				.content(commentCreateRequest.getContent())
-				.parentComment(parentComment)
-				// .creator(commentRequest.getUserId())
-				.idea(idea)
-				.build();
+		Comment comment;
+		if(commentCreateRequest.parentId() != null) {
+			Comment parentComment = commentRepository.getById(commentCreateRequest.parentId());
+			comment = new Comment(commentCreateRequest.content(), parentComment,
+				member, idea, new ArrayList<>(), new ArrayList<>());
 			commentRepository.save(comment);
 			parentComment.addComment(comment);
 		} else {
-			Comment comment = Comment.builder()
-				.content(commentCreateRequest.getContent())
-				.parentComment(null)
-				// .creator(commentRequest.getUserId())
-				.idea(idea)
-				.build();
+			comment = new Comment(commentCreateRequest.content(), null,
+				member, idea, new ArrayList<>(), new ArrayList<>());
 			commentRepository.save(comment);
 		}
 
-		return toCommonResponse("댓글 작성", HttpStatus.OK.value());
+		return comment.getId();
 	}
 
-	@Transactional
-	public ResponseEntity<CommonResponse> updateComment(Long commentId, CommentUpdateRequest request) {
+	public Long updateComment(Long commentId, CommentUpdateRequest request) {
+		// TODO
 		// 댓글 주인이 userId 인지 확인하는 로직 추가 예정
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException("Not Found ID : " + commentId));
-		comment.updateContent(request.getContent());
+		comment.updateContent(request.content());
 
-		return toCommonResponse("댓글 수정", HttpStatus.OK.value());
+		return comment.getId();
 	}
 
-	@Transactional
-	public ResponseEntity<CommonResponse> deleteComment(Long commentId) {
+	public void deleteComment(Long commentId) {
+		// TODO
 		// 댓글 주인이 userId 인지 확인하는 로직 추가 예정
 		// 댓글에 삭제 판단 하기 추가?
 		Comment comment = commentRepository.findById(commentId)
 			.orElseThrow(() -> new IllegalArgumentException("Not Found ID : " + commentId));
 		comment.updateContent("삭제된 댓글입니다.");
-
-		return toCommonResponse("댓글 삭제", HttpStatus.OK.value());
 	}
 
 }
