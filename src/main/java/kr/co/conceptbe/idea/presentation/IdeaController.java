@@ -3,6 +3,7 @@ package kr.co.conceptbe.idea.presentation;
 import java.net.URI;
 import java.util.List;
 
+import kr.co.conceptbe.idea.IdeaLikeID;
 import kr.co.conceptbe.idea.application.IdeaService;
 import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.presentation.dto.request.IdeaRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -56,5 +58,15 @@ public class IdeaController {
     public ResponseEntity<IdeaDetailResponse> getDetailIdeaResponse(@PathVariable(name = "idea_id") Long ideaId) {
         IdeaDetailResponse ideaDetailResponse = ideaService.getDetailIdeaResponse(ideaId);
         return ResponseEntity.ok(ideaDetailResponse);
+    }
+
+    @PostMapping("/{idea_id}")
+    public ResponseEntity<Void> likesIdea(
+        @PathVariable(name = "idea_id") Long ideaId,
+        @RequestParam(name = "member_id") Long memberId) {
+        Long id = ideaService.likesIdea(ideaId, memberId);
+
+        return ResponseEntity.created(URI.create("/ideas/" + id))
+            .build();
     }
 }

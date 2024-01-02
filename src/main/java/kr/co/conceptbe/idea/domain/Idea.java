@@ -68,7 +68,7 @@ public class Idea extends BaseTimeEntity {
     @OneToMany(mappedBy = "idea")
     private final List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "idea")
+    @OneToMany(mappedBy = "idea", orphanRemoval = true)
     private final List<IdeaLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "idea")
@@ -148,5 +148,7 @@ public class Idea extends BaseTimeEntity {
     }
 
     public void addBookmark(Bookmark bookmark) { this.bookmarks.add(bookmark); }
+
+    public void addIdeaLikes(IdeaLike ideaLike) { this.likes.add(ideaLike); }
 
 }
