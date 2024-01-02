@@ -1,4 +1,4 @@
-package kr.co.conceptbe.common.entity;
+package kr.co.conceptbe.common.entity.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,8 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamRecruitment {
 
     @Id
@@ -27,8 +27,7 @@ public class TeamRecruitment {
     @JoinColumn(name = "team_recruitment_category_id")
     private TeamRecruitmentCategory teamRecruitmentCategory;
 
-    public TeamRecruitment(Long id, String name, TeamRecruitmentCategory teamRecruitmentCategory) {
-        this.id = id;
+    public TeamRecruitment(String name, TeamRecruitmentCategory teamRecruitmentCategory) {
         this.name = name;
         this.teamRecruitmentCategory = teamRecruitmentCategory;
     }

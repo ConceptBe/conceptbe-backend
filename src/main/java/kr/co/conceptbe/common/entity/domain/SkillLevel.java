@@ -1,4 +1,4 @@
-package kr.co.conceptbe.common.entity;
+package kr.co.conceptbe.common.entity.domain;
 
 import lombok.Getter;
 

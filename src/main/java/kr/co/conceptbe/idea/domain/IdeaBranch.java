@@ -1,4 +1,6 @@
-package kr.co.conceptbe.idea;
+package kr.co.conceptbe.idea.domain;
+
+import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -6,15 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import kr.co.conceptbe.common.entity.TeamRecruitment;
-import lombok.AccessLevel;
+import kr.co.conceptbe.common.entity.domain.Branch;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class IdeaTeamRecruitment {
+@NoArgsConstructor(access = PROTECTED)
+public class IdeaBranch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +26,16 @@ public class IdeaTeamRecruitment {
     private Idea idea;
 
     @ManyToOne
-    @JoinColumn(name = "team_recruitment")
-    private TeamRecruitment teamRecruitment;
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
 
-    public IdeaTeamRecruitment(Long id, Idea idea, TeamRecruitment teamRecruitment) {
-        this.id = id;
+    private IdeaBranch(Idea idea, Branch branch) {
         this.idea = idea;
-        this.teamRecruitment = teamRecruitment;
+        this.branch = branch;
+    }
+
+    public static IdeaBranch of(Idea idea, Branch branch) {
+        return new IdeaBranch(idea, branch);
     }
 
 }
