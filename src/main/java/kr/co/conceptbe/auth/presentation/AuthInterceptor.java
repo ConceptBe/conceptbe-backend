@@ -23,7 +23,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         HttpServletResponse response,
         Object handler
     ) {
-        if (CorsUtils.isCorsRequest(request) || hasNotAuthorization(request)) {
+        if (CorsUtils.isPreFlightRequest(request) || hasNotAuthorization(request)) {
             return true;
         }
         String accessToken = BearerTokenExtractor.extract(request);
