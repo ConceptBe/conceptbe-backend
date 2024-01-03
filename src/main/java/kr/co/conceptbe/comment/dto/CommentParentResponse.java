@@ -11,7 +11,7 @@ public record CommentParentResponse (
 	Integer likesCount,
 	Integer commentCount
 ) {
-	public static CommentParentResponse of(Comment comment) {
+	public static CommentParentResponse from(Comment comment) {
 		return new CommentParentResponse(
 			comment.getCreator().getNickname(),
 			comment.getCreator().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList(),

@@ -3,7 +3,8 @@ package kr.co.conceptbe.idea.presentation;
 import java.net.URI;
 import java.util.List;
 
-import kr.co.conceptbe.idea.IdeaLikeID;
+import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
+import kr.co.conceptbe.common.auth.Auth;
 import kr.co.conceptbe.idea.application.IdeaService;
 import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.presentation.dto.request.IdeaRequest;
@@ -12,12 +13,12 @@ import kr.co.conceptbe.idea.presentation.dto.response.IdeaResponse;
 import kr.co.conceptbe.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -55,17 +56,26 @@ public class IdeaController {
     }
 
     @GetMapping("/{idea_id}")
-    public ResponseEntity<IdeaDetailResponse> getDetailIdeaResponse(@PathVariable(name = "idea_id") Long ideaId) {
+    public ResponseEntity<IdeaDetailResponse> getDetailIdeaResponse(
+        @PathVariable(name = "idea_id") Long ideaId) {
         IdeaDetailResponse ideaDetailResponse = ideaService.getDetailIdeaResponse(ideaId);
         return ResponseEntity.ok(ideaDetailResponse);
     }
 
-    @PostMapping("/{idea_id}")
+    @PostMapping("/likes/{idea_id}")
     public ResponseEntity<Void> likesIdea(
-        @PathVariable(name = "idea_id") Long ideaId,
-        @RequestParam(name = "member_id") Long memberId) {
-        Long id = ideaService.likesIdea(ideaId, memberId);
+        @Auth AuthCredentials authCredentials,
+        @PathVariable(name = "idea_id") Long ideaId) {
+        Long id = ideaService.likesIdea(authCredentials.id(), ideaId);
         return ResponseEntity.created(URI.create("/ideas/" + id))
             .build();
+    }
+
+    @DeleteMapping("/likes/{idea_id}")
+    public ResponseEntity<Void> likesCancelIdea(
+        @Auth AuthCredentials authCredentials,
+        @PathVariable(name = "idea_id") Long ideaId) {
+        ideaService.likesCancelIdea(authCredentials.id(), ideaId);
+        return ResponseEntity.noContent().build();
     }
 }

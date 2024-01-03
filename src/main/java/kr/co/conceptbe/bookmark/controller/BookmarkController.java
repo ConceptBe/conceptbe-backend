@@ -3,14 +3,15 @@ package kr.co.conceptbe.bookmark.controller;
 import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.conceptbe.bookmark.BookmarkID;
+import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.service.BookmarkService;
+import kr.co.conceptbe.common.auth.Auth;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -22,11 +23,18 @@ public class BookmarkController {
 
 	@PostMapping("/{idea_id}")
 	public ResponseEntity<Void> addBookmark(
-		@PathVariable(name = "idea_id") Long ideaId,
-		@RequestParam(name = "member_id") Long memberId) {
-		BookmarkID bookmarkID = bookmarkService.addBookmark(ideaId, memberId);
-
-		return ResponseEntity.created(URI.create("/ideas/" + bookmarkID.getIdeaId()))
+		@Auth AuthCredentials authCredentials,
+		@PathVariable(name = "idea_id") Long ideaId) {
+		Long id = bookmarkService.addBookmark(authCredentials.id(), ideaId);
+		return ResponseEntity.created(URI.create("/ideas/" + id))
 				.build();
+	}
+
+	@DeleteMapping("/{idea_id}")
+	public ResponseEntity<Void> cancelBookmark(
+		@Auth AuthCredentials authCredentials,
+		@PathVariable(name = "idea_id") Long ideaId) {
+		bookmarkService.cancelBookmark(authCredentials.id(), ideaId);
+		return ResponseEntity.noContent().build();
 	}
 }

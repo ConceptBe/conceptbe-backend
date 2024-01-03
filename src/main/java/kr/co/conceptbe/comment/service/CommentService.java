@@ -1,5 +1,7 @@
 package kr.co.conceptbe.comment.service;
 
+import static kr.co.conceptbe.member.Member.*;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -36,40 +38,38 @@ public class CommentService {
 			.toList();
 	}
 
-	public Long createComment(CommentCreateRequest commentCreateRequest) {
+	public Long createComment(Long tokenMemberId, CommentCreateRequest commentCreateRequest) {
 		Idea idea = ideaRepository.getById(commentCreateRequest.ideaId());
-		Member member = memberRepository.getById(commentCreateRequest.userId());
+		Member member = memberRepository.getById(tokenMemberId);
 
 		Comment comment;
-		if(commentCreateRequest.parentId() != null) {
+		if(isParentComment(commentCreateRequest.parentId())) {
+			comment = new Comment(commentCreateRequest.content(), null, member, idea);
+			commentRepository.save(comment);
+		} else {
 			Comment parentComment = commentRepository.getById(commentCreateRequest.parentId());
-			comment = new Comment(commentCreateRequest.content(), parentComment,
-				member, idea, new ArrayList<>(), new ArrayList<>());
+			comment = new Comment(commentCreateRequest.content(), parentComment, member, idea);
 			commentRepository.save(comment);
 			parentComment.addComment(comment);
-		} else {
-			comment = new Comment(commentCreateRequest.content(), null,
-				member, idea, new ArrayList<>(), new ArrayList<>());
-			commentRepository.save(comment);
 		}
 
 		return comment.getId();
 	}
 
-	public Long updateComment(Long commentId, CommentUpdateRequest request) {
-		// TODO
-		// 댓글 주인이 userId 인지 확인하는 로직 추가 예정
-		Comment comment = commentRepository.getById(commentId);
-		comment.updateContent(request.content());
+	private boolean isParentComment(Long parentId) {
+		return parentId == null || parentId == 0;
+	}
 
+	public Long updateComment(Long tokenMemberId, Long commentId, CommentUpdateRequest request) {
+		Comment comment = commentRepository.getById(commentId);
+		validateMember(tokenMemberId, comment.getCreator().getId());
+		comment.updateContent(request.content());
 		return comment.getId();
 	}
 
-	public void deleteComment(Long commentId) {
-		// TODO
-		// 댓글 주인이 userId 인지 확인하는 로직 추가 예정
-		// 댓글에 삭제 판단 하기 추가?
+	public void deleteComment(Long tokenMemberId, Long commentId) {
 		Comment comment = commentRepository.getById(commentId);
+		validateMember(tokenMemberId, comment.getCreator().getId());
 		comment.updateContent("삭제된 댓글입니다.");
 	}
 

@@ -1,10 +1,15 @@
 package kr.co.conceptbe.bookmark.service;
 
+import static kr.co.conceptbe.member.Member.*;
+
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.bookmark.BookmarkID;
 import kr.co.conceptbe.bookmark.repository.BookmarkRepository;
+import kr.co.conceptbe.bookmark.exception.BookmarkException;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.member.Member;
@@ -19,16 +24,27 @@ public class BookmarkService {
 	private final MemberRepository memberRepository;
 	private final BookmarkRepository bookmarkRepository;
 
-	public BookmarkID addBookmark(Long ideaId, Long memberId) {
-		// TODO
-		// Token 통해서 유저 id 가져올 시 수정될 예정
-		Member member = memberRepository.getById(memberId);
+	public Long addBookmark(Long tokenMemberId, Long ideaId) {
 		Idea idea = ideaRepository.getById(ideaId);
-		Bookmark bookmark = new Bookmark(member, idea);
+		validateMember(tokenMemberId, idea.getCreator().getId());
+		Member member = memberRepository.getById(tokenMemberId);
 
-		bookmarkRepository.save(bookmark);
-		idea.addBookmark(bookmark);
+		BookmarkID bookmarkID = new BookmarkID(tokenMemberId, ideaId);
+		Optional<Bookmark> optionalBookmark = bookmarkRepository.findById(bookmarkID);
 
-		return bookmark.getBookmarkID();
+		if(optionalBookmark.isEmpty()) {
+			Bookmark bookmark = new Bookmark(bookmarkID, member, idea);
+			bookmarkRepository.save(bookmark);
+			idea.addBookmark(bookmark);
+		} else {
+			throw new BookmarkException();
+		}
+		return idea.getId();
+	}
+
+	public void cancelBookmark(Long tokenMemberId, Long ideaId) {
+		BookmarkID bookmarkID = new BookmarkID(tokenMemberId, ideaId);
+		bookmarkRepository.getById(bookmarkID);
+		bookmarkRepository.deleteById(bookmarkID);
 	}
 }

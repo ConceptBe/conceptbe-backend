@@ -8,4 +8,8 @@ import kr.co.conceptbe.bookmark.BookmarkID;
 
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, BookmarkID> {
+	default Bookmark getById(BookmarkID bookmarkID) {
+		return findById(bookmarkID).orElseThrow(
+			() -> new IllegalArgumentException("Not Found ID : " + bookmarkID));
+	}
 }

@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.comment.dto.CommentCreateRequest;
 import kr.co.conceptbe.comment.dto.CommentResponse;
 import kr.co.conceptbe.comment.dto.CommentUpdateRequest;
 import kr.co.conceptbe.comment.service.CommentService;
+import kr.co.conceptbe.common.auth.Auth;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,24 +36,29 @@ public class CommentController {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<Void> createComment(@RequestBody CommentCreateRequest request) {
-		Long savedId = commentService.createComment(request);
+	public ResponseEntity<Void> createComment(
+		@Auth AuthCredentials authCredentials,
+		@RequestBody CommentCreateRequest request) {
+		Long savedId = commentService.createComment(authCredentials.id(), request);
 		return ResponseEntity.created(URI.create("/comments/" + savedId))
 			.build();
 	}
 
 	@PatchMapping("/{comment_id}")
 	public ResponseEntity<Void> updateComment(
+		@Auth AuthCredentials authCredentials,
 		@PathVariable(name = "comment_id") Long commentId,
 		@RequestBody CommentUpdateRequest request) {
-		Long savedId = commentService.updateComment(commentId, request);
+		Long savedId = commentService.updateComment(authCredentials.id(), commentId, request);
 		return ResponseEntity.created(URI.create("/comments/" + savedId))
 			.build();
 	}
 
 	@DeleteMapping("/{comment_id}")
-	public ResponseEntity<Void> deleteComment(@PathVariable(name = "comment_id") Long commentId) {
-		commentService.deleteComment(commentId);
+	public ResponseEntity<Void> deleteComment(
+		@Auth AuthCredentials authCredentials,
+		@PathVariable(name = "comment_id") Long commentId) {
+		commentService.deleteComment(authCredentials.id(), commentId);
 		return ResponseEntity.noContent().build();
 	}
 }

@@ -1,4 +1,4 @@
-package kr.co.conceptbe.idea;
+package kr.co.conceptbe.idea.domain;
 
 import java.io.Serializable;
 
@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Embeddable
 public class IdeaLikeID implements Serializable {
+
 	private Long memberId;
 	private Long ideaId;
 }

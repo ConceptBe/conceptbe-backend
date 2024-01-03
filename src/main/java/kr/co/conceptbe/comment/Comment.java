@@ -53,14 +53,13 @@ public class Comment extends BaseTimeEntity {
     @OneToMany(mappedBy = "parentComment")
     private List<Comment> comments = new ArrayList<>();
 
-    public Comment(String content, Comment parentComment, Member creator, Idea idea, List<CommentLike> likes,
-        List<Comment> comments) {
+    public Comment(String content, Comment parentComment, Member creator, Idea idea) {
         this.content = content;
         this.parentComment = parentComment;
         this.creator = creator;
         this.idea = idea;
-        this.likes = likes;
-        this.comments = comments;
+        this.likes = new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
 
     public void addComment(Comment comment) {

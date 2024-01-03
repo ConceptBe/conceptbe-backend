@@ -16,7 +16,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -35,7 +34,8 @@ public class Bookmark extends BaseTimeEntity implements Serializable {
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    public Bookmark(Member member, Idea idea) {
+    public Bookmark(BookmarkID bookmarkID, Member member, Idea idea) {
+        this.bookmarkID = bookmarkID;
         this.member = member;
         this.idea = idea;
     }

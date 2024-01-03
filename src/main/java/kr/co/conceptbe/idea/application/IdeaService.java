@@ -1,6 +1,5 @@
 package kr.co.conceptbe.idea.application;
 
-import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +10,8 @@ import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.common.entity.domain.persistence.BranchRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.TeamRecruitmentRepository;
-import kr.co.conceptbe.idea.IdeaLikeID;
+import kr.co.conceptbe.idea.exception.IdeaLikeException;
+import kr.co.conceptbe.idea.domain.IdeaLikeID;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
 import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
@@ -24,7 +24,6 @@ import kr.co.conceptbe.member.Member;
 import kr.co.conceptbe.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,27 +84,33 @@ public class IdeaService {
         Idea idea = ideaRepository.getById(ideaId);
         List<CommentParentResponse> commentParentResponses = idea.getComments()
             .stream()
-            .map(CommentParentResponse::of)
+            .map(CommentParentResponse::from)
             .toList();
 
         return IdeaDetailResponse.of(idea, commentParentResponses);
     }
 
-    public Long likesIdea(Long ideaId, Long memberId) {
+    public Long likesIdea(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        // TODO
-        // Token 통해서 유저 id 가져올 시 수정될 예정
-        Member member = memberRepository.getById(memberId);
+        Member member = memberRepository.getById(tokenMemberId);
 
-        IdeaLikeID ideaLikeID = new IdeaLikeID(memberId, ideaId);
+        IdeaLikeID ideaLikeID = new IdeaLikeID(tokenMemberId, ideaId);
         Optional<IdeaLike> optionalIdeaLike = ideaLikesRepository.findById(ideaLikeID);
-        if(optionalIdeaLike.isPresent()) {
-            ideaLikesRepository.deleteById(ideaLikeID);
-        } else {
+
+        if (optionalIdeaLike.isEmpty()) {
             IdeaLike ideaLike = new IdeaLike(ideaLikeID, member, idea);
             ideaLikesRepository.save(ideaLike);
             idea.addIdeaLikes(ideaLike);
+        } else {
+            throw new IdeaLikeException();
         }
+
         return idea.getId();
+    }
+
+    public void likesCancelIdea(Long tokenMemberId, Long ideaId) {
+        IdeaLikeID ideaLikeID = new IdeaLikeID(tokenMemberId, ideaId);
+        ideaLikesRepository.getById(ideaLikeID);
+        ideaLikesRepository.deleteById(ideaLikeID);
     }
 }

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Embeddable
 public class BookmarkID implements Serializable {
+
 	private Long memberId;
 	private Long ideaId;
 }
