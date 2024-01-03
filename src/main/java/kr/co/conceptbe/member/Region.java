@@ -2,7 +2,9 @@ package kr.co.conceptbe.member;
 
 import java.util.Arrays;
 import kr.co.conceptbe.member.exception.NotFoundRegionException;
+import lombok.Getter;
 
+@Getter
 public enum Region {
     SEOUL("서울특별시"),
     BUSAN("부산광역시"),

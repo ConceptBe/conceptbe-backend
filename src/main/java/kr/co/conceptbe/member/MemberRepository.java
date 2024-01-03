@@ -1,6 +1,7 @@
 package kr.co.conceptbe.member;
 
 import java.util.Optional;
+import kr.co.conceptbe.member.exception.NotFoundMemberException;
 import kr.co.conceptbe.member.exception.NotFoundOauthMemberException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -17,6 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     default Member getById(Long memberId) {
         return findById(memberId).orElseThrow(
-            () -> new IllegalArgumentException("Not Found ID : " + memberId));
+            () -> new NotFoundMemberException(memberId));
     }
 }

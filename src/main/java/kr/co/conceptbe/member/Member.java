@@ -73,7 +73,6 @@ public class Member extends BaseTimeEntity {
     private Region livingPlace;
 
     @ManyToOne
-    @Column(nullable = false)
     @JoinColumn(name = "main_skill_id")
     private SkillCategory mainSkill;
 

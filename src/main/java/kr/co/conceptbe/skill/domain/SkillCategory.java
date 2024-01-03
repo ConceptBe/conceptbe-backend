@@ -29,4 +29,13 @@ public class SkillCategory {
 
     @Column(nullable = false)
     private String name;
+
+    public SkillCategory(SkillCategory parentSkillCategory, String name) {
+        this.parentSkillCategory = parentSkillCategory;
+        this.name = name;
+    }
+
+    public SkillCategory(String name) {
+        this.name = name;
+    }
 }
