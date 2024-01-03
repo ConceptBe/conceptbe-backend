@@ -4,6 +4,7 @@ import java.util.List;
 import kr.co.conceptbe.member.Member;
 import kr.co.conceptbe.member.OauthId;
 import kr.co.conceptbe.member.OauthServerType;
+import kr.co.conceptbe.member.Region;
 
 public record SignUpRequest(
     String nickname,
@@ -11,7 +12,7 @@ public record SignUpRequest(
     String profileImageUrl,
     List<SignUpSkillRequest> skills,
     List<Long> joinPurposes,
-    Long livingPlace,
+    String livingPlace,
     String workingPlace,
     String introduction,
     String email,
@@ -26,7 +27,8 @@ public record SignUpRequest(
             profileImageUrl,
             email,
             introduction,
-            workingPlace
+            workingPlace,
+            Region.from(livingPlace)
         );
     }
 }

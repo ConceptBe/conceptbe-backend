@@ -31,7 +31,7 @@ public enum Region {
 
     public static Region from(String inputRegion) {
         return Arrays.stream(values())
-            .filter(region -> region.name().equals(inputRegion))
+            .filter(region -> region.getName().equals(inputRegion))
             .findFirst()
             .orElseThrow(NotFoundRegionException::new);
     }

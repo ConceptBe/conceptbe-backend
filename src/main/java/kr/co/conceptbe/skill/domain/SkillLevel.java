@@ -18,9 +18,9 @@ public enum SkillLevel {
         this.name = name;
     }
 
-    public static SkillLevel from(String type) {
+    public static SkillLevel from(String inputLevel) {
         return Arrays.stream(values())
-            .filter(server -> server.name().equals(type))
+            .filter(level -> level.getName().equals(inputLevel))
             .findFirst()
             .orElseThrow(NotFoundSkillLevelException::new);
     }
