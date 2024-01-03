@@ -36,7 +36,8 @@ public class IdeaLike extends BaseTimeEntity implements Serializable {
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    public IdeaLike(Member member, Idea idea) {
+    public IdeaLike(IdeaLikeID ideaLikeID, Member member, Idea idea) {
+        this.ideaLikeID = ideaLikeID;
         this.member = member;
         this.idea = idea;
     }

@@ -1,5 +1,6 @@
 package kr.co.conceptbe.idea.application;
 
+import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import kr.co.conceptbe.member.Member;
 import kr.co.conceptbe.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,7 +91,7 @@ public class IdeaService {
         return IdeaDetailResponse.of(idea, commentParentResponses);
     }
 
-    public Long likesIdea(Long ideaId, Long memberId) {
+    public ResponseEntity<Void> likesIdea(Long ideaId, Long memberId) {
         Idea idea = ideaRepository.getById(ideaId);
         // TODO
         // Token 통해서 유저 id 가져올 시 수정될 예정
@@ -99,12 +101,13 @@ public class IdeaService {
         Optional<IdeaLike> optionalIdeaLike = ideaLikesRepository.findById(ideaLikeID);
         if(optionalIdeaLike.isPresent()) {
             ideaLikesRepository.deleteById(ideaLikeID);
+            return ResponseEntity.noContent().build();
         } else {
-            IdeaLike ideaLike = new IdeaLike(member, idea);
+            IdeaLike ideaLike = new IdeaLike(ideaLikeID, member, idea);
             ideaLikesRepository.save(ideaLike);
             idea.addIdeaLikes(ideaLike);
+            return ResponseEntity.created(URI.create("/ideas/" + idea.getId()))
+                .build();
         }
-
-        return idea.getId();
     }
 }
