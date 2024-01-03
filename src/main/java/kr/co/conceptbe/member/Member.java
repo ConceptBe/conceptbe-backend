@@ -1,5 +1,7 @@
 package kr.co.conceptbe.member;
 
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
 import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Column;
@@ -8,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -18,6 +22,7 @@ import kr.co.conceptbe.auth.exception.TokenInvalidException;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.domain.Idea;
+import kr.co.conceptbe.skill.domain.SkillCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -64,13 +69,18 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = true)
     private String livingPlace;
 
+    @ManyToOne
+    @Column(nullable = false)
+    @JoinColumn(name = "main_skill_id")
+    private SkillCategory mainSkill;
+
     @OneToMany(mappedBy = "creator")
     private final List<Idea> createdIdea = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",  cascade = {PERSIST, REMOVE})
     private final List<MemberSkillCategory> skills = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
@@ -100,5 +110,13 @@ public class Member extends BaseTimeEntity {
             return;
         }
         throw new TokenInvalidException();
+    }
+
+    public void updateMainSkill(SkillCategory mainSkill) {
+        this.mainSkill = mainSkill;
+    }
+
+    public void addSkill(MemberSkillCategory memberSkill) {
+        this.skills.add(memberSkill);
     }
 }
