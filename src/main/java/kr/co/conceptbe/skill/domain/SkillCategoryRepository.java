@@ -1,7 +1,9 @@
 package kr.co.conceptbe.skill.domain;
 
+import java.util.List;
 import kr.co.conceptbe.skill.exception.NotFoundSkillCategoryException;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface SkillCategoryRepository extends JpaRepository<SkillCategory, Long> {
 
@@ -10,4 +12,7 @@ public interface SkillCategoryRepository extends JpaRepository<SkillCategory, Lo
             () -> new NotFoundSkillCategoryException(id)
         );
     }
+
+    @Query("select s from SkillCategory s where s.id = s.parentSkillCategory.id")
+    List<SkillCategory> findMainSkills();
 }

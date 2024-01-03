@@ -38,4 +38,8 @@ public class SkillCategory {
     public SkillCategory(String name) {
         this.name = name;
     }
+
+    public void updateParentSkill(SkillCategory parentSkill) {
+        this.parentSkillCategory = parentSkill;
+    }
 }
