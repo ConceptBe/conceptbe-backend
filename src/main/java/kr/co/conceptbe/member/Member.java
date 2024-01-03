@@ -7,6 +7,8 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -67,7 +69,8 @@ public class Member extends BaseTimeEntity {
     private String workingPlace;
 
     @Column(nullable = true)
-    private String livingPlace;
+    @Enumerated(EnumType.STRING)
+    private Region livingPlace;
 
     @ManyToOne
     @Column(nullable = false)
@@ -90,12 +93,13 @@ public class Member extends BaseTimeEntity {
     private final List<MemberPurpose> purposes = new ArrayList<>();
 
     public Member(
-            OauthId oauthId,
-            String nickname,
-            String profileImageUrl,
-            String email,
-            String introduce,
-            String workingPlace
+        OauthId oauthId,
+        String nickname,
+        String profileImageUrl,
+        String email,
+        String introduce,
+        String workingPlace,
+        Region livingPlace
     ) {
         this.oauthId = oauthId;
         this.nickname = nickname;
@@ -103,6 +107,7 @@ public class Member extends BaseTimeEntity {
         this.email = email;
         this.introduce = introduce;
         this.workingPlace = workingPlace;
+        this.livingPlace = livingPlace;
     }
 
     public static void validateMember(Long tokenMemberId, Long validateId) {

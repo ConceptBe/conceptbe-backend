@@ -35,30 +35,18 @@ public class MemberService {
 
     private Member saveMember(SignUpRequest signUpRequest) {
         Member member = signUpRequest.toMember();
+        processSkill(signUpRequest, member);
+        processPurpose(signUpRequest, member);
+        return memberRepository.save(member);
+    }
+
+    private void processSkill(SignUpRequest signUpRequest, Member member) {
         SkillCategory mainSkill = skillCategoryRepository.getById(signUpRequest.mainSkillId());
         member.updateMainSkill(mainSkill);
         List<MemberSkillCategory> memberSkills = mapToMemberSkills(signUpRequest, member);
         for (MemberSkillCategory memberSkill : memberSkills) {
             member.addSkill(memberSkill);
         }
-
-        List<MemberPurpose> memberPurposes = mapToMemberPurposes(signUpRequest, member);
-        for (MemberPurpose memberPurpose : memberPurposes) {
-            member.addPurpose(memberPurpose);
-        }
-
-        //TODO 지역 추가
-        //        Long livingPlace,
-
-        return memberRepository.save(member);
-    }
-
-    private List<MemberPurpose> mapToMemberPurposes(SignUpRequest signUpRequest, Member member) {
-        return signUpRequest.joinPurposes().stream()
-            .map((joinPurposeId) -> {
-                Purpose purpose = purposeRepository.getById(joinPurposeId);
-                return new MemberPurpose(member, purpose);
-            }).toList();
     }
 
     private List<MemberSkillCategory> mapToMemberSkills(SignUpRequest signUpRequest, Member member) {
@@ -66,6 +54,21 @@ public class MemberService {
             .map((skillRequest) -> {
                 SkillCategory skill = skillCategoryRepository.getById(skillRequest.skillId());
                 return new MemberSkillCategory(member, skill, SkillLevel.from(skillRequest.level()));
+            }).toList();
+    }
+
+    private void processPurpose(SignUpRequest signUpRequest, Member member) {
+        List<MemberPurpose> memberPurposes = mapToMemberPurposes(signUpRequest, member);
+        for (MemberPurpose memberPurpose : memberPurposes) {
+            member.addPurpose(memberPurpose);
+        }
+    }
+
+    private List<MemberPurpose> mapToMemberPurposes(SignUpRequest signUpRequest, Member member) {
+        return signUpRequest.joinPurposes().stream()
+            .map((joinPurposeId) -> {
+                Purpose purpose = purposeRepository.getById(joinPurposeId);
+                return new MemberPurpose(member, purpose);
             }).toList();
     }
 }
