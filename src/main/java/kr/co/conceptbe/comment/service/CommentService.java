@@ -2,7 +2,6 @@ package kr.co.conceptbe.comment.service;
 
 import static kr.co.conceptbe.member.Member.*;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -11,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.comment.dto.CommentCreateRequest;
-import kr.co.conceptbe.comment.dto.CommentResponse;
+import kr.co.conceptbe.comment.dto.CommentChildResponse;
 import kr.co.conceptbe.comment.dto.CommentUpdateRequest;
 import kr.co.conceptbe.comment.repository.CommentRepository;
 import kr.co.conceptbe.idea.domain.Idea;
@@ -30,11 +29,11 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 
 	@Transactional(readOnly = true)
-	public List<CommentResponse> getChildCommentList(Long commentId) {
+	public List<CommentChildResponse> getChildCommentList(Long commentId) {
 		return commentRepository.getById(commentId).getComments()
 			.stream()
 			.sorted(Comparator.comparing(Comment::getCreatedAt))
-			.map(CommentResponse::from)
+			.map(CommentChildResponse::from)
 			.toList();
 	}
 
@@ -46,13 +45,14 @@ public class CommentService {
 		if(isParentComment(commentCreateRequest.parentId())) {
 			comment = new Comment(commentCreateRequest.content(), null, member, idea);
 			commentRepository.save(comment);
+			comment.addParentComment(comment);
 		} else {
 			Comment parentComment = commentRepository.getById(commentCreateRequest.parentId());
 			comment = new Comment(commentCreateRequest.content(), parentComment, member, idea);
-			commentRepository.save(comment);
 			parentComment.addComment(comment);
+			commentRepository.save(comment);
 		}
-
+		idea.addComment(comment);
 		return comment.getId();
 	}
 
@@ -62,14 +62,14 @@ public class CommentService {
 
 	public Long updateComment(Long tokenMemberId, Long commentId, CommentUpdateRequest request) {
 		Comment comment = commentRepository.getById(commentId);
-		validateMember(tokenMemberId, comment.getCreator().getId());
+		Member.validateMember(tokenMemberId, comment.getCreator().getId());
 		comment.updateContent(request.content());
 		return comment.getId();
 	}
 
 	public void deleteComment(Long tokenMemberId, Long commentId) {
 		Comment comment = commentRepository.getById(commentId);
-		validateMember(tokenMemberId, comment.getCreator().getId());
+		Member.validateMember(tokenMemberId, comment.getCreator().getId());
 		comment.updateContent("삭제된 댓글입니다.");
 	}
 

@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import kr.co.conceptbe.bookmark.Bookmark;
-import kr.co.conceptbe.comment.dto.CommentParentResponse;
+import kr.co.conceptbe.comment.repository.CommentRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.BranchRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.common.entity.domain.persistence.TeamRecruitmentRepository;
@@ -82,12 +82,7 @@ public class IdeaService {
 
     public IdeaDetailResponse getDetailIdeaResponse(Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        List<CommentParentResponse> commentParentResponses = idea.getComments()
-            .stream()
-            .map(CommentParentResponse::from)
-            .toList();
-
-        return IdeaDetailResponse.of(idea, commentParentResponses);
+        return IdeaDetailResponse.of(idea);
     }
 
     public Long likesIdea(Long tokenMemberId, Long ideaId) {

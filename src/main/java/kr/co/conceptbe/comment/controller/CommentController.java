@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.comment.dto.CommentCreateRequest;
-import kr.co.conceptbe.comment.dto.CommentResponse;
+import kr.co.conceptbe.comment.dto.CommentChildResponse;
 import kr.co.conceptbe.comment.dto.CommentUpdateRequest;
 import kr.co.conceptbe.comment.service.CommentService;
 import kr.co.conceptbe.common.auth.Auth;
@@ -29,10 +29,10 @@ public class CommentController {
 	private final CommentService commentService;
 
 	@GetMapping("/{comment_id}")
-	public ResponseEntity<List<CommentResponse>> getChildCommentList(
+	public ResponseEntity<List<CommentChildResponse>> getChildCommentList(
 		@PathVariable(name = "comment_id") Long commentId) {
-		List<CommentResponse> commentResponses = commentService.getChildCommentList(commentId);
-		return ResponseEntity.ok(commentResponses);
+		List<CommentChildResponse> commentChildRespons = commentService.getChildCommentList(commentId);
+		return ResponseEntity.ok(commentChildRespons);
 	}
 
 	@PostMapping("")

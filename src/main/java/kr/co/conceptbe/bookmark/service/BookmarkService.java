@@ -1,7 +1,5 @@
 package kr.co.conceptbe.bookmark.service;
 
-import static kr.co.conceptbe.member.Member.*;
-
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -26,7 +24,7 @@ public class BookmarkService {
 
 	public Long addBookmark(Long tokenMemberId, Long ideaId) {
 		Idea idea = ideaRepository.getById(ideaId);
-		validateMember(tokenMemberId, idea.getCreator().getId());
+		Member.validateMember(tokenMemberId, idea.getCreator().getId());
 		Member member = memberRepository.getById(tokenMemberId);
 
 		BookmarkID bookmarkID = new BookmarkID(tokenMemberId, ideaId);

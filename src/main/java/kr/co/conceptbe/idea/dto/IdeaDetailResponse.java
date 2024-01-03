@@ -2,7 +2,9 @@ package kr.co.conceptbe.idea.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.domain.Idea;
 
@@ -22,9 +24,9 @@ public record IdeaDetailResponse (
 	Integer commentsCount,
 	Integer bookmarksCount,
 	Integer hits,
-	List<CommentParentResponse> commentParentResponseList
+	List<CommentParentResponse> commentParentResponses
 ) {
-	public static IdeaDetailResponse of(Idea idea, List<CommentParentResponse> commentParentResponses) {
+	public static IdeaDetailResponse of(Idea idea) {
 		return new IdeaDetailResponse(
 			idea.getCreator().getProfileImageUrl(),
 			idea.getCreator().getNickname(),
@@ -41,7 +43,11 @@ public record IdeaDetailResponse (
 			idea.getCommentsCount(),
 			idea.getBookmarksCount(),
 			idea.getHitsCount(),
-			commentParentResponses
+			idea.getComments()
+			    .stream()
+			    .filter(e->e.getParentComment() == null)
+			    .map(CommentParentResponse::from)
+			    .collect(Collectors.toList())
 		);
 	}
 }
