@@ -86,7 +86,7 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private final List<MemberBranch> branches = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {PERSIST, REMOVE})
     private final List<MemberPurpose> purposes = new ArrayList<>();
 
     public Member(
@@ -118,5 +118,9 @@ public class Member extends BaseTimeEntity {
 
     public void addSkill(MemberSkillCategory memberSkill) {
         this.skills.add(memberSkill);
+    }
+
+    public void addPurpose(MemberPurpose memberPurpose) {
+        this.purposes.add(memberPurpose);
     }
 }

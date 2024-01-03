@@ -8,13 +8,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import kr.co.conceptbe.common.entity.domain.Purpose;
+import kr.co.conceptbe.purpose.domain.Purpose;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@NoArgsConstructor(access = PROTECTED)
 @Getter
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class MemberPurpose {
 
     @Id
@@ -29,8 +31,7 @@ public class MemberPurpose {
     @JoinColumn(name = "purpose_id")
     private Purpose purpose;
 
-    public MemberPurpose(Long id, Member member, Purpose purpose) {
-        this.id = id;
+    public MemberPurpose(Member member, Purpose purpose) {
         this.member = member;
         this.purpose = purpose;
     }
