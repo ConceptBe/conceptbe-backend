@@ -1,4 +1,4 @@
-package kr.co.conceptbe.common.entity.domain;
+package kr.co.conceptbe.skill.domain;
 
 import lombok.Getter;
 
@@ -15,5 +15,4 @@ public enum SkillLevel {
     SkillLevel(String name) {
         this.name = name;
     }
-
 }

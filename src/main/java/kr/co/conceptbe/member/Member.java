@@ -85,8 +85,7 @@ public class Member extends BaseTimeEntity {
             String profileImageUrl,
             String email,
             String introduce,
-            String workingPlace,
-            String livingPlace
+            String workingPlace
     ) {
         this.oauthId = oauthId;
         this.nickname = nickname;
@@ -94,7 +93,6 @@ public class Member extends BaseTimeEntity {
         this.email = email;
         this.introduce = introduce;
         this.workingPlace = workingPlace;
-        this.livingPlace = livingPlace;
     }
 
     public static void validateMember(Long tokenMemberId, Long validateId) {

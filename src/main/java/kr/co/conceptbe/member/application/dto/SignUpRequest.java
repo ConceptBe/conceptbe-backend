@@ -5,14 +5,13 @@ import kr.co.conceptbe.member.Member;
 import kr.co.conceptbe.member.OauthId;
 import kr.co.conceptbe.member.OauthServerType;
 
-
 public record SignUpRequest(
     String nickname,
-    String mainSkill,
+    Long mainSkillId,
     String profileImageUrl,
-    List<String> skills,
-    List<String> joinPurpose,
-    String livingPlace,
+    List<SignUpSkillRequest> skills,
+    List<Long> joinPurposes,
+    Long livingPlace,
     String workingPlace,
     String introduction,
     String email,
@@ -27,8 +26,7 @@ public record SignUpRequest(
             profileImageUrl,
             email,
             introduction,
-            workingPlace,
-            livingPlace
+            workingPlace
         );
     }
 }
