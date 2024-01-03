@@ -32,7 +32,7 @@ public class CommentService {
 		return commentRepository.getById(commentId).getComments()
 			.stream()
 			.sorted(Comparator.comparing(Comment::getCreatedAt))
-			.map(CommentResponse::of)
+			.map(CommentResponse::from)
 			.toList();
 	}
 
@@ -59,8 +59,7 @@ public class CommentService {
 	public Long updateComment(Long commentId, CommentUpdateRequest request) {
 		// TODO
 		// 댓글 주인이 userId 인지 확인하는 로직 추가 예정
-		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new IllegalArgumentException("Not Found ID : " + commentId));
+		Comment comment = commentRepository.getById(commentId);
 		comment.updateContent(request.content());
 
 		return comment.getId();
@@ -70,8 +69,7 @@ public class CommentService {
 		// TODO
 		// 댓글 주인이 userId 인지 확인하는 로직 추가 예정
 		// 댓글에 삭제 판단 하기 추가?
-		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new IllegalArgumentException("Not Found ID : " + commentId));
+		Comment comment = commentRepository.getById(commentId);
 		comment.updateContent("삭제된 댓글입니다.");
 	}
 

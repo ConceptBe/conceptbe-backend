@@ -29,8 +29,8 @@ public class CommentController {
 	@GetMapping("/{comment_id}")
 	public ResponseEntity<List<CommentResponse>> getChildCommentList(
 		@PathVariable(name = "comment_id") Long commentId) {
-		List<CommentResponse> commentResponseList = commentService.getChildCommentList(commentId);
-		return ResponseEntity.ok(commentResponseList);
+		List<CommentResponse> commentResponses = commentService.getChildCommentList(commentId);
+		return ResponseEntity.ok(commentResponses);
 	}
 
 	@PostMapping("")
