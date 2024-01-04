@@ -13,6 +13,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.List;
+
+import kr.co.conceptbe.auth.exception.TokenInvalidException;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.domain.Idea;
@@ -93,5 +95,12 @@ public class Member extends BaseTimeEntity {
         this.introduce = introduce;
         this.workingPlace = workingPlace;
         this.livingPlace = livingPlace;
+    }
+
+    public static void validateMember(Long tokenMemberId, Long validateId) {
+        if(tokenMemberId.equals(validateId)) {
+            return;
+        }
+        throw new TokenInvalidException();
     }
 }

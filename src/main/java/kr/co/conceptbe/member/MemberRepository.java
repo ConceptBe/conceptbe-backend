@@ -14,4 +14,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
         return findByOauthId(oauthId).orElseThrow(
             () -> new NotFoundOauthMemberException(oauthId.getOauthServerId()));
     }
+
+    default Member getById(Long memberId) {
+        return findById(memberId).orElseThrow(
+            () -> new IllegalArgumentException("Not Found ID : " + memberId));
+    }
 }
