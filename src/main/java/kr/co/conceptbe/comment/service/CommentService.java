@@ -1,7 +1,5 @@
 package kr.co.conceptbe.comment.service;
 
-import static kr.co.conceptbe.member.Member.*;
-
 import java.util.Comparator;
 import java.util.List;
 
@@ -45,7 +43,6 @@ public class CommentService {
 		if(isParentComment(commentCreateRequest.parentId())) {
 			comment = new Comment(commentCreateRequest.content(), null, member, idea);
 			commentRepository.save(comment);
-			comment.addParentComment(comment);
 		} else {
 			Comment parentComment = commentRepository.getById(commentCreateRequest.parentId());
 			comment = new Comment(commentCreateRequest.content(), parentComment, member, idea);
