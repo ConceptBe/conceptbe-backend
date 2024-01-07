@@ -16,6 +16,5 @@ public interface SkillCategoryRepository extends JpaRepository<SkillCategory, Lo
     @Query("select s from SkillCategory s where s.id = s.parentSkillCategory.id")
     List<SkillCategory> findMainSkills();
 
-    @Query("select s from SkillCategory s where s.id != :parentSkillId and s.parentSkillCategory.id = :parentSkillId")
-    List<SkillCategory> findDetailSkills(Long parentSkillId);
+    List<SkillCategory> findByIdNotAndParentSkillCategoryId(Long id, Long parentSkillId);
 }

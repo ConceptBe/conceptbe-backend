@@ -20,7 +20,7 @@ public class SkillService {
     }
 
     public List<FindDetailSkillResponse> getDetailSkills(Long parentSkillId) {
-        return skillCategoryRepository.findDetailSkills(parentSkillId).stream()
+        return skillCategoryRepository.findByIdNotAndParentSkillCategoryId(parentSkillId, parentSkillId).stream()
             .map(skill -> new FindDetailSkillResponse(skill.getId(), skill.getName()))
             .toList();
     }
