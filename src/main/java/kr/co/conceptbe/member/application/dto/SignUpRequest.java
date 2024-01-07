@@ -4,14 +4,14 @@ import java.util.List;
 import kr.co.conceptbe.member.Member;
 import kr.co.conceptbe.member.OauthId;
 import kr.co.conceptbe.member.OauthServerType;
-
+import kr.co.conceptbe.member.Region;
 
 public record SignUpRequest(
     String nickname,
-    String mainSkill,
+    Long mainSkillId,
     String profileImageUrl,
-    List<String> skills,
-    List<String> joinPurpose,
+    List<SignUpSkillRequest> skills,
+    List<Long> joinPurposes,
     String livingPlace,
     String workingPlace,
     String introduction,
@@ -28,7 +28,7 @@ public record SignUpRequest(
             email,
             introduction,
             workingPlace,
-            livingPlace
+            Region.from(livingPlace)
         );
     }
 }

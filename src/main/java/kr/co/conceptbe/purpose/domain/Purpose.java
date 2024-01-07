@@ -1,4 +1,4 @@
-package kr.co.conceptbe.common.entity.domain;
+package kr.co.conceptbe.purpose.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 

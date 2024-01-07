@@ -1,13 +1,19 @@
 package kr.co.conceptbe.member;
 
+import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
 import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -18,6 +24,7 @@ import kr.co.conceptbe.auth.exception.TokenInvalidException;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.domain.Idea;
+import kr.co.conceptbe.skill.domain.SkillCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -62,7 +69,12 @@ public class Member extends BaseTimeEntity {
     private String workingPlace;
 
     @Column(nullable = true)
-    private String livingPlace;
+    @Enumerated(EnumType.STRING)
+    private Region livingPlace;
+
+    @ManyToOne
+    @JoinColumn(name = "main_skill_id")
+    private SkillCategory mainSkill;
 
     @OneToMany(mappedBy = "creator")
     private final List<Idea> createdIdea = new ArrayList<>();
@@ -70,23 +82,23 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",  cascade = {PERSIST, REMOVE})
     private final List<MemberSkillCategory> skills = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private final List<MemberBranch> branches = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {PERSIST, REMOVE})
     private final List<MemberPurpose> purposes = new ArrayList<>();
 
     public Member(
-            OauthId oauthId,
-            String nickname,
-            String profileImageUrl,
-            String email,
-            String introduce,
-            String workingPlace,
-            String livingPlace
+        OauthId oauthId,
+        String nickname,
+        String profileImageUrl,
+        String email,
+        String introduce,
+        String workingPlace,
+        Region livingPlace
     ) {
         this.oauthId = oauthId;
         this.nickname = nickname;
@@ -102,5 +114,17 @@ public class Member extends BaseTimeEntity {
             return;
         }
         throw new TokenInvalidException();
+    }
+
+    public void updateMainSkill(SkillCategory mainSkill) {
+        this.mainSkill = mainSkill;
+    }
+
+    public void addSkill(MemberSkillCategory memberSkill) {
+        this.skills.add(memberSkill);
+    }
+
+    public void addPurpose(MemberPurpose memberPurpose) {
+        this.purposes.add(memberPurpose);
     }
 }

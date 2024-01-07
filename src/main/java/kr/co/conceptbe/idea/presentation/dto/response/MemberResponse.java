@@ -1,7 +1,7 @@
 package kr.co.conceptbe.idea.presentation.dto.response;
 
 import java.util.List;
-import kr.co.conceptbe.common.entity.domain.SkillCategory;
+import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.member.Member;
 import kr.co.conceptbe.member.MemberSkillCategory;
 
