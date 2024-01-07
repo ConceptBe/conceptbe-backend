@@ -51,7 +51,7 @@ public class MemberService {
 
     private List<MemberSkillCategory> mapToMemberSkills(SignUpRequest signUpRequest, Member member) {
         return signUpRequest.skills().stream()
-            .map((skillRequest) -> {
+            .map(skillRequest -> {
                 SkillCategory skill = skillCategoryRepository.getById(skillRequest.skillId());
                 return new MemberSkillCategory(member, skill, SkillLevel.from(skillRequest.level()));
             }).toList();
@@ -66,7 +66,7 @@ public class MemberService {
 
     private List<MemberPurpose> mapToMemberPurposes(SignUpRequest signUpRequest, Member member) {
         return signUpRequest.joinPurposes().stream()
-            .map((joinPurposeId) -> {
+            .map(joinPurposeId -> {
                 Purpose purpose = purposeRepository.getById(joinPurposeId);
                 return new MemberPurpose(member, purpose);
             }).toList();
