@@ -1,11 +1,14 @@
 package kr.co.conceptbe.common.exception;
 
-import static java.util.stream.Collectors.joining;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,10 +40,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatusCode status,
         WebRequest request
     ) {
-        String errorMessage = ex.getBindingResult().getAllErrors().stream()
-                .map(ObjectError::getDefaultMessage)
-                .collect(joining("; "));
-        return ResponseEntity.status(status)
-            .body(new ErrorResponse(status.value(), errorMessage));
+        Map<String, String> errors = createNotValidExceptionResponse(ex);
+        return ResponseEntity.status(status).body(errors);
+    }
+
+    private static Map<String, String> createNotValidExceptionResponse(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
+        for (ObjectError error : allErrors) {
+            errors.put(((FieldError) error).getField(), error.getDefaultMessage());
+        }
+        return errors;
     }
 }

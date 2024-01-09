@@ -9,6 +9,7 @@ import kr.co.conceptbe.member.MemberPurpose;
 import kr.co.conceptbe.member.MemberRepository;
 import kr.co.conceptbe.member.MemberSkillCategory;
 import kr.co.conceptbe.member.application.dto.SignUpRequest;
+import kr.co.conceptbe.member.exception.AlreadyExistsNicknameException;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
@@ -35,6 +36,7 @@ public class MemberService {
 
     private Member saveMember(SignUpRequest signUpRequest) {
         Member member = signUpRequest.toMember();
+        validateDuplicatedNickName(member.getNickname());
         processSkill(signUpRequest, member);
         processPurpose(signUpRequest, member);
         return memberRepository.save(member);
@@ -70,5 +72,11 @@ public class MemberService {
                 Purpose purpose = purposeRepository.getById(joinPurposeId);
                 return new MemberPurpose(member, purpose);
             }).toList();
+    }
+
+    public void validateDuplicatedNickName(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new AlreadyExistsNicknameException(nickname);
+        }
     }
 }
