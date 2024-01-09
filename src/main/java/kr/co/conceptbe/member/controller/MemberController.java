@@ -1,5 +1,6 @@
 package kr.co.conceptbe.member.controller;
 
+import jakarta.validation.Valid;
 import kr.co.conceptbe.auth.presentation.dto.TokenResponse;
 import kr.co.conceptbe.member.application.MemberService;
 import kr.co.conceptbe.member.application.dto.SignUpRequest;
@@ -18,7 +19,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/sign-up")
-    ResponseEntity<TokenResponse> signUp(@RequestBody SignUpRequest signUpRequest) {
+    ResponseEntity<TokenResponse> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         TokenResponse tokenResponse = memberService.signUp(signUpRequest);
         return ResponseEntity.ok(tokenResponse);
     }
