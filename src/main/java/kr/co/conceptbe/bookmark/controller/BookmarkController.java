@@ -21,19 +21,19 @@ public class BookmarkController {
 
 	private final BookmarkService bookmarkService;
 
-	@PostMapping("/{idea_id}")
+	@PostMapping("/{ideaId}")
 	public ResponseEntity<Void> addBookmark(
 		@Auth AuthCredentials authCredentials,
-		@PathVariable(name = "idea_id") Long ideaId) {
+		@PathVariable(name = "ideaId") Long ideaId) {
 		Long id = bookmarkService.addBookmark(authCredentials.id(), ideaId);
 		return ResponseEntity.created(URI.create("/ideas/" + id))
 				.build();
 	}
 
-	@DeleteMapping("/{idea_id}")
+	@DeleteMapping("/{ideaId}")
 	public ResponseEntity<Void> cancelBookmark(
 		@Auth AuthCredentials authCredentials,
-		@PathVariable(name = "idea_id") Long ideaId) {
+		@PathVariable(name = "ideaId") Long ideaId) {
 		bookmarkService.cancelBookmark(authCredentials.id(), ideaId);
 		return ResponseEntity.noContent().build();
 	}

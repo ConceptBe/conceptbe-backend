@@ -26,7 +26,7 @@ public record IdeaDetailResponse (
 	Integer hits,
 	List<CommentParentResponse> commentParentResponses
 ) {
-	public static IdeaDetailResponse of(Idea idea) {
+	public static IdeaDetailResponse from(Idea idea) {
 		return new IdeaDetailResponse(
 			idea.getCreator().getProfileImageUrl(),
 			idea.getCreator().getNickname(),
