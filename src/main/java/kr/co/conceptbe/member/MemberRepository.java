@@ -20,4 +20,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
         return findById(memberId).orElseThrow(
             () -> new NotFoundMemberException(memberId));
     }
+
+    boolean existsByNickname(String nickname);
 }
