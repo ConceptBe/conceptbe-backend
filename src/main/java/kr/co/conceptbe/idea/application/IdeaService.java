@@ -82,7 +82,7 @@ public class IdeaService {
 
     public IdeaDetailResponse getDetailIdeaResponse(Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        return IdeaDetailResponse.of(idea);
+        return IdeaDetailResponse.from(idea);
     }
 
     public Long likesIdea(Long tokenMemberId, Long ideaId) {
