@@ -2,9 +2,9 @@ package kr.co.conceptbe.common.exception;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -44,12 +44,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(status).body(errors);
     }
 
-    private static Map<String, String> createNotValidExceptionResponse(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
+    private Map<String, String> createNotValidExceptionResponse(MethodArgumentNotValidException ex) {
         List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
-        for (ObjectError error : allErrors) {
-            errors.put(((FieldError) error).getField(), error.getDefaultMessage());
-        }
-        return errors;
+        return allErrors.stream()
+            .collect(Collectors.toMap(
+                error -> ((FieldError) error).getField(),
+                ObjectError::getDefaultMessage
+            ));
     }
 }
