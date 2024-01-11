@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.comment.dto.CommentCreateRequest;
 import kr.co.conceptbe.comment.dto.CommentChildResponse;
@@ -28,9 +29,9 @@ public class CommentController {
 
 	private final CommentService commentService;
 
-	@GetMapping("/{comment_id}")
+	@GetMapping("/{commentId}")
 	public ResponseEntity<List<CommentChildResponse>> getChildCommentList(
-		@PathVariable(name = "comment_id") Long commentId) {
+		@PathVariable(name = "commentId") Long commentId) {
 		List<CommentChildResponse> commentChildRespons = commentService.getChildCommentList(commentId);
 		return ResponseEntity.ok(commentChildRespons);
 	}
@@ -38,26 +39,26 @@ public class CommentController {
 	@PostMapping("")
 	public ResponseEntity<Void> createComment(
 		@Auth AuthCredentials authCredentials,
-		@RequestBody CommentCreateRequest request) {
+		@Valid @RequestBody CommentCreateRequest request) {
 		Long savedId = commentService.createComment(authCredentials.id(), request);
 		return ResponseEntity.created(URI.create("/comments/" + savedId))
 			.build();
 	}
 
-	@PatchMapping("/{comment_id}")
+	@PatchMapping("/{commentId}")
 	public ResponseEntity<Void> updateComment(
 		@Auth AuthCredentials authCredentials,
-		@PathVariable(name = "comment_id") Long commentId,
-		@RequestBody CommentUpdateRequest request) {
+		@PathVariable(name = "commentId") Long commentId,
+		@Valid @RequestBody CommentUpdateRequest request) {
 		Long savedId = commentService.updateComment(authCredentials.id(), commentId, request);
 		return ResponseEntity.created(URI.create("/comments/" + savedId))
 			.build();
 	}
 
-	@DeleteMapping("/{comment_id}")
+	@DeleteMapping("/{commentId}")
 	public ResponseEntity<Void> deleteComment(
 		@Auth AuthCredentials authCredentials,
-		@PathVariable(name = "comment_id") Long commentId) {
+		@PathVariable(name = "commentId") Long commentId) {
 		commentService.deleteComment(authCredentials.id(), commentId);
 		return ResponseEntity.noContent().build();
 	}

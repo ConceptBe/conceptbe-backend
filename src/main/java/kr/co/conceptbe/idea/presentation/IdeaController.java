@@ -55,23 +55,23 @@ public class IdeaController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/{idea_id}")
+    @GetMapping("/{ideaId}")
     public ResponseEntity<IdeaDetailResponse> getDetailIdeaResponse(
-        @PathVariable(name = "idea_id") Long ideaId) {
+        @PathVariable(name = "ideaId") Long ideaId) {
         IdeaDetailResponse ideaDetailResponse = ideaService.getDetailIdeaResponse(ideaId);
         return ResponseEntity.ok(ideaDetailResponse);
     }
 
-    @PostMapping("/likes/{idea_id}")
+    @PostMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesIdea(
         @Auth AuthCredentials authCredentials,
-        @PathVariable(name = "idea_id") Long ideaId) {
+        @PathVariable(name = "ideaId") Long ideaId) {
         Long id = ideaService.likesIdea(authCredentials.id(), ideaId);
         return ResponseEntity.created(URI.create("/ideas/" + id))
             .build();
     }
 
-    @DeleteMapping("/likes/{idea_id}")
+    @DeleteMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesCancelIdea(
         @Auth AuthCredentials authCredentials,
         @PathVariable(name = "idea_id") Long ideaId) {
