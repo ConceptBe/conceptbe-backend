@@ -3,6 +3,7 @@ package kr.co.conceptbe.member.controller;
 import jakarta.validation.Valid;
 import kr.co.conceptbe.auth.presentation.dto.TokenResponse;
 import kr.co.conceptbe.member.application.MemberService;
+import kr.co.conceptbe.member.application.dto.FindSignUpResponse;
 import kr.co.conceptbe.member.application.dto.SignUpRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,12 @@ public class MemberController {
     ResponseEntity<TokenResponse> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         TokenResponse tokenResponse = memberService.signUp(signUpRequest);
         return ResponseEntity.ok(tokenResponse);
+    }
+
+    @GetMapping("/sign-up")
+    ResponseEntity<FindSignUpResponse> getSignUpInformation() {
+        FindSignUpResponse signUpInFormation = memberService.getSignUpInFormation();
+        return ResponseEntity.ok(signUpInFormation);
     }
 
     @GetMapping("/members/nickname/{nickname}")
