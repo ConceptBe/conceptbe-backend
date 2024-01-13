@@ -8,6 +8,10 @@ import kr.co.conceptbe.member.Member;
 import kr.co.conceptbe.member.MemberPurpose;
 import kr.co.conceptbe.member.MemberRepository;
 import kr.co.conceptbe.member.MemberSkillCategory;
+import kr.co.conceptbe.member.application.dto.DetailSkillResponse;
+import kr.co.conceptbe.member.application.dto.FindSignUpResponse;
+import kr.co.conceptbe.member.application.dto.MainSkillResponse;
+import kr.co.conceptbe.member.application.dto.PurposeResponse;
 import kr.co.conceptbe.member.application.dto.SignUpRequest;
 import kr.co.conceptbe.member.exception.AlreadyExistsNicknameException;
 import kr.co.conceptbe.purpose.domain.Purpose;
@@ -42,6 +46,12 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
+    public void validateDuplicatedNickName(String nickname) {
+        if (memberRepository.existsByNickname(nickname)) {
+            throw new AlreadyExistsNicknameException(nickname);
+        }
+    }
+
     private void processSkill(SignUpRequest signUpRequest, Member member) {
         SkillCategory mainSkill = skillCategoryRepository.getById(signUpRequest.mainSkillId());
         member.updateMainSkill(mainSkill);
@@ -74,9 +84,50 @@ public class MemberService {
             }).toList();
     }
 
-    public void validateDuplicatedNickName(String nickname) {
-        if (memberRepository.existsByNickname(nickname)) {
-            throw new AlreadyExistsNicknameException(nickname);
-        }
+    public FindSignUpResponse getSignUpInFormation() {
+        List<SkillCategory> skills = skillCategoryRepository.findAll();
+        List<SkillCategory> mainSkills = categorizeMainSkills(skills);
+        List<MainSkillResponse> mainSkillResponses = createMainSkillResponses(skills, mainSkills);
+
+        List<PurposeResponse> purposeResponses = createPurposeResponses();
+
+        return new FindSignUpResponse(mainSkillResponses, purposeResponses);
+    }
+
+    private List<SkillCategory> categorizeMainSkills(List<SkillCategory> skills) {
+        return skills.stream()
+            .filter(skill -> (skill.getId().equals(skill.getParentSkillCategory().getId())))
+            .toList();
+    }
+
+    private List<MainSkillResponse> createMainSkillResponses(
+        List<SkillCategory> skills,
+        List<SkillCategory> mainSkills
+    ) {
+        return mainSkills.stream()
+            .map(skill -> new MainSkillResponse(skill.getId(), skill.getName(),
+                createDetailSkillResponses(skills, skill.getId())))
+            .toList();
+    }
+
+    private List<DetailSkillResponse> createDetailSkillResponses(
+        List<SkillCategory> skills,
+        Long parentSkillId
+    ) {
+        return skills.stream()
+            .filter(skill -> isChildSkillOfParentSkill(parentSkillId, skill))
+            .map(skill -> new DetailSkillResponse(skill.getId(), skill.getName()))
+            .toList();
+    }
+
+    private boolean isChildSkillOfParentSkill(Long parentSkillId, SkillCategory skill) {
+        return skill.getParentSkillCategory().getId().equals(parentSkillId) && !skill.getId()
+            .equals(skill.getParentSkillCategory().getId());
+    }
+
+    private List<PurposeResponse> createPurposeResponses() {
+        return purposeRepository.findAll().stream()
+            .map(purpose -> new PurposeResponse(purpose.getId(), purpose.getName()))
+            .toList();
     }
 }
