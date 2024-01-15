@@ -1,17 +1,17 @@
-package kr.co.conceptbe.member.application;
+package kr.co.conceptbe.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import kr.co.conceptbe.auth.application.dto.SignUpRequest;
+import kr.co.conceptbe.auth.application.dto.SignUpSkillRequest;
 import kr.co.conceptbe.auth.presentation.dto.TokenResponse;
 import kr.co.conceptbe.auth.support.JwtProvider;
 import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.auth.fixture.AuthFixture;
 import kr.co.conceptbe.member.persistence.MemberRepository;
-import kr.co.conceptbe.member.application.dto.SignUpRequest;
-import kr.co.conceptbe.member.application.dto.SignUpSkillRequest;
-import kr.co.conceptbe.member.fixture.MemberFixture;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
@@ -23,10 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
-class MemberServiceTest {
+class OauthServiceTest {
 
     @Autowired
-    private MemberService memberService;
+    private OauthService oauthService;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -48,7 +48,7 @@ class MemberServiceTest {
         SkillCategory beDetailSkill = skillCategoryRepository.save(new SkillCategory(mainSkill, "BE"));
         SkillCategory feDetailSkill = skillCategoryRepository.save(new SkillCategory(mainSkill, "FE"));
         Purpose purpose = purposeRepository.save(Purpose.from("창업"));
-        SignUpRequest signUpRequest = MemberFixture.createSignUpRequest(
+        SignUpRequest signUpRequest = AuthFixture.createSignUpRequest(
             mainSkill.getId(),
             List.of(
                 new SignUpSkillRequest(beDetailSkill.getId(), SkillLevel.HIGH.getName()),
@@ -58,7 +58,7 @@ class MemberServiceTest {
         );
 
         //when
-        TokenResponse tokenResponse = memberService.signUp(signUpRequest);
+        TokenResponse tokenResponse = oauthService.signUp(signUpRequest);
 
         //then
         String memberId = jwtProvider.getPayload(tokenResponse.accessToken());

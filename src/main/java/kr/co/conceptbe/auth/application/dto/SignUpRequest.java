@@ -1,4 +1,4 @@
-package kr.co.conceptbe.member.application.dto;
+package kr.co.conceptbe.auth.application.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
