@@ -7,7 +7,7 @@ import kr.co.conceptbe.auth.infra.oauth.kakao.dto.KakaoResponseToken;
 import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;
 import kr.co.conceptbe.auth.domain.client.OauthMemberClient;
 import kr.co.conceptbe.auth.infra.oauth.kakao.config.KakaoOauthConfig;
-import kr.co.conceptbe.member.OauthServerType;
+import kr.co.conceptbe.member.domain.OauthServerType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;

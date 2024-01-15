@@ -5,10 +5,10 @@ import kr.co.conceptbe.auth.domain.client.OauthMemberClientHandler;
 import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;
 import kr.co.conceptbe.auth.domain.authcode.AuthCodeRequestUrlProviderHandler;
 import kr.co.conceptbe.auth.support.JwtProvider;
-import kr.co.conceptbe.member.Member;
-import kr.co.conceptbe.member.MemberRepository;
-import kr.co.conceptbe.member.OauthId;
-import kr.co.conceptbe.member.OauthServerType;
+import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.member.persistence.MemberRepository;
+import kr.co.conceptbe.member.domain.OauthId;
+import kr.co.conceptbe.member.domain.OauthServerType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

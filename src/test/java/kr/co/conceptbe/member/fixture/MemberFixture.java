@@ -1,8 +1,8 @@
 package kr.co.conceptbe.member.fixture;
 
 import java.util.List;
-import kr.co.conceptbe.member.OauthServerType;
-import kr.co.conceptbe.member.Region;
+import kr.co.conceptbe.member.domain.OauthServerType;
+import kr.co.conceptbe.member.domain.Region;
 import kr.co.conceptbe.member.application.dto.SignUpRequest;
 import kr.co.conceptbe.member.application.dto.SignUpSkillRequest;
 

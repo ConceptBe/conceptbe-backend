@@ -1,7 +1,7 @@
 package kr.co.conceptbe.auth.domain.client;
 
 import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;
-import kr.co.conceptbe.member.OauthServerType;
+import kr.co.conceptbe.member.domain.OauthServerType;
 
 public interface OauthMemberClient {
 

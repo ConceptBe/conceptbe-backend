@@ -6,10 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
-import kr.co.conceptbe.member.Member;
-import kr.co.conceptbe.member.OauthId;
-import kr.co.conceptbe.member.OauthServerType;
-import kr.co.conceptbe.member.Region;
+import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.member.domain.OauthId;
+import kr.co.conceptbe.member.domain.OauthServerType;
+import kr.co.conceptbe.member.domain.Region;
 
 public record SignUpRequest(
     @NotNull(message = "닉네임은 빈 값일 수 없습니다.")

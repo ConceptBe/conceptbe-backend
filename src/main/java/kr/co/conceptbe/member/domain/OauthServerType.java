@@ -1,4 +1,4 @@
-package kr.co.conceptbe.member;
+package kr.co.conceptbe.member.domain;
 
 import java.util.Arrays;
 import kr.co.conceptbe.member.exception.NotFoundOauthServerTypeException;

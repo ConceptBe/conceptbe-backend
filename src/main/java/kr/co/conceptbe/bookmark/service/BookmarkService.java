@@ -10,8 +10,8 @@ import kr.co.conceptbe.bookmark.repository.BookmarkRepository;
 import kr.co.conceptbe.bookmark.exception.BookmarkException;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
-import kr.co.conceptbe.member.Member;
-import kr.co.conceptbe.member.MemberRepository;
+import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.member.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service

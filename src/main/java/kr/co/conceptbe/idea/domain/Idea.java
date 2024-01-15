@@ -24,7 +24,7 @@ import kr.co.conceptbe.idea.domain.vo.IdeaPurposes;
 import kr.co.conceptbe.idea.domain.vo.IdeaTeamRecruitments;
 import kr.co.conceptbe.idea.domain.vo.Introduce;
 import kr.co.conceptbe.idea.domain.vo.Title;
-import kr.co.conceptbe.member.Member;
+import kr.co.conceptbe.member.domain.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

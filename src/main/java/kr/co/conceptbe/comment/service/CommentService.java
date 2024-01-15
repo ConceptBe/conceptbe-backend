@@ -13,8 +13,8 @@ import kr.co.conceptbe.comment.dto.CommentUpdateRequest;
 import kr.co.conceptbe.comment.repository.CommentRepository;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
-import kr.co.conceptbe.member.Member;
-import kr.co.conceptbe.member.MemberRepository;
+import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.member.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service

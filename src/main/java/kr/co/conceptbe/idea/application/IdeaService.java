@@ -19,8 +19,8 @@ import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.presentation.dto.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.presentation.dto.request.IdeaRequest;
 import kr.co.conceptbe.idea.presentation.dto.response.IdeaResponse;
-import kr.co.conceptbe.member.Member;
-import kr.co.conceptbe.member.MemberRepository;
+import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.member.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;

@@ -2,7 +2,6 @@ package kr.co.conceptbe.idea.domain.persistence;
 
 import java.util.List;
 import kr.co.conceptbe.idea.domain.Idea;
-import kr.co.conceptbe.member.Member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
