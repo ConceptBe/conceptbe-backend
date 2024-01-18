@@ -1,4 +1,4 @@
-package kr.co.conceptbe.member;
+package kr.co.conceptbe.member.domain;
 
 import static jakarta.persistence.EnumType.STRING;
 import static lombok.AccessLevel.PROTECTED;

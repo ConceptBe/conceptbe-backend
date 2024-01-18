@@ -2,8 +2,8 @@ package kr.co.conceptbe.idea.presentation.dto.response;
 
 import java.util.List;
 import kr.co.conceptbe.skill.domain.SkillCategory;
-import kr.co.conceptbe.member.Member;
-import kr.co.conceptbe.member.MemberSkillCategory;
+import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.member.domain.MemberSkillCategory;
 
 public record MemberResponse(
         String imageUrl,

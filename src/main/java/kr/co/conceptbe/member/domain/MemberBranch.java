@@ -1,4 +1,4 @@
-package kr.co.conceptbe.member;
+package kr.co.conceptbe.member.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -8,16 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import kr.co.conceptbe.purpose.domain.Purpose;
-import lombok.AllArgsConstructor;
+import kr.co.conceptbe.common.entity.domain.Branch;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-public class MemberPurpose {
+@Getter
+public class MemberBranch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,11 +26,12 @@ public class MemberPurpose {
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "purpose_id")
-    private Purpose purpose;
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
 
-    public MemberPurpose(Member member, Purpose purpose) {
+    public MemberBranch(Long id, Member member, Branch branch) {
+        this.id = id;
         this.member = member;
-        this.purpose = purpose;
+        this.branch = branch;
     }
 }

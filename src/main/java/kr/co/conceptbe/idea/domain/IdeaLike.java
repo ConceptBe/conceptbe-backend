@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
-import kr.co.conceptbe.member.Member;
+import kr.co.conceptbe.member.domain.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

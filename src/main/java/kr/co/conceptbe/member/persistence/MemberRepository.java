@@ -1,6 +1,8 @@
-package kr.co.conceptbe.member;
+package kr.co.conceptbe.member.persistence;
 
 import java.util.Optional;
+import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.member.domain.OauthId;
 import kr.co.conceptbe.member.exception.NotFoundMemberException;
 import kr.co.conceptbe.member.exception.NotFoundOauthMemberException;
 import org.springframework.data.jpa.repository.JpaRepository;

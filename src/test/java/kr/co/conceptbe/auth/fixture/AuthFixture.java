@@ -1,12 +1,12 @@
-package kr.co.conceptbe.member.fixture;
+package kr.co.conceptbe.auth.fixture;
 
 import java.util.List;
-import kr.co.conceptbe.member.OauthServerType;
-import kr.co.conceptbe.member.Region;
-import kr.co.conceptbe.member.application.dto.SignUpRequest;
-import kr.co.conceptbe.member.application.dto.SignUpSkillRequest;
+import kr.co.conceptbe.member.domain.OauthServerType;
+import kr.co.conceptbe.member.domain.Region;
+import kr.co.conceptbe.auth.application.dto.SignUpRequest;
+import kr.co.conceptbe.auth.application.dto.SignUpSkillRequest;
 
-public class MemberFixture {
+public class AuthFixture {
 
     public static SignUpRequest createSignUpRequest(
         Long mainSkillId,
