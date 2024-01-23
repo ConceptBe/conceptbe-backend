@@ -1,16 +1,16 @@
 package kr.co.conceptbe.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
+import kr.co.conceptbe.auth.application.dto.AuthResponse;
 import kr.co.conceptbe.auth.application.dto.SignUpRequest;
 import kr.co.conceptbe.auth.application.dto.SignUpSkillRequest;
-import kr.co.conceptbe.auth.presentation.dto.TokenResponse;
+import kr.co.conceptbe.auth.fixture.AuthFixture;
 import kr.co.conceptbe.auth.support.JwtProvider;
 import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.member.domain.Member;
-import kr.co.conceptbe.auth.fixture.AuthFixture;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.skill.domain.SkillCategory;
@@ -58,10 +58,10 @@ class OauthServiceTest {
         );
 
         //when
-        TokenResponse tokenResponse = oauthService.signUp(signUpRequest);
+        AuthResponse authResponse = oauthService.signUp(signUpRequest);
 
         //then
-        String memberId = jwtProvider.getPayload(tokenResponse.accessToken());
+        String memberId = jwtProvider.getPayload(authResponse.accessToken());
         Member member = memberRepository.getById(Long.valueOf(memberId));
         List<String> skillLevels = mapToSkillLevels(member);
         List<String> skillNames = mapToSkillNames(member);
@@ -70,7 +70,10 @@ class OauthServiceTest {
             () -> assertThat(member.getMainSkill().getName()).isEqualTo("개발"),
             () -> assertThat(skillLevels).contains("상", "하"),
             () -> assertThat(skillNames).contains("BE", "FE"),
-            () -> assertThat(purposeNames).contains("창업")
+            () -> assertThat(purposeNames).contains("창업"),
+            () -> assertThat(authResponse.authMemberInformation().id()).isEqualTo(member.getId()),
+            () -> assertThat(authResponse.authMemberInformation().nickname()).isEqualTo(member.getNickname()),
+            () -> assertThat(authResponse.authMemberInformation().profileImageUrl()).isEqualTo(member.getProfileImageUrl())
         );
     }
 

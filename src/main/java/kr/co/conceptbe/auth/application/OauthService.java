@@ -1,25 +1,26 @@
 package kr.co.conceptbe.auth.application;
 
 import java.util.List;
-import kr.co.conceptbe.auth.application.dto.OauthMemberResponse;
-import kr.co.conceptbe.auth.domain.client.OauthMemberClientHandler;
-import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;
-import kr.co.conceptbe.auth.domain.authcode.AuthCodeRequestUrlProviderHandler;
-import kr.co.conceptbe.auth.presentation.dto.TokenResponse;
-import kr.co.conceptbe.auth.support.JwtProvider;
-import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
-import kr.co.conceptbe.member.application.MemberService;
+import kr.co.conceptbe.auth.application.dto.AuthMemberInformation;
+import kr.co.conceptbe.auth.application.dto.AuthResponse;
 import kr.co.conceptbe.auth.application.dto.DetailSkillResponse;
 import kr.co.conceptbe.auth.application.dto.FindSignUpResponse;
 import kr.co.conceptbe.auth.application.dto.MainSkillResponse;
+import kr.co.conceptbe.auth.application.dto.OauthMemberResponse;
 import kr.co.conceptbe.auth.application.dto.PurposeResponse;
 import kr.co.conceptbe.auth.application.dto.SignUpRequest;
+import kr.co.conceptbe.auth.domain.authcode.AuthCodeRequestUrlProviderHandler;
+import kr.co.conceptbe.auth.domain.client.OauthMemberClientHandler;
+import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;
+import kr.co.conceptbe.auth.support.JwtProvider;
+import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
+import kr.co.conceptbe.member.application.MemberService;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.MemberPurpose;
 import kr.co.conceptbe.member.domain.MemberSkillCategory;
-import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.member.domain.OauthId;
 import kr.co.conceptbe.member.domain.OauthServerType;
+import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
@@ -54,15 +55,22 @@ public class OauthService {
         return new OauthMemberResponse(isMember, oauthMemberInformation);
     }
 
-    public String login(String oauthId, OauthServerType oauthServerType) {
+    public AuthResponse login(String oauthId, OauthServerType oauthServerType) {
         Member member = memberRepository.getByOauthId(new OauthId(oauthId, oauthServerType));
-        return jwtProvider.createAccessToken(member.getId());
+        String accessToken = jwtProvider.createAccessToken(member.getId());
+        return new AuthResponse(
+            accessToken,
+            new AuthMemberInformation(member.getId(), member.getNickname(), member.getProfileImageUrl())
+        );
     }
 
-    public TokenResponse signUp(SignUpRequest signUpRequest) {
+    public AuthResponse signUp(SignUpRequest signUpRequest) {
         Member member = saveMember(signUpRequest);
         String accessToken = jwtProvider.createAccessToken(member.getId());
-        return new TokenResponse(accessToken);
+        return new AuthResponse(
+            accessToken,
+            new AuthMemberInformation(member.getId(), member.getNickname(), member.getProfileImageUrl())
+        );
     }
 
     private Member saveMember(SignUpRequest signUpRequest) {

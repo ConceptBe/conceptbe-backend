@@ -44,8 +44,6 @@ import lombok.NoArgsConstructor;
 )
 public class Member extends BaseTimeEntity {
 
-    //TODO 패키지 변경
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

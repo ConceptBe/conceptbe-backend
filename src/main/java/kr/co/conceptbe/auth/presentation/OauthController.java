@@ -4,9 +4,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.io.IOException;
 import kr.co.conceptbe.auth.application.OauthService;
-import kr.co.conceptbe.auth.application.dto.OauthMemberResponse;
-import kr.co.conceptbe.auth.presentation.dto.TokenResponse;
+import kr.co.conceptbe.auth.application.dto.AuthResponse;
 import kr.co.conceptbe.auth.application.dto.FindSignUpResponse;
+import kr.co.conceptbe.auth.application.dto.OauthMemberResponse;
 import kr.co.conceptbe.auth.application.dto.SignUpRequest;
 import kr.co.conceptbe.member.domain.OauthServerType;
 import lombok.RequiredArgsConstructor;
@@ -44,18 +44,18 @@ public class OauthController {
     }
 
     @GetMapping("/oauth/{oauthServerType}/login")
-    ResponseEntity<TokenResponse> login(
+    ResponseEntity<AuthResponse> login(
         @PathVariable OauthServerType oauthServerType,
         @RequestParam("oauthId") String oauthId
     ) {
-        String accessToken = oauthService.login(oauthId, oauthServerType);
-        return ResponseEntity.ok(new TokenResponse(accessToken));
+        AuthResponse authResponse = oauthService.login(oauthId, oauthServerType);
+        return ResponseEntity.ok(authResponse);
     }
 
     @PostMapping("/sign-up")
-    ResponseEntity<TokenResponse> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
-        TokenResponse tokenResponse = oauthService.signUp(signUpRequest);
-        return ResponseEntity.ok(tokenResponse);
+    ResponseEntity<AuthResponse> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
+        AuthResponse authResponse = oauthService.signUp(signUpRequest);
+        return ResponseEntity.ok(authResponse);
     }
 
     @GetMapping("/sign-up")
