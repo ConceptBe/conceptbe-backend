@@ -30,6 +30,8 @@ import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,30 +79,29 @@ public class IdeaService {
     }
 
     @Transactional(readOnly = true)
-    public List<BestIdeaResponse> findAllBestIdea() {
-        return ideaRepository.findAll()
+    public List<BestIdeaResponse> findAllBestIdea(Pageable pageable) {
+        return ideaRepository.findAllByOrderByLikesCountDesc(pageable)
                 .stream()
-                .sorted(Comparator.comparing(Idea::getLikesCount).reversed())
                 .map(BestIdeaResponse::from)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<IdeaResponse> findAll(AuthCredentials authCredentials) {
+    public List<IdeaResponse> findAll(AuthCredentials authCredentials, Pageable pageable) {
         if (Objects.isNull(authCredentials)) {
-            return findAllOfGuest();
+            return findAllOfGuest(pageable);
         }
 
         Member member = findMember(authCredentials.id());
         Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
-        return ideaRepository.findAllByOrderByCreatedAtDesc()
+        return ideaRepository.findAllByOrderByCreatedAtDesc(pageable)
                 .stream()
                 .map(idea -> IdeaResponse.ofMember(idea, ideasBookmarkedByMember.contains(idea)))
                 .toList();
     }
 
-    private List<IdeaResponse> findAllOfGuest() {
-        return ideaRepository.findAllByOrderByCreatedAtDesc()
+    private List<IdeaResponse> findAllOfGuest(Pageable pageable) {
+        return ideaRepository.findAllByOrderByCreatedAtDesc(pageable)
                 .stream()
                 .map(IdeaResponse::ofGuest)
                 .toList();

@@ -13,6 +13,8 @@ import kr.co.conceptbe.idea.presentation.dto.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.presentation.dto.response.IdeaResponse;
 import kr.co.conceptbe.member.domain.Member;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -49,16 +52,23 @@ public class IdeaController {
 
     @GetMapping
     public ResponseEntity<List<IdeaResponse>> findAll(
-            @OptionalAuth @RequestBody AuthCredentials authCredentials
+            @OptionalAuth @RequestBody AuthCredentials authCredentials,
+            @RequestParam int page,
+            @RequestParam int size
     ) {
-        List<IdeaResponse> responses = ideaService.findAll(authCredentials);
+        Pageable pageable = PageRequest.of(page, size);
+        List<IdeaResponse> responses = ideaService.findAll(authCredentials, pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/bests")
-    public ResponseEntity<List<BestIdeaResponse>> findBestsIdea() {
-        List<BestIdeaResponse> responses = ideaService.findAllBestIdea();
+    public ResponseEntity<List<BestIdeaResponse>> findBestsIdea(
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<BestIdeaResponse> responses = ideaService.findAllBestIdea(pageable);
 
         return ResponseEntity.ok(responses);
     }
