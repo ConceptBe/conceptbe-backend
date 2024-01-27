@@ -5,6 +5,8 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,17 +16,18 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
+import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
-import kr.co.conceptbe.branch.domain.Branch;
-import kr.co.conceptbe.purpose.domain.Purpose;
-import kr.co.conceptbe.teamrecruitment.domain.TeamRecruitment;
+import kr.co.conceptbe.idea.domain.vo.CooperationWay;
 import kr.co.conceptbe.idea.domain.vo.IdeaBranches;
 import kr.co.conceptbe.idea.domain.vo.IdeaPurposes;
 import kr.co.conceptbe.idea.domain.vo.IdeaTeamRecruitments;
 import kr.co.conceptbe.idea.domain.vo.Introduce;
 import kr.co.conceptbe.idea.domain.vo.Title;
 import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.purpose.domain.Purpose;
+import kr.co.conceptbe.teamrecruitment.domain.TeamRecruitment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -44,7 +47,8 @@ public class Idea extends BaseTimeEntity {
     private Introduce introduce;
 
     @Column(nullable = false)
-    private String cooperationWay;
+    @Enumerated(EnumType.STRING)
+    private CooperationWay cooperationWay;
 
     @Column(nullable = false)
     private String recruitmentPlace;
@@ -77,7 +81,7 @@ public class Idea extends BaseTimeEntity {
     private Idea(
             Title title,
             Introduce introduce,
-            String cooperationWay,
+            CooperationWay cooperationWay,
             String recruitmentPlace,
             Member creator
     ) {
@@ -101,7 +105,7 @@ public class Idea extends BaseTimeEntity {
         Idea idea = new Idea(
                 Title.from(title),
                 Introduce.from(introduce),
-                cooperationWay,
+                CooperationWay.from(cooperationWay),
                 recruitmentPlace,
                 creator
         );
