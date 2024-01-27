@@ -7,7 +7,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
+import kr.co.conceptbe.idea.presentation.dto.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
+import kr.co.conceptbe.region.domain.presentation.RegionRepository;
+import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentCategoryRepository;
 import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentRepository;
 import kr.co.conceptbe.idea.exception.IdeaLikeException;
 import kr.co.conceptbe.idea.domain.IdeaLikeID;
@@ -33,7 +36,9 @@ public class IdeaService {
 
     private final BranchRepository branchRepository;
     private final PurposeRepository purposeRepository;
+    private final TeamRecruitmentCategoryRepository teamRecruitmentCategoryRepository;
     private final TeamRecruitmentRepository teamRecruitmentRepository;
+    private final RegionRepository regionRepository;
     private final IdeaRepository ideaRepository;
     private final MemberRepository memberRepository;
     private final IdeaLikesRepository ideaLikesRepository;
@@ -107,4 +112,14 @@ public class IdeaService {
         ideaLikesRepository.getById(ideaLikeID);
         ideaLikesRepository.deleteById(ideaLikeID);
     }
+
+    public FindIdeaWriteResponse getFindIdeaWriteResponse() {
+        return FindIdeaWriteResponse.of(
+                regionRepository.findAll(),
+                branchRepository.findAll(),
+                purposeRepository.findAll(),
+                teamRecruitmentCategoryRepository.findAll()
+        );
+    }
+
 }
