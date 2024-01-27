@@ -1,7 +1,7 @@
 package kr.co.conceptbe.idea.presentation.dto.response;
 
 import java.util.List;
-import kr.co.conceptbe.common.entity.domain.Branch;
+import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaBranch;
 

@@ -16,7 +16,7 @@ import java.util.List;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
-import kr.co.conceptbe.common.entity.domain.Branch;
+import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.common.entity.domain.TeamRecruitment;
 import kr.co.conceptbe.idea.domain.vo.IdeaBranches;
