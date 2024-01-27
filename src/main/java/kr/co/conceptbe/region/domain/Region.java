@@ -33,4 +33,8 @@ public class Region {
         return new Region(RegionName.from(name));
     }
 
+    public String getName() {
+        return name.getName();
+    }
+
 }
