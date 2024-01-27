@@ -1,13 +1,18 @@
 package kr.co.conceptbe.idea.application;
 
+import java.awt.FontFormatException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.idea.presentation.dto.response.FindIdeaWriteResponse;
+import kr.co.conceptbe.member.exception.ForbiddenMemberException;
+import kr.co.conceptbe.member.exception.NotFoundMemberException;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentCategoryRepository;
@@ -43,19 +48,33 @@ public class IdeaService {
     private final MemberRepository memberRepository;
     private final IdeaLikesRepository ideaLikesRepository;
 
-    public Long save(Member member, IdeaRequest request) {
+    public Long save(AuthCredentials authCredentials, IdeaRequest request) {
+        validateMember(authCredentials);
         Idea idea = Idea.of(
                 request.title(),
                 request.introduce(),
                 request.cooperationWay(),
                 request.recruitmentPlace(),
-                member,
+                findMember(authCredentials.id()),
                 branchRepository.findByIdIn(request.branchIds()),
                 purposeRepository.findByIdIn(request.purposeIds()),
                 teamRecruitmentRepository.findByIdIn(request.teamRecruitmentIds())
         );
 
         return ideaRepository.save(idea).getId();
+    }
+
+    private void validateMember(AuthCredentials authCredentials) {
+        if (Objects.nonNull(authCredentials)) {
+            return;
+        }
+
+        throw new ForbiddenMemberException();
+    }
+
+    private Member findMember(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new NotFoundMemberException(id));
     }
 
     @Transactional(readOnly = true)

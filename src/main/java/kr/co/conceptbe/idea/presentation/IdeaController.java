@@ -2,7 +2,6 @@ package kr.co.conceptbe.idea.presentation;
 
 import java.net.URI;
 import java.util.List;
-
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.common.auth.Auth;
 import kr.co.conceptbe.idea.application.IdeaService;
@@ -31,10 +30,10 @@ public class IdeaController {
 
     @PostMapping
     public ResponseEntity<Void> addIdea(
-            @RequestBody Member member,
+            @Auth @RequestBody AuthCredentials auth,
             @RequestBody IdeaRequest request
     ) {
-        Long savedId = ideaService.save(member, request);
+        Long savedId = ideaService.save(auth, request);
 
         return ResponseEntity.created(URI.create("/ideas/" + savedId))
                 .build();
