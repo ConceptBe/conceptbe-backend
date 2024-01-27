@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
-import kr.co.conceptbe.common.entity.domain.persistence.TeamRecruitmentRepository;
+import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentRepository;
 import kr.co.conceptbe.idea.exception.IdeaLikeException;
 import kr.co.conceptbe.idea.domain.IdeaLikeID;
 import kr.co.conceptbe.idea.domain.Idea;
