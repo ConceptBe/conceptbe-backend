@@ -1,4 +1,4 @@
-package kr.co.conceptbe.common.entity.domain.persistence;
+package kr.co.conceptbe.purpose.domain.persistence;
 
 import java.util.List;
 import kr.co.conceptbe.purpose.domain.Purpose;
