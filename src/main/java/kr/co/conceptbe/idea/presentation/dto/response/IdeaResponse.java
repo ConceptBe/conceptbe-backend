@@ -22,7 +22,7 @@ public record IdeaResponse(
         List<String> teamRecruitments
 ) {
 
-    public static IdeaResponse of(Idea idea, boolean isBookmarked) {
+    public static IdeaResponse ofMember(Idea idea, boolean isBookmarked) {
         return new IdeaResponse(
                 idea.getTitle(),
                 idea.getIntroduce(),
@@ -50,6 +50,22 @@ public record IdeaResponse(
                 .map(IdeaTeamRecruitment::getTeamRecruitment)
                 .map(TeamRecruitment::getName)
                 .toList();
+    }
+
+    public static IdeaResponse ofGuest(Idea idea) {
+        return new IdeaResponse(
+                idea.getTitle(),
+                idea.getIntroduce(),
+                idea.getHitsCount(),
+                idea.getCommentsCount(),
+                idea.getLikesCount(),
+                idea.getBookmarksCount(),
+                false,
+                idea.getCreatedAt(),
+                MemberResponse.from(idea.getCreator()),
+                getBranches(idea.getBranches()),
+                getTeamRecruitments(idea.getTeamRecruitments())
+        );
     }
 
 }

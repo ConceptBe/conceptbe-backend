@@ -1,6 +1,5 @@
 package kr.co.conceptbe.idea.application;
 
-import java.awt.FontFormatException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -87,12 +86,23 @@ public class IdeaService {
     }
 
     @Transactional(readOnly = true)
-    public List<IdeaResponse> findAll(Member member) {
-        Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
+    public List<IdeaResponse> findAll(AuthCredentials authCredentials) {
+        if (Objects.isNull(authCredentials)) {
+            return findAllOfGuest();
+        }
 
+        Member member = findMember(authCredentials.id());
+        Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
         return ideaRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
-                .map(idea -> IdeaResponse.of(idea, ideasBookmarkedByMember.contains(idea)))
+                .map(idea -> IdeaResponse.ofMember(idea, ideasBookmarkedByMember.contains(idea)))
+                .toList();
+    }
+
+    private List<IdeaResponse> findAllOfGuest() {
+        return ideaRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(IdeaResponse::ofGuest)
                 .toList();
     }
 

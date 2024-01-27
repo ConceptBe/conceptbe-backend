@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.common.auth.Auth;
+import kr.co.conceptbe.common.auth.OptionalAuth;
 import kr.co.conceptbe.idea.application.IdeaService;
 import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.presentation.dto.request.IdeaRequest;
@@ -48,9 +49,9 @@ public class IdeaController {
 
     @GetMapping
     public ResponseEntity<List<IdeaResponse>> findAll(
-            @RequestBody Member member
+            @OptionalAuth @RequestBody AuthCredentials authCredentials
     ) {
-        List<IdeaResponse> responses = ideaService.findAll(member);
+        List<IdeaResponse> responses = ideaService.findAll(authCredentials);
 
         return ResponseEntity.ok(responses);
     }
