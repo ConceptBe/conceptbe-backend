@@ -54,7 +54,7 @@ public class IdeaService {
                 request.introduce(),
                 request.cooperationWay(),
                 request.recruitmentPlace(),
-                findMember(authCredentials.id()),
+                memberRepository.getById(authCredentials.id()),
                 branchRepository.findByIdIn(request.branchIds()),
                 purposeRepository.findByIdIn(request.purposeIds()),
                 teamRecruitmentRepository.findByIdIn(request.teamRecruitmentIds())
@@ -71,11 +71,6 @@ public class IdeaService {
         throw new UnAuthorizedMemberException();
     }
 
-    private Member findMember(Long id) {
-        return memberRepository.findById(id)
-                .orElseThrow(() -> new NotFoundMemberException(id));
-    }
-
     @Transactional(readOnly = true)
     public List<BestIdeaResponse> findAllBestIdea(Pageable pageable) {
         return ideaRepository.findAllByOrderByLikesCountDesc(pageable)
@@ -90,7 +85,7 @@ public class IdeaService {
             return findAllOfGuest(pageable);
         }
 
-        Member member = findMember(authCredentials.id());
+        Member member = memberRepository.getById(authCredentials.id());
         Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
         return ideaRepository.findAllByOrderByCreatedAtDesc(pageable)
                 .stream()
