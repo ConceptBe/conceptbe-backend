@@ -62,8 +62,8 @@ public class IdeaController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/bests")
-    public ResponseEntity<List<BestIdeaResponse>> findBestsIdea(
+    @GetMapping("/best")
+    public ResponseEntity<List<BestIdeaResponse>> findBestIdeas(
             @RequestParam int page,
             @RequestParam int size
     ) {
