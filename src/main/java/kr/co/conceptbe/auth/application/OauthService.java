@@ -7,7 +7,7 @@ import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;
 import kr.co.conceptbe.auth.domain.authcode.AuthCodeRequestUrlProviderHandler;
 import kr.co.conceptbe.auth.presentation.dto.TokenResponse;
 import kr.co.conceptbe.auth.support.JwtProvider;
-import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
+import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.member.application.MemberService;
 import kr.co.conceptbe.auth.application.dto.DetailSkillResponse;
 import kr.co.conceptbe.auth.application.dto.FindSignUpResponse;

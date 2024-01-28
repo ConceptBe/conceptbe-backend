@@ -3,8 +3,6 @@ package kr.co.conceptbe.idea.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.domain.Idea;
 
@@ -36,7 +34,7 @@ public record IdeaDetailResponse (
 			idea.getIntroduce(),
 			idea.getBranches().stream().map(e -> e.getBranch().getName()).toList(),
 			idea.getPurposes().stream().map(e -> e.getPurpose().getName()).toList(),
-			idea.getCooperationWay(),
+			idea.getCooperationWay().name(),
 			idea.getRecruitmentPlace(),
 			idea.getTeamRecruitments().stream().map(e -> e.getTeamRecruitment().getName()).toList(),
 			idea.getLikesCount(),
@@ -44,10 +42,10 @@ public record IdeaDetailResponse (
 			idea.getBookmarksCount(),
 			idea.getHitsCount(),
 			idea.getComments()
-			    .stream()
-			    .filter(e->e.getParentComment() == null)
-			    .map(CommentParentResponse::from)
-			    .collect(Collectors.toList())
+					.stream()
+					.filter(e->e.getParentComment() == null)
+					.map(CommentParentResponse::from)
+					.toList()
 		);
 	}
 }
