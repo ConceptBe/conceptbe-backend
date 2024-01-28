@@ -11,7 +11,6 @@ import kr.co.conceptbe.idea.presentation.dto.request.IdeaRequest;
 import kr.co.conceptbe.idea.presentation.dto.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.presentation.dto.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.presentation.dto.response.IdeaResponse;
-import kr.co.conceptbe.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +42,7 @@ public class IdeaController {
                 .build();
     }
 
-    @GetMapping("/ideas/writes")
+    @GetMapping("writing")
     public ResponseEntity<FindIdeaWriteResponse> getIdeaWriteResponses() {
         FindIdeaWriteResponse response = ideaService.getFindIdeaWriteResponse();
 
