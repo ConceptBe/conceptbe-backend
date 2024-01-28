@@ -1,7 +1,5 @@
 package kr.co.conceptbe.auth.application.dto;
 
-import kr.co.conceptbe.branch.domain.Branch;
-import kr.co.conceptbe.idea.presentation.dto.response.BranchResponse;
 import kr.co.conceptbe.purpose.domain.Purpose;
 
 public record PurposeResponse(
