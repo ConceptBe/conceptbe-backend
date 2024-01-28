@@ -1,6 +1,5 @@
 package kr.co.conceptbe.idea.application;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -10,7 +9,7 @@ import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.idea.presentation.dto.response.FindIdeaWriteResponse;
-import kr.co.conceptbe.member.exception.ForbiddenMemberException;
+import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.member.exception.NotFoundMemberException;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
@@ -30,7 +29,6 @@ import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +68,7 @@ public class IdeaService {
             return;
         }
 
-        throw new ForbiddenMemberException();
+        throw new UnAuthorizedMemberException();
     }
 
     private Member findMember(Long id) {
