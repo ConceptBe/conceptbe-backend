@@ -9,7 +9,7 @@ public interface IdeaRepository extends JpaRepository<Idea, Long> {
 
     List<Idea> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
-    List<Idea> findAllByOrderByLikesCountDesc(Pageable pageable);
+    List<Idea> findAllByOrderByLikesDesc(Pageable pageable);
 
     default Idea getById(Long ideaId) {
         return findById(ideaId).orElseThrow(
