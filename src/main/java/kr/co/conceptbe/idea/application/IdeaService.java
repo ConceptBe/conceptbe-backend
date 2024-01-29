@@ -72,7 +72,7 @@ public class IdeaService {
 
     @Transactional(readOnly = true)
     public List<BestIdeaResponse> findAllBestIdea(Pageable pageable) {
-        return ideaRepository.findAllByOrderByLikesCountDesc(pageable)
+        return ideaRepository.findAllByOrderByLikesDesc(pageable)
                 .stream()
                 .map(BestIdeaResponse::from)
                 .toList();

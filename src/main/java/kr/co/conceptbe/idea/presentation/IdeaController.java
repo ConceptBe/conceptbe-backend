@@ -33,7 +33,7 @@ public class IdeaController {
 
     @PostMapping
     public ResponseEntity<Void> addIdea(
-            @Auth @RequestBody AuthCredentials auth,
+            @Auth AuthCredentials auth,
             @RequestBody IdeaRequest request
     ) {
         Long savedId = ideaService.save(auth, request);
@@ -51,7 +51,7 @@ public class IdeaController {
 
     @GetMapping
     public ResponseEntity<List<IdeaResponse>> findAll(
-            @OptionalAuth @RequestBody AuthCredentials authCredentials,
+            @OptionalAuth AuthCredentials authCredentials,
             @RequestParam int page,
             @RequestParam int size
     ) {
