@@ -5,7 +5,7 @@ import kr.co.conceptbe.idea.exception.NotFoundCooperationWayException;
 
 public enum CooperationWay {
 
-    NO_MATTER("상관 없음"),
+    NO_MATTER("상관없음"),
     ONLINE("온라인"),
     OFFLINE("오프라인"),
     ;
