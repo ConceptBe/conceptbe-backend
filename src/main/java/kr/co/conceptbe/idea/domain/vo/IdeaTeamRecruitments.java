@@ -5,7 +5,7 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
-import kr.co.conceptbe.common.entity.domain.TeamRecruitment;
+import kr.co.conceptbe.teamrecruitment.domain.TeamRecruitment;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaTeamRecruitment;
 import lombok.Getter;

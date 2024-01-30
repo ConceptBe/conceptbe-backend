@@ -1,7 +1,7 @@
-package kr.co.conceptbe.common.entity.domain.persistence;
+package kr.co.conceptbe.teamrecruitment.domain.persistence;
 
 import java.util.List;
-import kr.co.conceptbe.common.entity.domain.TeamRecruitment;
+import kr.co.conceptbe.teamrecruitment.domain.TeamRecruitment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TeamRecruitmentRepository extends JpaRepository<TeamRecruitment, Long> {

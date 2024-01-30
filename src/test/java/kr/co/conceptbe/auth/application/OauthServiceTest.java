@@ -9,7 +9,7 @@ import kr.co.conceptbe.auth.application.dto.SignUpRequest;
 import kr.co.conceptbe.auth.application.dto.SignUpSkillRequest;
 import kr.co.conceptbe.auth.fixture.AuthFixture;
 import kr.co.conceptbe.auth.support.JwtProvider;
-import kr.co.conceptbe.common.entity.domain.persistence.PurposeRepository;
+import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
