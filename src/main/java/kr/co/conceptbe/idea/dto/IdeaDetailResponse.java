@@ -3,6 +3,9 @@ package kr.co.conceptbe.idea.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.domain.Idea;
 
@@ -11,6 +14,7 @@ public record IdeaDetailResponse (
 	String nickname,
 	List<String> skillList,
 	String title,
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm", timezone = "Asia/Seoul")
 	LocalDateTime date,
 	String introduce,
 	List<String> branchList,
