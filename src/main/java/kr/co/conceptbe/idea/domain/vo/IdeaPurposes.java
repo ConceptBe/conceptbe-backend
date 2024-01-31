@@ -3,6 +3,7 @@ package kr.co.conceptbe.idea.domain.vo;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
@@ -19,7 +20,7 @@ public class IdeaPurposes {
 
     private static final int IDEA_PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE = 1;
 
-    @OneToMany(mappedBy = "idea")
+    @OneToMany(mappedBy = "idea", cascade = CascadeType.PERSIST)
     private List<IdeaPurpose> ideaPurposes;
 
     private IdeaPurposes(List<IdeaPurpose> ideaPurposes) {

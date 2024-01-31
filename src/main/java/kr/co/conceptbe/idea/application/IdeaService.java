@@ -48,11 +48,12 @@ public class IdeaService {
 
     public Long save(AuthCredentials authCredentials, IdeaRequest request) {
         validateMember(authCredentials);
+
         Idea idea = Idea.of(
                 request.title(),
                 request.introduce(),
                 request.cooperationWay(),
-                request.recruitmentPlace(),
+                regionRepository.getById(request.recruitmentPlaceId()),
                 memberRepository.getById(authCredentials.id()),
                 branchRepository.findByIdIn(request.branchIds()),
                 purposeRepository.findByIdIn(request.purposeIds()),

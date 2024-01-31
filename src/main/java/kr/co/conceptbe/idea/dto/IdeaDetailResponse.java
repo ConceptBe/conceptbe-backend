@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.domain.Idea;
 
@@ -39,8 +38,8 @@ public record IdeaDetailResponse (
 			idea.getIntroduce(),
 			idea.getBranches().stream().map(e -> e.getBranch().getName()).toList(),
 			idea.getPurposes().stream().map(e -> e.getPurpose().getName()).toList(),
-			idea.getCooperationWay().name(),
-			idea.getRecruitmentPlace(),
+			idea.getCooperationWay().getValue(),
+			idea.getRecruitmentPlace().getName(),
 			idea.getTeamRecruitments().stream().map(e -> e.getTeamRecruitment().getName()).toList(),
 			idea.getLikesCount(),
 			idea.getCommentsCount(),

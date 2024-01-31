@@ -10,7 +10,7 @@ public enum CooperationWay {
     OFFLINE("오프라인"),
     ;
 
-    private String value;
+    private final String value;
 
     CooperationWay(String value) {
         this.value = value;
@@ -21,6 +21,10 @@ public enum CooperationWay {
                 .filter(cooperationWay -> cooperationWay.value.equals(input))
                 .findFirst()
                 .orElseThrow(NotFoundCooperationWayException::new);
+    }
+
+    public String getValue() {
+        return value;
     }
 
 }
