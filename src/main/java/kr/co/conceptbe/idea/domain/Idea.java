@@ -27,6 +27,7 @@ import kr.co.conceptbe.idea.domain.vo.Introduce;
 import kr.co.conceptbe.idea.domain.vo.Title;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.purpose.domain.Purpose;
+import kr.co.conceptbe.region.domain.Region;
 import kr.co.conceptbe.teamrecruitment.domain.TeamRecruitment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,8 +51,9 @@ public class Idea extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private CooperationWay cooperationWay;
 
-    @Column(nullable = false)
-    private String recruitmentPlace;
+    @ManyToOne
+    @JoinColumn(name = "recruitment_place")
+    private Region recruitmentPlace;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
@@ -82,7 +84,7 @@ public class Idea extends BaseTimeEntity {
             Title title,
             Introduce introduce,
             CooperationWay cooperationWay,
-            String recruitmentPlace,
+            Region recruitmentPlace,
             Member creator
     ) {
         this.title = title;
@@ -96,7 +98,7 @@ public class Idea extends BaseTimeEntity {
             String title,
             String introduce,
             String cooperationWay,
-            String recruitmentPlace,
+            Region recruitmentPlace,
             Member creator,
             List<Branch> branches,
             List<Purpose> purposes,
