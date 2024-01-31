@@ -106,9 +106,9 @@ public class IdeaService {
                 .collect(Collectors.toSet());
     }
 
-    public IdeaDetailResponse getDetailIdeaResponse(Long ideaId) {
+    public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        return IdeaDetailResponse.from(idea);
+        return IdeaDetailResponse.of(tokenMemberId, idea);
     }
 
     public Long likesIdea(Long tokenMemberId, Long ideaId) {

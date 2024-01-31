@@ -22,9 +22,10 @@ public record IdeaDetailResponse (
 	Integer commentsCount,
 	Integer bookmarksCount,
 	Integer hits,
-	List<CommentParentResponse> commentParentResponses
+	List<CommentParentResponse> commentParentResponses,
+	Boolean mine
 ) {
-	public static IdeaDetailResponse from(Idea idea) {
+	public static IdeaDetailResponse of(Long tokenMemberId, Idea idea) {
 		return new IdeaDetailResponse(
 			idea.getCreator().getProfileImageUrl(),
 			idea.getCreator().getNickname(),
@@ -45,7 +46,8 @@ public record IdeaDetailResponse (
 					.stream()
 					.filter(e->e.getParentComment() == null)
 					.map(CommentParentResponse::from)
-					.toList()
+					.toList(),
+			idea.isMyIdea(tokenMemberId)
 		);
 	}
 }
