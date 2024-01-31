@@ -9,6 +9,7 @@ import kr.co.conceptbe.idea.domain.IdeaBranch;
 import kr.co.conceptbe.idea.domain.IdeaTeamRecruitment;
 
 public record IdeaResponse(
+        Long id,
         String title,
         String introduce,
         int hitsCount,
@@ -24,6 +25,7 @@ public record IdeaResponse(
 
     public static IdeaResponse ofMember(Idea idea, boolean isBookmarked) {
         return new IdeaResponse(
+                idea.getId(),
                 idea.getTitle(),
                 idea.getIntroduce(),
                 idea.getHitsCount(),
@@ -54,6 +56,7 @@ public record IdeaResponse(
 
     public static IdeaResponse ofGuest(Idea idea) {
         return new IdeaResponse(
+                idea.getId(),
                 idea.getTitle(),
                 idea.getIntroduce(),
                 idea.getHitsCount(),
