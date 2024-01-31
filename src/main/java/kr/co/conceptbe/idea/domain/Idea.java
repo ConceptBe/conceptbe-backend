@@ -157,7 +157,7 @@ public class Idea extends BaseTimeEntity {
 
     public void addIdeaLikes(IdeaLike ideaLike) { this.likes.add(ideaLike); }
 
-    public boolean isMyIdea(Long tokenMemberId) {
+    public boolean isOwner(Long tokenMemberId) {
         return creator.getId().equals(tokenMemberId);
     }
 }

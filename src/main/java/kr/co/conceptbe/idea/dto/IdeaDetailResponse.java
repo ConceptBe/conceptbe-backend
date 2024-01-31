@@ -23,7 +23,7 @@ public record IdeaDetailResponse (
 	Integer bookmarksCount,
 	Integer hits,
 	List<CommentParentResponse> commentParentResponses,
-	Boolean mine
+	Boolean owner
 ) {
 	public static IdeaDetailResponse of(Long tokenMemberId, Idea idea) {
 		return new IdeaDetailResponse(
@@ -47,7 +47,7 @@ public record IdeaDetailResponse (
 					.filter(e->e.getParentComment() == null)
 					.map(CommentParentResponse::from)
 					.toList(),
-			idea.isMyIdea(tokenMemberId)
+			idea.isOwner(tokenMemberId)
 		);
 	}
 }
