@@ -74,8 +74,9 @@ public class IdeaController {
 
     @GetMapping("/{ideaId}")
     public ResponseEntity<IdeaDetailResponse> getDetailIdeaResponse(
+        @Auth AuthCredentials authCredentials,
         @PathVariable(name = "ideaId") Long ideaId) {
-        IdeaDetailResponse ideaDetailResponse = ideaService.getDetailIdeaResponse(ideaId);
+        IdeaDetailResponse ideaDetailResponse = ideaService.getDetailIdeaResponse(authCredentials.id(), ideaId);
         return ResponseEntity.ok(ideaDetailResponse);
     }
 
