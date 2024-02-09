@@ -2,11 +2,15 @@ package kr.co.conceptbe.member.application;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
+import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
+import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.exception.AlreadyExistsNicknameException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final IdeaRepository ideaRepository;
 
     public void validateDuplicatedNickName(String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
@@ -47,5 +52,14 @@ public class MemberService {
         return member.getSkills().stream()
             .map(skill -> skill.getSkillCategory().getName())
             .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<MemberIdeaResponse> findMemberIdeas(
+        AuthCredentials authCredentials, Pageable pageable) {
+        return ideaRepository.findAllByCreatorIdOrderByCreatedAtDesc(authCredentials.id(), pageable)
+            .stream()
+            .map(MemberIdeaResponse::ofMember)
+            .toList();
     }
 }

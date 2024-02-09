@@ -8,26 +8,25 @@ import java.util.stream.Collectors;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
+import kr.co.conceptbe.idea.application.request.IdeaRequest;
+import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
+import kr.co.conceptbe.idea.application.response.IdeaResponse;
+import kr.co.conceptbe.idea.domain.Idea;
+import kr.co.conceptbe.idea.domain.IdeaLike;
+import kr.co.conceptbe.idea.domain.IdeaLikeID;
+import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
+import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
+import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
+import kr.co.conceptbe.idea.exception.IdeaLikeException;
+import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
+import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentCategoryRepository;
 import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentRepository;
-import kr.co.conceptbe.idea.exception.IdeaLikeException;
-import kr.co.conceptbe.idea.domain.IdeaLikeID;
-import kr.co.conceptbe.idea.domain.Idea;
-import kr.co.conceptbe.idea.domain.IdeaLike;
-import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
-import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
-import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
-import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
-import kr.co.conceptbe.idea.application.request.IdeaRequest;
-import kr.co.conceptbe.idea.application.response.IdeaResponse;
-import kr.co.conceptbe.member.domain.Member;
-import kr.co.conceptbe.member.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -144,5 +143,4 @@ public class IdeaService {
                 teamRecruitmentCategoryRepository.findAll()
         );
     }
-
 }
