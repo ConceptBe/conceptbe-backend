@@ -3,6 +3,9 @@ package kr.co.conceptbe.member.application;
 import java.util.List;
 import java.util.stream.Collectors;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
+import kr.co.conceptbe.bookmark.Bookmark;
+import kr.co.conceptbe.bookmark.repository.BookmarkRepository;
+import kr.co.conceptbe.idea.application.response.IdeaResponse;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
@@ -21,6 +24,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final IdeaRepository ideaRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     public void validateDuplicatedNickName(String nickname) {
         if (memberRepository.existsByNickname(nickname)) {
@@ -55,11 +59,18 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberIdeaResponse> findMemberIdeas(
-        AuthCredentials authCredentials, Pageable pageable) {
+    public List<MemberIdeaResponse> findMemberIdeas(AuthCredentials authCredentials, Pageable pageable) {
         return ideaRepository.findAllByCreatorIdOrderByCreatedAtDesc(authCredentials.id(), pageable)
             .stream()
             .map(MemberIdeaResponse::ofMember)
+            .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<IdeaResponse> findMemberBookMarks(AuthCredentials authCredentials, Pageable pageable) {
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByMemberIdOrderByIdeaCreatedAtDesc(authCredentials.id(), pageable);
+        return bookmarks.stream()
+            .map(bookmark -> IdeaResponse.ofMember(bookmark.getIdea(), true))
             .toList();
     }
 }

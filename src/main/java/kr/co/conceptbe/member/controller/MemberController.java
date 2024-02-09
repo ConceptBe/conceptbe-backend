@@ -3,6 +3,7 @@ package kr.co.conceptbe.member.controller;
 import java.util.List;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.common.auth.Auth;
+import kr.co.conceptbe.idea.application.response.IdeaResponse;
 import kr.co.conceptbe.member.application.MemberService;
 import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
@@ -46,8 +47,20 @@ public class MemberController {
         @RequestParam int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<MemberIdeaResponse> responses = memberService.findMemberIdeas(authCredentials, pageable);
+        List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, pageable);
 
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(memberIdeas);
+    }
+
+    @GetMapping("/{id}/bookmarks")
+    public ResponseEntity<List<IdeaResponse>> findMemberBookmarks(
+        @Auth AuthCredentials authCredentials,
+        @RequestParam int page,
+        @RequestParam int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<IdeaResponse> memberBookMarks = memberService.findMemberBookMarks(authCredentials, pageable);
+
+        return ResponseEntity.ok(memberBookMarks);
     }
 }
