@@ -162,7 +162,7 @@ public class IdeaService {
         Idea idea = ideaRepository.getById(ideaId);
         return idea.getComments()
             .stream()
-            .filter(e->e.getParentComment() == null)
+            .filter(comment -> comment.getParentComment() == null)
             .map(CommentParentResponse::from)
             .toList();
     }
