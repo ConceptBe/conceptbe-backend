@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
+import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
@@ -107,6 +108,7 @@ public class IdeaService {
                 .collect(Collectors.toSet());
     }
 
+    @Transactional(readOnly = true)
     public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
         return IdeaDetailResponse.of(tokenMemberId, idea);
@@ -145,4 +147,13 @@ public class IdeaService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public List<CommentParentResponse> getIdeaCommentResponse(Long ideaId) {
+        Idea idea = ideaRepository.getById(ideaId);
+        return idea.getComments()
+            .stream()
+            .filter(e->e.getParentComment() == null)
+            .map(CommentParentResponse::from)
+            .toList();
+    }
 }

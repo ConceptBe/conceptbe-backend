@@ -3,6 +3,7 @@ package kr.co.conceptbe.idea.presentation;
 import java.net.URI;
 import java.util.List;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
+import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.common.auth.Auth;
 import kr.co.conceptbe.common.auth.OptionalAuth;
 import kr.co.conceptbe.idea.application.IdeaService;
@@ -80,6 +81,14 @@ public class IdeaController {
         return ResponseEntity.ok(ideaDetailResponse);
     }
 
+    @GetMapping("/{ideaId}/comments")
+    public ResponseEntity<List<CommentParentResponse>> getIdeaCommentResponse(
+        @Auth AuthCredentials authCredentials,
+        @PathVariable(name = "ideaId") Long ideaId) {
+        List<CommentParentResponse> commentParentResponses = ideaService.getIdeaCommentResponse(ideaId);
+        return ResponseEntity.ok(commentParentResponses);
+    }
+
     @PostMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesIdea(
         @Auth AuthCredentials authCredentials,
@@ -92,7 +101,7 @@ public class IdeaController {
     @DeleteMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesCancelIdea(
         @Auth AuthCredentials authCredentials,
-        @PathVariable(name = "idea_id") Long ideaId) {
+        @PathVariable(name = "ideaId") Long ideaId) {
         ideaService.likesCancelIdea(authCredentials.id(), ideaId);
         return ResponseEntity.noContent().build();
     }
