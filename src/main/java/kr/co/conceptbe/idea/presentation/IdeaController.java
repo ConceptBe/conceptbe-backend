@@ -12,6 +12,7 @@ import kr.co.conceptbe.idea.application.request.IdeaRequest;
 import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
+import kr.co.conceptbe.idea.dto.IdeaHitResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -104,5 +105,13 @@ public class IdeaController {
         @PathVariable(name = "ideaId") Long ideaId) {
         ideaService.likesCancelIdea(authCredentials.id(), ideaId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{ideaId}/hits")
+    public ResponseEntity<List<IdeaHitResponse>> getIdeaHitsResponse(
+        @Auth AuthCredentials authCredentials,
+        @PathVariable(name = "ideaId") Long ideaId) {
+        List<IdeaHitResponse> ideaCommentResponse = ideaService.getIdeaHitsResponse(ideaId);
+        return ResponseEntity.ok(ideaCommentResponse);
     }
 }

@@ -12,6 +12,7 @@ import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.persistence.HitRepository;
+import kr.co.conceptbe.idea.dto.IdeaHitResponse;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
@@ -164,5 +165,15 @@ public class IdeaService {
             .filter(e->e.getParentComment() == null)
             .map(CommentParentResponse::from)
             .toList();
+    }
+
+    public List<IdeaHitResponse> getIdeaHitsResponse(Long ideaId) {
+        Idea idea = ideaRepository.getById(ideaId);
+
+        List<IdeaHitResponse> responses = null;
+        for (Hit hit : idea.getHits()) {
+            responses.add(IdeaHitResponse.from(hit.getMember()));
+        }
+        return responses;
     }
 }
