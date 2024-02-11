@@ -2,6 +2,7 @@ package kr.co.conceptbe.idea.domain.vo;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
@@ -18,7 +19,7 @@ public class IdeaBranches {
 
     private static final int IDEA_BRANCHES_SIZE_LOWER_BOUND_INCLUSIVE = 1;
 
-    @OneToMany(mappedBy = "idea")
+    @OneToMany(mappedBy = "idea", cascade = CascadeType.PERSIST)
     private List<IdeaBranch> ideaBranches;
 
     private IdeaBranches(List<IdeaBranch> ideaBranches) {

@@ -27,7 +27,7 @@ public enum RegionName {
     JEJU("제주특별자치도"),
     ;
 
-    private String name;
+    private final String name;
 
     RegionName(String name) {
         this.name = name;
@@ -35,7 +35,7 @@ public enum RegionName {
 
     public static RegionName from(String inputRegion) {
         return Arrays.stream(values())
-                .filter(region -> region.getName().equals(inputRegion))
+                .filter(region -> region.name().equals(inputRegion))
                 .findFirst()
                 .orElseThrow(NotFoundRegionException::new);
     }
