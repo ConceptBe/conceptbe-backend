@@ -10,6 +10,8 @@ import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
+import kr.co.conceptbe.idea.domain.Hit;
+import kr.co.conceptbe.idea.domain.persistence.HitRepository;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
@@ -46,6 +48,7 @@ public class IdeaService {
     private final IdeaRepository ideaRepository;
     private final MemberRepository memberRepository;
     private final IdeaLikesRepository ideaLikesRepository;
+    private final HitRepository hitRepository;
 
     public Long save(AuthCredentials authCredentials, IdeaRequest request) {
         validateMember(authCredentials);
@@ -108,10 +111,16 @@ public class IdeaService {
                 .collect(Collectors.toSet());
     }
 
-    @Transactional(readOnly = true)
     public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        return IdeaDetailResponse.of(tokenMemberId, idea);
+        IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea);
+
+        Member member = memberRepository.getById(tokenMemberId);
+        Hit hit = new Hit(member, idea);
+        hitRepository.save(hit);
+        idea.addHit(hit);
+
+        return ideaDetailResponse;
     }
 
     public Long likesIdea(Long tokenMemberId, Long ideaId) {

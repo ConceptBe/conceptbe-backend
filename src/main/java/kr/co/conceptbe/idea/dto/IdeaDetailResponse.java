@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.domain.Idea;
 
 public record IdeaDetailResponse (

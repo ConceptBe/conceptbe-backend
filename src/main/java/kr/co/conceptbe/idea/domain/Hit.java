@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.member.domain.Member;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,8 +31,7 @@ public class Hit extends BaseTimeEntity {
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    public Hit(Long id, Member member, Idea idea) {
-        this.id = id;
+    public Hit(Member member, Idea idea) {
         this.member = member;
         this.idea = idea;
     }
