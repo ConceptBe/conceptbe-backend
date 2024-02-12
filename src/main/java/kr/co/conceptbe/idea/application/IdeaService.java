@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
+import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.domain.Hit;
@@ -162,7 +163,7 @@ public class IdeaService {
         Idea idea = ideaRepository.getById(ideaId);
         return idea.getComments()
             .stream()
-            .filter(comment -> comment.getParentComment() == null)
+            .filter(Comment::isNullParentComment)
             .map(CommentParentResponse::from)
             .toList();
     }

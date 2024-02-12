@@ -73,4 +73,8 @@ public class Comment extends BaseTimeEntity {
     public int getLikesCount() { return likes.size(); }
 
     public int getCommentsCount() { return comments.size(); }
+
+    public boolean isNullParentComment() {
+        return this.parentComment == null;
+    }
 }
