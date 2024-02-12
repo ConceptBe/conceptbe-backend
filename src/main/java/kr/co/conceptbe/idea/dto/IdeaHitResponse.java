@@ -15,7 +15,7 @@ public record IdeaHitResponse (
 			member.getId(),
 			member.getNickname(),
 			member.getProfileImageUrl(),
-			member.getSkills().stream().map(e -> e.getSkillCategory().getName()).toList()
+			member.getSkills().stream().map(skill -> skill.getSkillCategory().getName()).toList()
 		);
 	}
 }
