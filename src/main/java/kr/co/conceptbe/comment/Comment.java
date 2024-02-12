@@ -74,7 +74,7 @@ public class Comment extends BaseTimeEntity {
 
     public int getCommentsCount() { return comments.size(); }
 
-    public boolean isNullParentComment() {
+    public boolean isParentComment() {
         return this.parentComment == null;
     }
 }

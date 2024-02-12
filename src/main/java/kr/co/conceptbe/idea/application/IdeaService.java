@@ -163,7 +163,7 @@ public class IdeaService {
         Idea idea = ideaRepository.getById(ideaId);
         return idea.getComments()
             .stream()
-            .filter(Comment::isNullParentComment)
+            .filter(Comment::isParentComment)
             .map(CommentParentResponse::from)
             .toList();
     }
@@ -171,10 +171,9 @@ public class IdeaService {
     public List<IdeaHitResponse> getIdeaHitsResponse(Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
 
-        List<IdeaHitResponse> responses = null;
-        for (Hit hit : idea.getHits()) {
-            responses.add(IdeaHitResponse.from(hit.getMember()));
-        }
-        return responses;
+        return idea.getHits().stream()
+                .map(Hit::getMember)
+                .map(IdeaHitResponse::from)
+                .toList();
     }
 }
