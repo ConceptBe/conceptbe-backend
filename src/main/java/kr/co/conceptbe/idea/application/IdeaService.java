@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
+import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.domain.Hit;
@@ -117,9 +118,8 @@ public class IdeaService {
         IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea);
 
         Member member = memberRepository.getById(tokenMemberId);
-        Hit hit = new Hit(member, idea);
+        Hit hit = Hit.of(member, idea);
         hitRepository.save(hit);
-        idea.addHit(hit);
 
         return ideaDetailResponse;
     }
@@ -162,7 +162,7 @@ public class IdeaService {
         Idea idea = ideaRepository.getById(ideaId);
         return idea.getComments()
             .stream()
-            .filter(comment -> comment.getParentComment() == null)
+            .filter(Comment::isParentComment)
             .map(CommentParentResponse::from)
             .toList();
     }
@@ -170,10 +170,9 @@ public class IdeaService {
     public List<IdeaHitResponse> getIdeaHitsResponse(Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
 
-        List<IdeaHitResponse> responses = null;
-        for (Hit hit : idea.getHits()) {
-            responses.add(IdeaHitResponse.from(hit.getMember()));
-        }
-        return responses;
+        return idea.getHits().stream()
+                .map(Hit::getMember)
+                .map(IdeaHitResponse::from)
+                .toList();
     }
 }
