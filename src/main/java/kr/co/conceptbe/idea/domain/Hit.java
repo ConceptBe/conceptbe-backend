@@ -36,4 +36,9 @@ public class Hit extends BaseTimeEntity {
         this.idea = idea;
     }
 
+    public static Hit of(Member member, Idea idea) {
+        Hit hit = new Hit(member, idea);
+        idea.addHit(hit);
+        return hit;
+    }
 }

@@ -118,9 +118,8 @@ public class IdeaService {
         IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea);
 
         Member member = memberRepository.getById(tokenMemberId);
-        Hit hit = new Hit(member, idea);
+        Hit hit = Hit.of(member, idea);
         hitRepository.save(hit);
-        idea.addHit(hit);
 
         return ideaDetailResponse;
     }
