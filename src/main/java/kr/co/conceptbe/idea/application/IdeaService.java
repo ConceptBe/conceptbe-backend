@@ -8,7 +8,12 @@ import java.util.stream.Collectors;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
+import kr.co.conceptbe.comment.Comment;
+import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
+import kr.co.conceptbe.idea.domain.Hit;
+import kr.co.conceptbe.idea.domain.persistence.HitRepository;
+import kr.co.conceptbe.idea.dto.IdeaHitResponse;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
@@ -45,6 +50,7 @@ public class IdeaService {
     private final IdeaRepository ideaRepository;
     private final MemberRepository memberRepository;
     private final IdeaLikesRepository ideaLikesRepository;
+    private final HitRepository hitRepository;
 
     public Long save(AuthCredentials authCredentials, IdeaRequest request) {
         validateMember(authCredentials);
@@ -109,7 +115,13 @@ public class IdeaService {
 
     public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        return IdeaDetailResponse.of(tokenMemberId, idea);
+        IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea);
+
+        Member member = memberRepository.getById(tokenMemberId);
+        Hit hit = Hit.of(member, idea);
+        hitRepository.save(hit);
+
+        return ideaDetailResponse;
     }
 
     public Long likesIdea(Long tokenMemberId, Long ideaId) {
@@ -145,4 +157,22 @@ public class IdeaService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public List<CommentParentResponse> getIdeaCommentResponse(Long ideaId) {
+        Idea idea = ideaRepository.getById(ideaId);
+        return idea.getComments()
+            .stream()
+            .filter(Comment::isParentComment)
+            .map(CommentParentResponse::from)
+            .toList();
+    }
+
+    public List<IdeaHitResponse> getIdeaHitsResponse(Long ideaId) {
+        Idea idea = ideaRepository.getById(ideaId);
+
+        return idea.getHits().stream()
+                .map(Hit::getMember)
+                .map(IdeaHitResponse::from)
+                .toList();
+    }
 }

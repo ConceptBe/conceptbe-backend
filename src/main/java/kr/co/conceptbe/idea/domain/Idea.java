@@ -153,6 +153,8 @@ public class Idea extends BaseTimeEntity {
         return comments.size();
     }
 
+    public void addHit(Hit hit) { this.hits.add(hit); }
+
     public void addComment(Comment comment) { this.comments.add(comment); }
 
     public void addBookmark(Bookmark bookmark) { this.bookmarks.add(bookmark); }

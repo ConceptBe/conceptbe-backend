@@ -2,10 +2,8 @@ package kr.co.conceptbe.idea.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.idea.domain.Idea;
 
 public record IdeaDetailResponse (
@@ -25,7 +23,6 @@ public record IdeaDetailResponse (
 	Integer commentsCount,
 	Integer bookmarksCount,
 	Integer hits,
-	List<CommentParentResponse> commentParentResponses,
 	Boolean owner
 ) {
 	public static IdeaDetailResponse of(Long tokenMemberId, Idea idea) {
@@ -45,11 +42,6 @@ public record IdeaDetailResponse (
 			idea.getCommentsCount(),
 			idea.getBookmarksCount(),
 			idea.getHitsCount(),
-			idea.getComments()
-					.stream()
-					.filter(e->e.getParentComment() == null)
-					.map(CommentParentResponse::from)
-					.toList(),
 			idea.isOwner(tokenMemberId)
 		);
 	}
