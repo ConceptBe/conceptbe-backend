@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -112,7 +113,7 @@ public class IdeaController {
     }
 
     @Operation(summary = "Idea 좋아요 취소", description = "피드글을 좋아요 취소를 합니다.")
-    @DeleteMapping("/likes/{ideaId}")
+    @PatchMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesCancelIdea(
         @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
         @PathVariable(name = "ideaId") Long ideaId) {
