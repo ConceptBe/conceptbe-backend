@@ -12,6 +12,19 @@ import kr.co.conceptbe.idea.application.request.IdeaRequest;
 import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
+import kr.co.conceptbe.comment.Comment;
+import kr.co.conceptbe.comment.dto.CommentParentResponse;
+import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
+import kr.co.conceptbe.idea.domain.Hit;
+import kr.co.conceptbe.idea.domain.persistence.HitRepository;
+import kr.co.conceptbe.idea.dto.IdeaHitResponse;
+import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
+import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
+import kr.co.conceptbe.region.domain.presentation.RegionRepository;
+import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentCategoryRepository;
+import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentRepository;
+import kr.co.conceptbe.idea.exception.IdeaLikeException;
+import kr.co.conceptbe.idea.domain.IdeaLikeID;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
 import kr.co.conceptbe.idea.domain.IdeaLikeID;
@@ -44,8 +57,10 @@ public class IdeaService {
     private final IdeaRepository ideaRepository;
     private final MemberRepository memberRepository;
     private final IdeaLikesRepository ideaLikesRepository;
+    private final HitRepository hitRepository;
 
-    public Long save(AuthCredentials authCredentials, IdeaRequest request) {
+    public Long save(AuthCredentials authCredentials, 
+                     request) {
         validateMember(authCredentials);
 
         Idea idea = Idea.of(
@@ -108,7 +123,13 @@ public class IdeaService {
 
     public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        return IdeaDetailResponse.of(tokenMemberId, idea);
+        IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea);
+
+        Member member = memberRepository.getById(tokenMemberId);
+        Hit hit = Hit.of(member, idea);
+        hitRepository.save(hit);
+
+        return ideaDetailResponse;
     }
 
     public Long likesIdea(Long tokenMemberId, Long ideaId) {
@@ -142,5 +163,24 @@ public class IdeaService {
                 purposeRepository.findAll(),
                 teamRecruitmentCategoryRepository.findAll()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentParentResponse> getIdeaCommentResponse(Long ideaId) {
+        Idea idea = ideaRepository.getById(ideaId);
+        return idea.getComments()
+            .stream()
+            .filter(Comment::isParentComment)
+            .map(CommentParentResponse::from)
+            .toList();
+    }
+
+    public List<IdeaHitResponse> getIdeaHitsResponse(Long ideaId) {
+        Idea idea = ideaRepository.getById(ideaId);
+
+        return idea.getHits().stream()
+                .map(Hit::getMember)
+                .map(IdeaHitResponse::from)
+                .toList();
     }
 }
