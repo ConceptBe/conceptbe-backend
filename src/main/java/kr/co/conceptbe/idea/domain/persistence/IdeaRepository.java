@@ -11,6 +11,8 @@ public interface IdeaRepository extends JpaRepository<Idea, Long> {
 
     List<Idea> findAllByOrderByLikesDesc(Pageable pageable);
 
+    List<Idea> findAllByCreatorIdOrderByCreatedAtDesc(Long memberId, Pageable pageable);
+
     default Idea getById(Long ideaId) {
         return findById(ideaId).orElseThrow(
             () -> new IllegalArgumentException("Not Found ID : " + ideaId));
