@@ -71,8 +71,7 @@ public class CommentController {
 	public ResponseEntity<Void> deleteComment(
 		@Parameter(hidden = true) @Auth AuthCredentials authCredentials,
 		@PathVariable(name = "commentId") Long commentId) {
-		Long savedId = commentService.deleteComment(authCredentials.id(), commentId);
-		return ResponseEntity.created(URI.create("/comments/" + savedId))
-			.build();
+		commentService.deleteComment(authCredentials.id(), commentId);
+		return ResponseEntity.noContent().build();
 	}
 }

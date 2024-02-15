@@ -113,7 +113,7 @@ public class IdeaController {
     }
 
     @Operation(summary = "Idea 좋아요 취소", description = "피드글을 좋아요 취소를 합니다.")
-    @PatchMapping("/likes/{ideaId}")
+    @DeleteMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesCancelIdea(
         @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
         @PathVariable(name = "ideaId") Long ideaId) {
