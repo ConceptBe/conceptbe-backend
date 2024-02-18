@@ -25,12 +25,11 @@ public class MemberController implements MemberApi {
 
     private final MemberService memberService;
 
-    @GetMapping("/nickname/{nickname}")
-    public ResponseEntity<Void> checkDuplicatedNickName(
-        @PathVariable String nickname
+    @GetMapping("/nickname")
+    ResponseEntity<Boolean> checkDuplicatedNickName(
+        @RequestParam String nickname
     ) {
-        memberService.validateDuplicatedNickName(nickname);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(memberService.validateDuplicatedNickName(nickname));
     }
 
     @GetMapping("/{id}")
