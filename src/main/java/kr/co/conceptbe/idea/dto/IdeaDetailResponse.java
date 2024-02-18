@@ -11,7 +11,6 @@ public record IdeaDetailResponse (
 	String nickname,
 	List<String> skillList,
 	String title,
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm", timezone = "Asia/Seoul")
 	LocalDateTime date,
 	String introduce,
 	List<String> branchList,
