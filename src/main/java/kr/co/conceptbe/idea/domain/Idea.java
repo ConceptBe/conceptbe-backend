@@ -164,4 +164,12 @@ public class Idea extends BaseTimeEntity {
     public boolean isOwner(Long tokenMemberId) {
         return creator.getId().equals(tokenMemberId);
     }
+
+    public boolean isOwnerLike(Long tokenMemberId) {
+        return likes.stream().anyMatch(like -> like.getMember().getId().equals(tokenMemberId));
+    }
+
+    public boolean isOwnerScrap(Long tokenMemberId) {
+        return bookmarks.stream().anyMatch(bookmark -> bookmark.getMember().getId().equals(tokenMemberId));
+    }
 }

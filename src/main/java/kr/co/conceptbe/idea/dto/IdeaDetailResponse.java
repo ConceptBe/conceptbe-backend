@@ -23,7 +23,9 @@ public record IdeaDetailResponse (
 	Integer commentsCount,
 	Integer bookmarksCount,
 	Integer hits,
-	Boolean owner
+	Boolean owner,
+	Boolean ownerLike,
+	Boolean ownerScrap
 ) {
 	public static IdeaDetailResponse of(Long tokenMemberId, Idea idea) {
 		return new IdeaDetailResponse(
@@ -42,7 +44,9 @@ public record IdeaDetailResponse (
 			idea.getCommentsCount(),
 			idea.getBookmarksCount(),
 			idea.getHitsCount(),
-			idea.isOwner(tokenMemberId)
+			idea.isOwner(tokenMemberId),
+			idea.isOwnerLike(tokenMemberId),
+			idea.isOwnerScrap(tokenMemberId)
 		);
 	}
 }
