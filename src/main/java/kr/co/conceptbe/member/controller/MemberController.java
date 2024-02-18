@@ -26,7 +26,7 @@ public class MemberController implements MemberApi {
     private final MemberService memberService;
 
     @GetMapping("/nickname")
-    ResponseEntity<Boolean> checkDuplicatedNickName(
+    public ResponseEntity<Boolean> checkDuplicatedNickName(
         @RequestParam String nickname
     ) {
         return ResponseEntity.ok(memberService.validateDuplicatedNickName(nickname));

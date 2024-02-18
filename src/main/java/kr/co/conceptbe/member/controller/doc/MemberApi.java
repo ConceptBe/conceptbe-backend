@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface MemberApi {
 
     @Operation(summary = "닉네임 중복 체크")
-    ResponseEntity<Void> checkDuplicatedNickName(@PathVariable String nickname);
+    ResponseEntity<Boolean> checkDuplicatedNickName(@PathVariable String nickname);
 
     @Operation(summary = "회원 프로필 조회")
     ResponseEntity<GetMemberProfileResponse> getMemberProfile(@PathVariable Long id);
