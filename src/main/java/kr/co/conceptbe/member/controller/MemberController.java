@@ -24,12 +24,11 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/nickname/{nickname}")
-    ResponseEntity<Void> checkDuplicatedNickName(
-        @PathVariable String nickname
+    @GetMapping("/nickname")
+    ResponseEntity<Boolean> checkDuplicatedNickName(
+        @RequestParam String nickname
     ) {
-        memberService.validateDuplicatedNickName(nickname);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(memberService.validateDuplicatedNickName(nickname));
     }
 
     @GetMapping("/{id}")
