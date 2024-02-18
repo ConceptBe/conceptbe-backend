@@ -7,6 +7,7 @@ import kr.co.conceptbe.idea.application.response.IdeaResponse;
 import kr.co.conceptbe.member.application.MemberService;
 import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
+import kr.co.conceptbe.member.controller.doc.MemberApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
-public class MemberController {
+public class MemberController implements MemberApi {
 
     private final MemberService memberService;
 
@@ -32,7 +33,7 @@ public class MemberController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<GetMemberProfileResponse> getMemberProfile(
+    public ResponseEntity<GetMemberProfileResponse> getMemberProfile(
         @PathVariable Long id
     ) {
         GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(id);
