@@ -26,10 +26,8 @@ public class MemberService {
     private final IdeaRepository ideaRepository;
     private final BookmarkRepository bookmarkRepository;
 
-    public void validateDuplicatedNickName(String nickname) {
-        if (memberRepository.existsByNickname(nickname)) {
-            throw new AlreadyExistsNicknameException(nickname);
-        }
+    public boolean validateDuplicatedNickName(String nickname) {
+        return !memberRepository.existsByNickname(nickname);
     }
 
     public GetMemberProfileResponse getMemberProfileBy(Long id) {

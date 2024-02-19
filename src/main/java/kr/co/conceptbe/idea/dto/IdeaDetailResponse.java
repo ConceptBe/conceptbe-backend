@@ -11,7 +11,6 @@ public record IdeaDetailResponse (
 	String nickname,
 	List<String> skillList,
 	String title,
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm", timezone = "Asia/Seoul")
 	LocalDateTime date,
 	String introduce,
 	List<String> branchList,
@@ -23,7 +22,9 @@ public record IdeaDetailResponse (
 	Integer commentsCount,
 	Integer bookmarksCount,
 	Integer hits,
-	Boolean owner
+	Boolean owner,
+	Boolean ownerLike,
+	Boolean ownerScrap
 ) {
 	public static IdeaDetailResponse of(Long tokenMemberId, Idea idea) {
 		return new IdeaDetailResponse(
@@ -42,7 +43,9 @@ public record IdeaDetailResponse (
 			idea.getCommentsCount(),
 			idea.getBookmarksCount(),
 			idea.getHitsCount(),
-			idea.isOwner(tokenMemberId)
+			idea.isOwner(tokenMemberId),
+			idea.isOwnerLike(tokenMemberId),
+			idea.isOwnerScrap(tokenMemberId)
 		);
 	}
 }

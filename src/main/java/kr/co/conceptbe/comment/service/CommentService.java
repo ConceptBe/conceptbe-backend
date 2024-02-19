@@ -64,11 +64,10 @@ public class CommentService {
 		return comment.getId();
 	}
 
-	public Long deleteComment(Long tokenMemberId, Long commentId) {
+	public void deleteComment(Long tokenMemberId, Long commentId) {
 		Comment comment = commentRepository.getById(commentId);
 		Member.validateMember(tokenMemberId, comment.getCreator().getId());
 		comment.updateContent("삭제된 댓글입니다.");
-		return comment.getId();
 	}
 
 }
