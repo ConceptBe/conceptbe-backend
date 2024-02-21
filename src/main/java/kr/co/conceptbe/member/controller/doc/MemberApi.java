@@ -28,6 +28,7 @@ public interface MemberApi {
     @Operation(summary = "회원이 작성한 아이디어 조회")
     ResponseEntity<List<MemberIdeaResponse>> findMemberIdeas(
         @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+        @PathVariable Long id,
         @RequestParam int page,
         @RequestParam int size
     );

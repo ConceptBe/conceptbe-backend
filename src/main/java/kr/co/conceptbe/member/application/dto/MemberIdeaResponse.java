@@ -13,6 +13,8 @@ public record MemberIdeaResponse(
     Long id,
     @Schema(description = "제목", example = "같이 프로젝트 하실분")
     String title,
+    @Schema(description = "옵션(isMine, isBookmarked, isNotBookmarked", example = "isMine")
+    MemberIdeaResponseOption option,
     @Schema(description = "소개", example = "같이 프로젝트 하실분을 찾습니다.")
     String introduce,
     @Schema(description = "조회수", example = "90")
@@ -29,10 +31,11 @@ public record MemberIdeaResponse(
     List<String> teamRecruitments
 ) {
 
-    public static MemberIdeaResponse ofMember(Idea idea) {
+    public static MemberIdeaResponse ofMember(Idea idea, MemberIdeaResponseOption option) {
         return new MemberIdeaResponse(
             idea.getId(),
             idea.getTitle(),
+            option,
             idea.getIntroduce(),
             idea.getHitsCount(),
             idea.getCommentsCount(),

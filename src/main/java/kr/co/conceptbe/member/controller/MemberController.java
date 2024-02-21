@@ -44,11 +44,12 @@ public class MemberController implements MemberApi {
     @GetMapping("/{id}/ideas")
     public ResponseEntity<List<MemberIdeaResponse>> findMemberIdeas(
         @Auth AuthCredentials authCredentials,
+        @PathVariable Long id,
         @RequestParam int page,
         @RequestParam int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, pageable);
+        List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, id, pageable);
 
         return ResponseEntity.ok(memberIdeas);
     }
