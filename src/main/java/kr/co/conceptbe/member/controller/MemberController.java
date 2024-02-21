@@ -34,6 +34,7 @@ public class MemberController implements MemberApi {
 
     @GetMapping("/{id}")
     public ResponseEntity<GetMemberProfileResponse> getMemberProfile(
+        @Auth AuthCredentials authCredentials,
         @PathVariable Long id
     ) {
         GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(id);
