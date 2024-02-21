@@ -1,6 +1,7 @@
 package kr.co.conceptbe.member.application;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
@@ -10,7 +11,6 @@ import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
 import kr.co.conceptbe.member.domain.Member;
-import kr.co.conceptbe.member.exception.AlreadyExistsNicknameException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,11 +30,12 @@ public class MemberService {
         return !memberRepository.existsByNickname(nickname);
     }
 
-    public GetMemberProfileResponse getMemberProfileBy(Long id) {
+    public GetMemberProfileResponse getMemberProfileBy(AuthCredentials authCredentials, Long id) {
         Member member = memberRepository.getById(id);
         return new GetMemberProfileResponse(
             member.getProfileImageUrl(),
             member.getNickname(),
+            Objects.equals(authCredentials.id(), id),
             member.getMainSkill().getName(),
             member.getWorkingPlace(),
             member.getWorkingPlace(),

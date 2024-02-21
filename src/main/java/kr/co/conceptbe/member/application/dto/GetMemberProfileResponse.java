@@ -8,6 +8,8 @@ public record GetMemberProfileResponse(
     String profileImageUrl,
     @Schema(description = "닉네임", example = "conceptbe")
     String nickname,
+    @Schema(description = "프로필 수정 가능 여부", example = "true")
+    boolean isMyProfile,
     @Schema(description = "대표스킬", example = "개발")
     String mainSkill,
     @Schema(description = "지역", example = "서울특별시")

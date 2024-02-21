@@ -37,7 +37,7 @@ public class MemberController implements MemberApi {
         @Auth AuthCredentials authCredentials,
         @PathVariable Long id
     ) {
-        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(id);
+        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(authCredentials, id);
         return ResponseEntity.ok(memberProfileResponse);
     }
 

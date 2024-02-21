@@ -20,7 +20,10 @@ public interface MemberApi {
     ResponseEntity<Boolean> checkDuplicatedNickName(@PathVariable String nickname);
 
     @Operation(summary = "회원 프로필 조회")
-    ResponseEntity<GetMemberProfileResponse> getMemberProfile(@PathVariable Long id);
+    ResponseEntity<GetMemberProfileResponse> getMemberProfile(
+        @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+        @PathVariable Long id
+    );
 
     @Operation(summary = "회원이 작성한 아이디어 조회")
     ResponseEntity<List<MemberIdeaResponse>> findMemberIdeas(
