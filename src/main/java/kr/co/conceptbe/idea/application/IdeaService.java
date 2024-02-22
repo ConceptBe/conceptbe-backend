@@ -29,6 +29,7 @@ import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
+import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentCategoryRepository;
 import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +51,7 @@ public class IdeaService {
     private final MemberRepository memberRepository;
     private final IdeaLikesRepository ideaLikesRepository;
     private final HitRepository hitRepository;
+    private final SkillCategoryRepository skillCategoryRepository;
 
     public Long save(AuthCredentials authCredentials, IdeaRequest request) {
         validateMember(authCredentials);
@@ -152,7 +154,7 @@ public class IdeaService {
                 regionRepository.findAll(),
                 branchRepository.findAll(),
                 purposeRepository.findAll(),
-                teamRecruitmentCategoryRepository.findAll()
+                skillCategoryRepository.findAll()
         );
     }
 
@@ -160,10 +162,10 @@ public class IdeaService {
     public List<CommentParentResponse> getIdeaCommentResponse(Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
         return idea.getComments()
-            .stream()
-            .filter(Comment::isParentComment)
-            .map(CommentParentResponse::from)
-            .toList();
+                .stream()
+                .filter(Comment::isParentComment)
+                .map(CommentParentResponse::from)
+                .toList();
     }
 
     public List<IdeaHitResponse> getIdeaHitsResponse(Long ideaId) {
