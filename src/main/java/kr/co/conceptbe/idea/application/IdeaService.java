@@ -1,5 +1,10 @@
 package kr.co.conceptbe.idea.application;
 
+import static kr.co.conceptbe.idea.domain.QIdea.*;
+
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,6 +24,7 @@ import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
 import kr.co.conceptbe.idea.domain.IdeaLikeID;
+import kr.co.conceptbe.idea.domain.QIdea;
 import kr.co.conceptbe.idea.domain.persistence.HitRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
@@ -49,6 +55,7 @@ public class IdeaService {
     private final IdeaLikesRepository ideaLikesRepository;
     private final HitRepository hitRepository;
     private final SkillCategoryRepository skillCategoryRepository;
+    private final JPAQueryFactory jpaQueryFactory;
 
     public Long save(AuthCredentials authCredentials, IdeaRequest request) {
         validateMember(authCredentials);
