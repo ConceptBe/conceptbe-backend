@@ -5,8 +5,8 @@ import java.util.List;
 import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaBranch;
-import kr.co.conceptbe.idea.domain.IdeaTeamRecruitment;
-import kr.co.conceptbe.teamrecruitment.domain.TeamRecruitment;
+import kr.co.conceptbe.idea.domain.IdeaSkillCategory;
+import kr.co.conceptbe.skill.domain.SkillCategory;
 
 public record MemberIdeaResponse(
     @Schema(description = "아이디어 ID", example = "1")
@@ -26,7 +26,7 @@ public record MemberIdeaResponse(
     @Schema(description = "분야", example = "IT, 유튜브 컨텐츠")
     List<String> branches,
     @Schema(description = "팀원 모집 세부스킬들", example = "영상디자인, 서비스기획, 마케팅")
-    List<String> teamRecruitments
+    List<String> skillCategories
 ) {
 
     public static MemberIdeaResponse ofMember(Idea idea) {
@@ -39,7 +39,7 @@ public record MemberIdeaResponse(
             idea.getLikesCount(),
             idea.getBookmarksCount(),
             getBranches(idea.getBranches()),
-            getTeamRecruitments(idea.getTeamRecruitments())
+            getSkillCategories(idea.getIdeaSkillCategories())
         );
     }
 
@@ -50,10 +50,10 @@ public record MemberIdeaResponse(
                 .toList();
     }
 
-    private static List<String> getTeamRecruitments(List<IdeaTeamRecruitment> teamRecruitments) {
-        return teamRecruitments.stream()
-                .map(IdeaTeamRecruitment::getTeamRecruitment)
-                .map(TeamRecruitment::getName)
+    private static List<String> getSkillCategories(List<IdeaSkillCategory> skillCategories) {
+        return skillCategories.stream()
+                .map(IdeaSkillCategory::getSkillCategory)
+                .map(SkillCategory::getName)
                 .toList();
     }
 }

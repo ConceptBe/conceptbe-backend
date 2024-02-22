@@ -30,8 +30,6 @@ import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
-import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentCategoryRepository;
-import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,8 +42,6 @@ public class IdeaService {
 
     private final BranchRepository branchRepository;
     private final PurposeRepository purposeRepository;
-    private final TeamRecruitmentCategoryRepository teamRecruitmentCategoryRepository;
-    private final TeamRecruitmentRepository teamRecruitmentRepository;
     private final RegionRepository regionRepository;
     private final IdeaRepository ideaRepository;
     private final MemberRepository memberRepository;
@@ -64,7 +60,7 @@ public class IdeaService {
                 memberRepository.getById(authCredentials.id()),
                 branchRepository.findByIdIn(request.branchIds()),
                 purposeRepository.findByIdIn(request.purposeIds()),
-                teamRecruitmentRepository.findByIdIn(request.teamRecruitmentIds())
+                skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
 
         return ideaRepository.save(idea).getId();

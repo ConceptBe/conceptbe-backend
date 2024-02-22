@@ -9,6 +9,6 @@ public record IdeaRequest(
         Long recruitmentPlaceId,
         List<Long> branchIds,
         List<Long> purposeIds,
-        List<Long> teamRecruitmentIds
+        List<Long> skillCategoryIds
 ) {
 }

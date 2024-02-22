@@ -9,9 +9,11 @@ public interface SkillCategoryRepository extends JpaRepository<SkillCategory, Lo
 
     default SkillCategory getById(Long id) {
         return findById(id).orElseThrow(
-            () -> new NotFoundSkillCategoryException(id)
+                () -> new NotFoundSkillCategoryException(id)
         );
     }
+
+    List<SkillCategory> findByIdIn(List<Long> ids);
 
     @Query("select s from SkillCategory s where s.id = s.parentSkillCategory.id")
     List<SkillCategory> findMainSkills();

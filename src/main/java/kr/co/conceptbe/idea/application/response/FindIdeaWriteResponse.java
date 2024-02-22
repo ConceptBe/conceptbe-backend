@@ -11,7 +11,7 @@ public record FindIdeaWriteResponse(
         List<RegionResponse> regions,
         List<BranchResponse> branches,
         List<PurposeResponse> purposes,
-        List<SkillCategoryResponse> teamRecruitmentCategories
+        List<SkillCategoryResponse> skillCategoryResponses
 ) {
 
     public static FindIdeaWriteResponse of(
