@@ -10,6 +10,7 @@ import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
+import kr.co.conceptbe.idea.application.request.FilteringRequest;
 import kr.co.conceptbe.idea.application.request.IdeaRequest;
 import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
@@ -75,7 +76,7 @@ public class IdeaService {
     }
 
     @Transactional(readOnly = true)
-    public List<BestIdeaResponse> findAllBestIdea(Pageable pageable) {
+    public List<BestIdeaResponse> findAllBestIdea(Pageable pageable, FilteringRequest filteringRequest) {
         return ideaRepository.findAllByOrderByLikesDesc(pageable)
                 .stream()
                 .map(BestIdeaResponse::from)
@@ -83,7 +84,11 @@ public class IdeaService {
     }
 
     @Transactional(readOnly = true)
-    public List<IdeaResponse> findAll(AuthCredentials authCredentials, Pageable pageable) {
+    public List<IdeaResponse> findAll(
+            AuthCredentials authCredentials,
+            Pageable pageable,
+            FilteringRequest filteringRequest
+    ) {
         if (Objects.isNull(authCredentials)) {
             return findAllOfGuest(pageable);
         }
