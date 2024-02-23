@@ -2,10 +2,8 @@ package kr.co.conceptbe.idea.presentation;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.List;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
@@ -20,6 +18,7 @@ import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
 import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.dto.IdeaHitResponse;
+import kr.co.conceptbe.idea.presentation.doc.IdeaApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,9 +35,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/ideas")
-@Tag(name = "Idea", description = "Idea API")
 @SecurityRequirement(name = AUTHORIZATION)
-public class IdeaController {
+public class IdeaController implements IdeaApi {
 
     private final IdeaService ideaService;
 
@@ -107,16 +105,15 @@ public class IdeaController {
         return ResponseEntity.ok(responses);
     }
 
-    @Operation(summary = "Idea 상세 조회", description = "피드글의 상세 내용을 가져옵니다.")
     @GetMapping("/{ideaId}")
     public ResponseEntity<IdeaDetailResponse> getDetailIdeaResponse(
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
-            @PathVariable(name = "ideaId") Long ideaId) {
+            @PathVariable(name = "ideaId") Long ideaId
+    ) {
         IdeaDetailResponse ideaDetailResponse = ideaService.getDetailIdeaResponse(authCredentials.id(), ideaId);
         return ResponseEntity.ok(ideaDetailResponse);
     }
 
-    @Operation(summary = "Idea 상세 댓글 조회", description = "피드글의 댓글을 가져옵니다.")
     @GetMapping("/{ideaId}/comments")
     public ResponseEntity<List<CommentParentResponse>> getIdeaCommentResponse(
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
@@ -125,30 +122,30 @@ public class IdeaController {
         return ResponseEntity.ok(commentParentResponses);
     }
 
-    @Operation(summary = "Idea 좋아요", description = "피드글을 좋아요를 합니다.")
     @PostMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesIdea(
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
-            @PathVariable(name = "ideaId") Long ideaId) {
+            @PathVariable(name = "ideaId") Long ideaId
+    ) {
         Long id = ideaService.likesIdea(authCredentials.id(), ideaId);
         return ResponseEntity.created(URI.create("/ideas/" + id))
                 .build();
     }
 
-    @Operation(summary = "Idea 좋아요 취소", description = "피드글을 좋아요 취소를 합니다.")
     @DeleteMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesCancelIdea(
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
-            @PathVariable(name = "ideaId") Long ideaId) {
+            @PathVariable(name = "ideaId") Long ideaId
+    ) {
         ideaService.likesCancelIdea(authCredentials.id(), ideaId);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Idea 조회한 사람 확인", description = "피드글을 조회한 사람들의 목록을 가져옵니다.")
     @GetMapping("/{ideaId}/hits")
     public ResponseEntity<List<IdeaHitResponse>> getIdeaHitsResponse(
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
-            @PathVariable(name = "ideaId") Long ideaId) {
+            @PathVariable(name = "ideaId") Long ideaId
+    ) {
         List<IdeaHitResponse> ideaCommentResponse = ideaService.getIdeaHitsResponse(ideaId);
         return ResponseEntity.ok(ideaCommentResponse);
     }
