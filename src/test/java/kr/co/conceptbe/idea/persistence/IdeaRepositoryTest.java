@@ -43,7 +43,7 @@ class IdeaRepositoryTest {
     private RegionRepository regionRepository;
 
     @Test
-    void Query_DSL_을_사용한_Method_가_정상적으로_동작하는지_확인한다() {
+    void Query_DSL_을_적용한_Repository_Method_들이_정상적으로_동작하는지_확인한다() {
         // given
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
