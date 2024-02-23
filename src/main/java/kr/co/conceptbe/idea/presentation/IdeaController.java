@@ -79,7 +79,7 @@ public class IdeaController {
                 region,
                 skillCategoryIds
         );
-        List<IdeaResponse> responses = ideaService.findAll(authCredentials, pageable, filteringRequest);
+        List<IdeaResponse> responses = ideaService.findAll(authCredentials, filteringRequest, pageable);
 
         return ResponseEntity.ok(responses);
     }
@@ -102,7 +102,7 @@ public class IdeaController {
                 region,
                 skillCategoryIds
         );
-        List<BestIdeaResponse> responses = ideaService.findAllBestIdea(pageable, filteringRequest);
+        List<BestIdeaResponse> responses = ideaService.findAllBestIdea(filteringRequest, pageable);
 
         return ResponseEntity.ok(responses);
     }

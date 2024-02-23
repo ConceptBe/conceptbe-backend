@@ -6,7 +6,7 @@ public record FilteringRequest(
         List<Long> branchIds,
         List<Long> purposeIds,
         String cooperationWay,
-        Long region,
+        Long recruitmentPlace,
         List<Long> skillCategoryIds
 ) {
 }

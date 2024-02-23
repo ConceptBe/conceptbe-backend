@@ -66,7 +66,7 @@ public class Idea extends BaseTimeEntity {
     private IdeaPurposes purposes;
 
     @Embedded
-    private IdeaSkillCategories ideaSkillCategories;
+    private IdeaSkillCategories skillCategories;
 
     @OneToMany(mappedBy = "idea")
     private final List<Hit> hits = new ArrayList<>();
@@ -113,7 +113,7 @@ public class Idea extends BaseTimeEntity {
         );
         idea.branches = IdeaBranches.of(idea, branches);
         idea.purposes = IdeaPurposes.of(idea, purposes);
-        idea.ideaSkillCategories = IdeaSkillCategories.of(idea, skillCategories);
+        idea.skillCategories = IdeaSkillCategories.of(idea, skillCategories);
         return idea;
     }
 
@@ -133,8 +133,8 @@ public class Idea extends BaseTimeEntity {
         return purposes.getIdeaPurposes();
     }
 
-    public List<IdeaSkillCategory> getIdeaSkillCategories() {
-        return ideaSkillCategories.getIdeaSkillCategories();
+    public List<IdeaSkillCategory> getSkillCategories() {
+        return skillCategories.getIdeaSkillCategories();
     }
 
     public int getLikesCount() {

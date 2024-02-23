@@ -37,7 +37,7 @@ public record IdeaDetailResponse (
 			idea.getPurposes().stream().map(e -> e.getPurpose().getName()).toList(),
 			idea.getCooperationWay().getValue(),
 			idea.getRecruitmentPlace().getName(),
-			idea.getIdeaSkillCategories().stream().map(e -> e.getSkillCategory().getName()).toList(),
+			idea.getSkillCategories().stream().map(e -> e.getSkillCategory().getName()).toList(),
 			idea.getLikesCount(),
 			idea.getCommentsCount(),
 			idea.getBookmarksCount(),

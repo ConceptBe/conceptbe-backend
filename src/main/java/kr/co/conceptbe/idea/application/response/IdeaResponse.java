@@ -48,7 +48,7 @@ public record IdeaResponse(
             idea.getCreatedAt(),
             MemberResponse.from(idea.getCreator()),
             getBranches(idea.getBranches()),
-            getSkillCategories(idea.getIdeaSkillCategories())
+            getSkillCategories(idea.getSkillCategories())
         );
     }
 
@@ -79,7 +79,7 @@ public record IdeaResponse(
             idea.getCreatedAt(),
             MemberResponse.from(idea.getCreator()),
             getBranches(idea.getBranches()),
-            getSkillCategories(idea.getIdeaSkillCategories())
+            getSkillCategories(idea.getSkillCategories())
         );
     }
 

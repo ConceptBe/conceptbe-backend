@@ -39,7 +39,7 @@ public record MemberIdeaResponse(
             idea.getLikesCount(),
             idea.getBookmarksCount(),
             getBranches(idea.getBranches()),
-            getSkillCategories(idea.getIdeaSkillCategories())
+            getSkillCategories(idea.getSkillCategories())
         );
     }
 

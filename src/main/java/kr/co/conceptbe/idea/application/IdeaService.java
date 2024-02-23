@@ -1,10 +1,5 @@
 package kr.co.conceptbe.idea.application;
 
-import static kr.co.conceptbe.idea.domain.QIdea.*;
-
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,7 +19,6 @@ import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
 import kr.co.conceptbe.idea.domain.IdeaLikeID;
-import kr.co.conceptbe.idea.domain.QIdea;
 import kr.co.conceptbe.idea.domain.persistence.HitRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
@@ -55,7 +49,6 @@ public class IdeaService {
     private final IdeaLikesRepository ideaLikesRepository;
     private final HitRepository hitRepository;
     private final SkillCategoryRepository skillCategoryRepository;
-    private final JPAQueryFactory jpaQueryFactory;
 
     public Long save(AuthCredentials authCredentials, IdeaRequest request) {
         validateMember(authCredentials);
@@ -83,8 +76,8 @@ public class IdeaService {
     }
 
     @Transactional(readOnly = true)
-    public List<BestIdeaResponse> findAllBestIdea(Pageable pageable, FilteringRequest filteringRequest) {
-        return ideaRepository.findAllByOrderByLikesDesc(pageable)
+    public List<BestIdeaResponse> findAllBestIdea(FilteringRequest filteringRequest, Pageable pageable) {
+        return ideaRepository.findAllByOrderByLikesDesc(filteringRequest, pageable)
                 .stream()
                 .map(BestIdeaResponse::from)
                 .toList();
@@ -93,23 +86,23 @@ public class IdeaService {
     @Transactional(readOnly = true)
     public List<IdeaResponse> findAll(
             AuthCredentials authCredentials,
-            Pageable pageable,
-            FilteringRequest filteringRequest
+            FilteringRequest filteringRequest,
+            Pageable pageable
     ) {
         if (Objects.isNull(authCredentials)) {
-            return findAllOfGuest(pageable);
+            return findAllOfGuest(filteringRequest, pageable);
         }
 
         Member member = memberRepository.getById(authCredentials.id());
         Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
-        return ideaRepository.findAllByOrderByCreatedAtDesc(pageable)
+        return ideaRepository.findAllByOrderByCreatedAtDesc(filteringRequest, pageable)
                 .stream()
                 .map(idea -> IdeaResponse.ofMember(idea, ideasBookmarkedByMember.contains(idea)))
                 .toList();
     }
 
-    private List<IdeaResponse> findAllOfGuest(Pageable pageable) {
-        return ideaRepository.findAllByOrderByCreatedAtDesc(pageable)
+    private List<IdeaResponse> findAllOfGuest(FilteringRequest filteringRequest, Pageable pageable) {
+        return ideaRepository.findAllByOrderByCreatedAtDesc(filteringRequest, pageable)
                 .stream()
                 .map(IdeaResponse::ofGuest)
                 .toList();
