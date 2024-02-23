@@ -4,12 +4,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.bookmark.repository.BookmarkRepository;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
-import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
@@ -70,10 +68,10 @@ public class MemberService {
                 .toList();
         }
 
-        return ideaRepository.findAllByCreatorIdOrderByCreatedAtDesc(id, pageable)
-            .stream()
+        Set<Long> guestBookmarkedIdeaIds = findGuestBookmarkedIdeaIds(authCredentials);
+        return ideaRepository.findAllByCreatorIdOrderByCreatedAtDesc(id, pageable).stream()
             .map(idea -> {
-                if (findGuestBookmarkedIdeaIds(authCredentials).contains(idea.getId())) {
+                if (guestBookmarkedIdeaIds.contains(idea.getId())) {
                     return MemberIdeaResponse.ofMember(idea, MemberIdeaResponseOption.IS_BOOKMARKED); 
                 }
                 return MemberIdeaResponse.ofMember(idea, MemberIdeaResponseOption.IS_NOT_BOOKMARKED);
