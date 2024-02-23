@@ -23,7 +23,8 @@ public record SkillCategoryResponse(
         );
     }
 
-    private static boolean isChildSkill(SkillCategory parentSkill, SkillCategory childSkill) {
-        return parentSkill.getId().equals(childSkill.getId());
+    private static boolean isChildSkill(SkillCategory skillCategory, SkillCategory childSkill) {
+        Long parentSkillCategoryId = childSkill.getParentSkillCategory().getId();
+        return skillCategory.getId().equals(parentSkillCategoryId);
     }
 }
