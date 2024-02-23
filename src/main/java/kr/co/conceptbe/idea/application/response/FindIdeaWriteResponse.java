@@ -10,13 +10,13 @@ import kr.co.conceptbe.skill.domain.SkillCategory;
 
 
 public record FindIdeaWriteResponse(
-        @Schema(description = "팀원 모집 지역들")
+        @Schema(description = "팀원 모집 지역 목록")
         List<RegionResponse> regions,
-        @Schema(description = "분야들")
+        @Schema(description = "분야 목록")
         List<BranchResponse> branches,
-        @Schema(description = "목적들")
+        @Schema(description = "목적 목록")
         List<PurposeResponse> purposes,
-        @Schema(description = "팀원 모집 분야들")
+        @Schema(description = "팀원 모집 분야 목록")
         List<SkillCategoryResponse> skillCategoryResponses
 ) {
 
