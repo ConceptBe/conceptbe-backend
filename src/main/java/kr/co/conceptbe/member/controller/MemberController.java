@@ -34,20 +34,22 @@ public class MemberController implements MemberApi {
 
     @GetMapping("/{id}")
     public ResponseEntity<GetMemberProfileResponse> getMemberProfile(
+        @Auth AuthCredentials authCredentials,
         @PathVariable Long id
     ) {
-        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(id);
+        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(authCredentials, id);
         return ResponseEntity.ok(memberProfileResponse);
     }
 
     @GetMapping("/{id}/ideas")
     public ResponseEntity<List<MemberIdeaResponse>> findMemberIdeas(
         @Auth AuthCredentials authCredentials,
+        @PathVariable Long id,
         @RequestParam int page,
         @RequestParam int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, pageable);
+        List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, id, pageable);
 
         return ResponseEntity.ok(memberIdeas);
     }
