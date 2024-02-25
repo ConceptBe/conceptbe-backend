@@ -4,6 +4,7 @@ import static kr.co.conceptbe.idea.domain.QIdea.idea;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.micrometer.common.util.StringUtils;
 import java.util.List;
 import java.util.Objects;
 import kr.co.conceptbe.idea.application.request.FilteringRequest;
@@ -70,7 +71,7 @@ public class IdeaRepositoryCustomImpl implements IdeaRepositoryCustom {
     }
 
     private BooleanExpression cooperationWayEqual(String cooperationWay) {
-        if (Objects.isNull(cooperationWay)) {
+        if (StringUtils.isEmpty(cooperationWay)){
             return null;
         }
 
