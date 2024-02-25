@@ -11,6 +11,6 @@ public interface IdeaRepository extends JpaRepository<Idea, Long>, IdeaRepositor
 
     default Idea getById(Long ideaId) {
         return findById(ideaId).orElseThrow(
-                () -> new IllegalArgumentException("Not Found ID : " + ideaId));
+            () -> new IllegalArgumentException("Not Found ID : " + ideaId));
     }
 }
