@@ -1,9 +1,9 @@
 package kr.co.conceptbe.member.domain;
 
-import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.CascadeType.REMOVE;
 import static lombok.AccessLevel.PROTECTED;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -19,7 +19,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.ArrayList;
 import java.util.List;
-
 import kr.co.conceptbe.auth.exception.TokenInvalidException;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
@@ -80,13 +79,13 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member",  cascade = {PERSIST, REMOVE})
+    @OneToMany(mappedBy = "member",  cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private final List<MemberSkillCategory> skills = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private final List<MemberBranch> branches = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = {PERSIST, REMOVE})
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private final List<MemberPurpose> purposes = new ArrayList<>();
 
     public Member(
@@ -124,5 +123,41 @@ public class Member extends BaseTimeEntity {
 
     public void addPurpose(MemberPurpose memberPurpose) {
         this.purposes.add(memberPurpose);
+    }
+
+
+    public void updateProfile(
+        String nickname,
+        SkillCategory mainSkill,
+        String profileImageUrl,
+        String livingPlace,
+        String from,
+        String introduction
+    ) {
+        this.nickname = nickname;
+        this.mainSkill = mainSkill;
+        this.profileImageUrl = profileImageUrl;
+        updateLivingPlace(livingPlace);
+
+        this.workingPlace = from;
+        this.introduce = introduction;
+    }
+
+    private void updateLivingPlace(String livingPlace) {
+        if (livingPlace != null) {
+            this.livingPlace = Region.from(livingPlace);
+            return;
+        }
+        this.livingPlace = null;
+    }
+
+    public void updateSkills(List<MemberSkillCategory> memberSkillCategories) {
+        this.skills.clear();
+        this.skills.addAll(memberSkillCategories);
+    }
+
+    public void updateJoinPurposes(List<MemberPurpose> memberPurposes) {
+        this.purposes.clear();
+        this.purposes.addAll(memberPurposes);
     }
 }
