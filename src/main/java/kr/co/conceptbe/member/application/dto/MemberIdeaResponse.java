@@ -1,5 +1,6 @@
 package kr.co.conceptbe.member.application.dto;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import kr.co.conceptbe.branch.domain.Branch;
@@ -26,8 +27,13 @@ public record MemberIdeaResponse(
     @Schema(description = "북마크수", example = "3")
     int bookmarksCount,
     @Schema(description = "분야", example = "IT, 유튜브 컨텐츠")
+    @ArraySchema( arraySchema =  @Schema(
+        description = "분야",
+        example ="[\"IT\", \"유튜브 컨텐츠\"]"))
     List<String> branches,
-    @Schema(description = "팀원 모집 세부스킬들", example = "영상디자인, 서비스기획, 마케팅")
+    @ArraySchema( arraySchema =  @Schema(
+        description = "팀원 모집 세부스킬들",
+        example ="[\"영상디자인\", \"서비스기획\", \"마케팅\"]"))
     List<String> teamRecruitments
 ) {
 
