@@ -37,4 +37,8 @@ public class Bookmark extends BaseTimeEntity implements Serializable {
         this.member = member;
         this.idea = idea;
     }
+
+    public boolean isOwnerOfBookmark(Long tokenMemberId) {
+        return this.member.getId().equals(tokenMemberId);
+    }
 }
