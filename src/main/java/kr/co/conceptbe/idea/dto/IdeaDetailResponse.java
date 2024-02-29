@@ -3,7 +3,6 @@ package kr.co.conceptbe.idea.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import kr.co.conceptbe.idea.domain.Idea;
 
 public record IdeaDetailResponse (
