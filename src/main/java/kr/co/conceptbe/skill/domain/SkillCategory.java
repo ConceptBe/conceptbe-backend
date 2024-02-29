@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,5 +42,9 @@ public class SkillCategory {
 
     public void updateParentSkill(SkillCategory parentSkill) {
         this.parentSkillCategory = parentSkill;
+    }
+
+    public boolean isParentSkill() {
+        return Objects.nonNull(parentSkillCategory) && id.equals(parentSkillCategory.getId());
     }
 }

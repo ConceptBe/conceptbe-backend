@@ -7,6 +7,7 @@ import kr.co.conceptbe.idea.application.response.IdeaResponse;
 import kr.co.conceptbe.member.application.MemberService;
 import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
+import kr.co.conceptbe.member.controller.doc.MemberApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,34 +21,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")
-public class MemberController {
+public class MemberController implements MemberApi {
 
     private final MemberService memberService;
 
-    @GetMapping("/nickname/{nickname}")
-    ResponseEntity<Void> checkDuplicatedNickName(
-        @PathVariable String nickname
+    @GetMapping("/nickname")
+    public ResponseEntity<Boolean> checkDuplicatedNickName(
+        @RequestParam String nickname
     ) {
-        memberService.validateDuplicatedNickName(nickname);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(memberService.validateDuplicatedNickName(nickname));
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<GetMemberProfileResponse> getMemberProfile(
+    public ResponseEntity<GetMemberProfileResponse> getMemberProfile(
+        @Auth AuthCredentials authCredentials,
         @PathVariable Long id
     ) {
-        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(id);
+        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(authCredentials, id);
         return ResponseEntity.ok(memberProfileResponse);
     }
 
     @GetMapping("/{id}/ideas")
     public ResponseEntity<List<MemberIdeaResponse>> findMemberIdeas(
         @Auth AuthCredentials authCredentials,
+        @PathVariable Long id,
         @RequestParam int page,
         @RequestParam int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, pageable);
+        List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, id, pageable);
 
         return ResponseEntity.ok(memberIdeas);
     }
