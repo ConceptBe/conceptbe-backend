@@ -3,7 +3,6 @@ package kr.co.conceptbe.idea.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import kr.co.conceptbe.idea.domain.Idea;
 
 public record IdeaDetailResponse (
@@ -17,7 +16,7 @@ public record IdeaDetailResponse (
 	List<String> purposeList,
 	String cooperationWay,
 	String recruitmentPlace,
-	List<String> teamRecruitmentsList,
+	List<String> skillCategories,
 	Integer likesCount,
 	Integer commentsCount,
 	Integer bookmarksCount,
@@ -38,7 +37,7 @@ public record IdeaDetailResponse (
 			idea.getPurposes().stream().map(e -> e.getPurpose().getName()).toList(),
 			idea.getCooperationWay().getValue(),
 			idea.getRecruitmentPlace().getName(),
-			idea.getTeamRecruitments().stream().map(e -> e.getTeamRecruitment().getName()).toList(),
+			idea.getSkillCategories().stream().map(e -> e.getSkillCategory().getName()).toList(),
 			idea.getLikesCount(),
 			idea.getCommentsCount(),
 			idea.getBookmarksCount(),

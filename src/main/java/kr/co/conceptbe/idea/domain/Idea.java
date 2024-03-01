@@ -22,13 +22,13 @@ import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.domain.vo.CooperationWay;
 import kr.co.conceptbe.idea.domain.vo.IdeaBranches;
 import kr.co.conceptbe.idea.domain.vo.IdeaPurposes;
-import kr.co.conceptbe.idea.domain.vo.IdeaTeamRecruitments;
+import kr.co.conceptbe.idea.domain.vo.IdeaSkillCategories;
 import kr.co.conceptbe.idea.domain.vo.Introduce;
 import kr.co.conceptbe.idea.domain.vo.Title;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.region.domain.Region;
-import kr.co.conceptbe.teamrecruitment.domain.TeamRecruitment;
+import kr.co.conceptbe.skill.domain.SkillCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -66,7 +66,7 @@ public class Idea extends BaseTimeEntity {
     private IdeaPurposes purposes;
 
     @Embedded
-    private IdeaTeamRecruitments teamRecruitments;
+    private IdeaSkillCategories skillCategories;
 
     @OneToMany(mappedBy = "idea")
     private final List<Hit> hits = new ArrayList<>();
@@ -102,7 +102,7 @@ public class Idea extends BaseTimeEntity {
             Member creator,
             List<Branch> branches,
             List<Purpose> purposes,
-            List<TeamRecruitment> teamRecruitments
+            List<SkillCategory> skillCategories
     ) {
         Idea idea = new Idea(
                 Title.from(title),
@@ -113,7 +113,7 @@ public class Idea extends BaseTimeEntity {
         );
         idea.branches = IdeaBranches.of(idea, branches);
         idea.purposes = IdeaPurposes.of(idea, purposes);
-        idea.teamRecruitments = IdeaTeamRecruitments.of(idea, teamRecruitments);
+        idea.skillCategories = IdeaSkillCategories.of(idea, skillCategories);
         return idea;
     }
 
@@ -133,8 +133,8 @@ public class Idea extends BaseTimeEntity {
         return purposes.getIdeaPurposes();
     }
 
-    public List<IdeaTeamRecruitment> getTeamRecruitments() {
-        return teamRecruitments.getIdeaTeamRecruitments();
+    public List<IdeaSkillCategory> getSkillCategories() {
+        return skillCategories.getIdeaSkillCategories();
     }
 
     public int getLikesCount() {
@@ -153,23 +153,33 @@ public class Idea extends BaseTimeEntity {
         return comments.size();
     }
 
-    public void addHit(Hit hit) { this.hits.add(hit); }
+    public void addHit(Hit hit) {
+        this.hits.add(hit);
+    }
 
-    public void addComment(Comment comment) { this.comments.add(comment); }
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
 
-    public void addBookmark(Bookmark bookmark) { this.bookmarks.add(bookmark); }
+    public void addBookmark(Bookmark bookmark) {
+        this.bookmarks.add(bookmark);
+    }
 
-    public void addIdeaLikes(IdeaLike ideaLike) { this.likes.add(ideaLike); }
+    public void addIdeaLikes(IdeaLike ideaLike) {
+        this.likes.add(ideaLike);
+    }
 
     public boolean isOwner(Long tokenMemberId) {
         return creator.getId().equals(tokenMemberId);
     }
 
     public boolean isOwnerLike(Long tokenMemberId) {
-        return likes.stream().anyMatch(like -> like.getMember().getId().equals(tokenMemberId));
+        return likes.stream()
+            .anyMatch(like -> like.isOwnerOfLike(tokenMemberId));
     }
 
     public boolean isOwnerScrap(Long tokenMemberId) {
-        return bookmarks.stream().anyMatch(bookmark -> bookmark.getMember().getId().equals(tokenMemberId));
+        return bookmarks.stream()
+            .anyMatch(bookmark -> bookmark.isOwnerOfBookmark(tokenMemberId));
     }
 }

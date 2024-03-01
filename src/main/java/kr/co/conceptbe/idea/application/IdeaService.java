@@ -10,6 +10,7 @@ import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
+import kr.co.conceptbe.idea.application.request.FilteringRequest;
 import kr.co.conceptbe.idea.application.request.IdeaRequest;
 import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
@@ -29,8 +30,7 @@ import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
-import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentCategoryRepository;
-import kr.co.conceptbe.teamrecruitment.domain.persistence.TeamRecruitmentRepository;
+import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -43,13 +43,12 @@ public class IdeaService {
 
     private final BranchRepository branchRepository;
     private final PurposeRepository purposeRepository;
-    private final TeamRecruitmentCategoryRepository teamRecruitmentCategoryRepository;
-    private final TeamRecruitmentRepository teamRecruitmentRepository;
     private final RegionRepository regionRepository;
     private final IdeaRepository ideaRepository;
     private final MemberRepository memberRepository;
     private final IdeaLikesRepository ideaLikesRepository;
     private final HitRepository hitRepository;
+    private final SkillCategoryRepository skillCategoryRepository;
 
     public Long save(AuthCredentials authCredentials, IdeaRequest request) {
         validateMember(authCredentials);
@@ -62,7 +61,7 @@ public class IdeaService {
                 memberRepository.getById(authCredentials.id()),
                 branchRepository.findByIdIn(request.branchIds()),
                 purposeRepository.findByIdIn(request.purposeIds()),
-                teamRecruitmentRepository.findByIdIn(request.teamRecruitmentIds())
+                skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
 
         return ideaRepository.save(idea).getId();
@@ -77,29 +76,33 @@ public class IdeaService {
     }
 
     @Transactional(readOnly = true)
-    public List<BestIdeaResponse> findAllBestIdea(Pageable pageable) {
-        return ideaRepository.findAllByOrderByLikesDesc(pageable)
+    public List<BestIdeaResponse> findAllBestIdea(FilteringRequest filteringRequest, Pageable pageable) {
+        return ideaRepository.findAllByOrderByLikesDesc(filteringRequest, pageable)
                 .stream()
                 .map(BestIdeaResponse::from)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<IdeaResponse> findAll(AuthCredentials authCredentials, Pageable pageable) {
+    public List<IdeaResponse> findAll(
+            AuthCredentials authCredentials,
+            FilteringRequest filteringRequest,
+            Pageable pageable
+    ) {
         if (Objects.isNull(authCredentials)) {
-            return findAllOfGuest(pageable);
+            return findAllOfGuest(filteringRequest, pageable);
         }
 
         Member member = memberRepository.getById(authCredentials.id());
         Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
-        return ideaRepository.findAllByOrderByCreatedAtDesc(pageable)
+        return ideaRepository.findAllByOrderByCreatedAtDesc(filteringRequest, pageable)
                 .stream()
                 .map(idea -> IdeaResponse.ofMember(idea, ideasBookmarkedByMember.contains(idea)))
                 .toList();
     }
 
-    private List<IdeaResponse> findAllOfGuest(Pageable pageable) {
-        return ideaRepository.findAllByOrderByCreatedAtDesc(pageable)
+    private List<IdeaResponse> findAllOfGuest(FilteringRequest filteringRequest, Pageable pageable) {
+        return ideaRepository.findAllByOrderByCreatedAtDesc(filteringRequest, pageable)
                 .stream()
                 .map(IdeaResponse::ofGuest)
                 .toList();
@@ -152,7 +155,7 @@ public class IdeaService {
                 regionRepository.findAll(),
                 branchRepository.findAll(),
                 purposeRepository.findAll(),
-                teamRecruitmentCategoryRepository.findAll()
+                skillCategoryRepository.findAll()
         );
     }
 
@@ -160,10 +163,10 @@ public class IdeaService {
     public List<CommentParentResponse> getIdeaCommentResponse(Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
         return idea.getComments()
-            .stream()
-            .filter(Comment::isParentComment)
-            .map(CommentParentResponse::from)
-            .toList();
+                .stream()
+                .filter(Comment::isParentComment)
+                .map(CommentParentResponse::from)
+                .toList();
     }
 
     public List<IdeaHitResponse> getIdeaHitsResponse(Long ideaId) {
