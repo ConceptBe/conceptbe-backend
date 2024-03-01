@@ -1,6 +1,8 @@
 package kr.co.conceptbe.member.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
+import kr.co.conceptbe.auth.application.dto.UpdateMemberProfileRequest;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.common.auth.Auth;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +43,16 @@ public class MemberController implements MemberApi {
     ) {
         GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(authCredentials, id);
         return ResponseEntity.ok(memberProfileResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateMemberProfile(
+        @RequestBody @Valid UpdateMemberProfileRequest updateMemberProfileRequest,
+        @Auth AuthCredentials authCredentials,
+        @PathVariable Long id
+    ) {
+        memberService.updateMemberProfile(updateMemberProfileRequest, authCredentials, id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/ideas")

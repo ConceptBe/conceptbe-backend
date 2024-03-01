@@ -1,5 +1,6 @@
 package kr.co.conceptbe.member.application.dto;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 
@@ -18,9 +19,13 @@ public record GetMemberProfileResponse(
     String workingPlace,
     @Schema(description = "자기소개", example = "안녕하세요 31살 백엔드 개발자입니다.")
     String introduction,
-    @Schema(description = "세부 스킬", example = "시각디자인_상, 제품디자인_하")
+    @ArraySchema( arraySchema =  @Schema(
+        description = "세부 스킬",
+        example ="[\"시각디자인_상\", \"제품디자인_하\"]"))
     List<String> skills,
-    @Schema(description = "가입목적", example = "사이드프로젝트, 공모전")
+    @ArraySchema( arraySchema =  @Schema(
+        description = "가입목적",
+        example ="[\"사이드프로젝트\", \"공모전\"]"))
     List<String> joinPurposes
 ) {
 }
