@@ -34,7 +34,7 @@ public record MemberIdeaResponse(
     @ArraySchema( arraySchema =  @Schema(
         description = "팀원 모집 세부스킬들",
         example ="[\"영상디자인\", \"서비스기획\", \"마케팅\"]"))
-    List<String> teamRecruitments
+    List<String> skillCategories
 ) {
 
     public static MemberIdeaResponse ofMember(Idea idea, MemberIdeaResponseOption option) {
