@@ -295,26 +295,26 @@ insert into branch(id, name) values (1, 'IT');
 insert into branch(id, name) values (2, '게임');
 insert into branch(id, name) values (3, '웹툰');
 
-insert into member(main_skill_id, email, nickname, oauth_server_id, oauth_server_type,
-                   profile_image_url)
-values (1, 'conceptbe@gmail.com', '컨셉비', 'oauth_server_id', 'KAKAO', 'test');
-
-insert into member(main_skill_id, email, nickname, oauth_server_id, oauth_server_type,
-                   profile_image_url)
-values (2, 'conceptbe1@gmail.com', '컨셉비1', 'oauth_server_id1', 'KAKAO', 'test1');
+-- insert into member(main_skill_id, email, nickname, oauth_server_id, oauth_server_type,
+--                    profile_image_url)
+-- values (1, 'conceptbe@gmail.com', '컨셉비', 'oauth_server_id', 'KAKAO', 'test');
+--
+-- insert into member(main_skill_id, email, nickname, oauth_server_id, oauth_server_type,
+--                    profile_image_url)
+-- values (2, 'conceptbe1@gmail.com', '컨셉비1', 'oauth_server_id1', 'KAKAO', 'test1');
 --
 
-insert into idea(member_id, title, cooperation_way, recruitment_place, introduce, created_at)
-values(1, '테스트1', 'ONLINE', 1, '테스트', '2023-08-10 07:47:50');
+-- insert into idea(member_id, title, cooperation_way, recruitment_place, introduce, created_at)
+-- values(1, '테스트1', 'ONLINE', 1, '테스트', '2023-08-10 07:47:50');
+--
+-- insert into idea(member_id, title, cooperation_way, recruitment_place, introduce, created_at)
+-- values(2, '테스트2', 'ONLINE', 1, '테스트', '2023-08-10 08:47:50');
 
-insert into idea(member_id, title, cooperation_way, recruitment_place, introduce, created_at)
-values(2, '테스트2', 'ONLINE', 1, '테스트', '2023-08-10 08:47:50');
-
-insert into bookmark(member_id, idea_id)
-values (1, 1);
-
-insert into bookmark(member_id, idea_id)
-values (2, 1);
-
-insert into bookmark(member_id, idea_id)
-values (1, 2);
+-- insert into bookmark(member_id, idea_id)
+-- values (1, 1);
+--
+-- insert into bookmark(member_id, idea_id)
+-- values (2, 1);
+--
+-- insert into bookmark(member_id, idea_id)
+-- values (1, 2);
