@@ -9,9 +9,7 @@ import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.idea.domain.Idea;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
-
-	List<Comment> findByIdea_Id(Long ideaId);
+public interface CommentRepository extends JpaRepository<Comment, Long>, CommentRepositoryCustom {
 
 	default Comment getById(Long commentId) {
 		return findById(commentId).orElseThrow(

@@ -117,8 +117,11 @@ public class IdeaController implements IdeaApi {
     @GetMapping("/{ideaId}/comments")
     public ResponseEntity<List<CommentParentResponse>> getIdeaCommentResponse(
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+            @RequestParam int page,
+            @RequestParam int size,
             @PathVariable(name = "ideaId") Long ideaId) {
-        List<CommentParentResponse> commentParentResponses = ideaService.getIdeaCommentResponse(ideaId);
+        Pageable pageable = PageRequest.of(page, size);
+        List<CommentParentResponse> commentParentResponses = ideaService.getIdeaCommentResponse(ideaId, pageable);
         return ResponseEntity.ok(commentParentResponses);
     }
 

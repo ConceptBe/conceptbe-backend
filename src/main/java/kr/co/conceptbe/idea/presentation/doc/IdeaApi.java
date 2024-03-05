@@ -63,6 +63,8 @@ public interface IdeaApi {
     @Operation(summary = "Idea 상세 댓글 조회", description = "피드글의 댓글을 가져옵니다.")
     ResponseEntity<List<CommentParentResponse>> getIdeaCommentResponse(
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+            @RequestParam int page,
+            @RequestParam int size,
             @PathVariable(name = "ideaId") Long ideaId
     );
 
