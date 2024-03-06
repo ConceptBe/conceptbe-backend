@@ -24,7 +24,6 @@ public class BookmarkService {
 
 	public Long addBookmark(Long tokenMemberId, Long ideaId) {
 		Idea idea = ideaRepository.getById(ideaId);
-		Member.validateMember(tokenMemberId, idea.getCreator().getId());
 		Member member = memberRepository.getById(tokenMemberId);
 
 		BookmarkID bookmarkID = new BookmarkID(tokenMemberId, ideaId);
