@@ -8,14 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import kr.co.conceptbe.teamrecruitment.domain.TeamRecruitment;
+import kr.co.conceptbe.skill.domain.SkillCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class IdeaTeamRecruitment {
+public class IdeaSkillCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,16 +26,16 @@ public class IdeaTeamRecruitment {
     private Idea idea;
 
     @ManyToOne
-    @JoinColumn(name = "team_recruitment")
-    private TeamRecruitment teamRecruitment;
+    @JoinColumn(name = "skill_category")
+    private SkillCategory skillCategory;
 
-    private IdeaTeamRecruitment(Idea idea, TeamRecruitment teamRecruitment) {
+    private IdeaSkillCategory(Idea idea, SkillCategory skillCategory) {
         this.idea = idea;
-        this.teamRecruitment = teamRecruitment;
+        this.skillCategory = skillCategory;
     }
 
-    public static IdeaTeamRecruitment of(Idea idea, TeamRecruitment teamRecruitment) {
-        return new IdeaTeamRecruitment(idea, teamRecruitment);
+    public static IdeaSkillCategory of(Idea idea, SkillCategory skillCategory) {
+        return new IdeaSkillCategory(idea, skillCategory);
     }
 
 }

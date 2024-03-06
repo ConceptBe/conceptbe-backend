@@ -5,7 +5,7 @@ import kr.co.conceptbe.member.exception.NotFoundOauthServerTypeException;
 
 public enum OauthServerType {
     KAKAO,
-    //TODO 2차 MVP때 NAVER 추가
+    NAVER,
     ;
 
     public static OauthServerType from(String type) {

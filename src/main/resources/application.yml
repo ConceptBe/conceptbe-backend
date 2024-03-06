@@ -1,9 +1,9 @@
-
 spring:
   datasource:
-    username: root
-    password: root
-    url: jdbc:mysql://localhost:13306/conceptBe?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&rewriteBatchedStatements=true
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=MYSQL
+    username: sa
+    password:
   #  h2:
   #    console:
   #      enabled: true
@@ -14,18 +14,24 @@ spring:
         format_sql: true
     show-sql: true
     hibernate:
-      ddl-auto: create
-
-# TODO 등록 후 키 값 추가
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
 
 oauth:
   kakao:
-    client_id: # REST API 키
-    redirect_uri: # redirect urk
-    client_secret: # Client Secret 키
-    scope: # scope(nickname, image)
+    client_id: ${KAKAO_CLIENT_ID}
+    redirect_uri: ${KAKAO_REDIRECT_URI}
+    client_secret: ${KAKAO_CLIENT_SECRET}
+    scope: ${KAKAO_SCOPE}
 
-# TODO 테스트 후 변경
+  naver:
+    client_id: ${NAVER_CLIENT_ID}
+    redirect_uri: ${NAVER_REDIRECT_URI}
+    client_secret: ${NAVER_CLIENT_SECRET}
+    scope: ${NAVER_SCOPE}
+
 jwt:
-  secret-key: this1-is2-conceptbe3-test4-secret5-key6
-  access-token-expiration-time: 604800000
+  secret-key: ${JWT_SECRET_KEY}
+  access-token-expiration-time: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME}

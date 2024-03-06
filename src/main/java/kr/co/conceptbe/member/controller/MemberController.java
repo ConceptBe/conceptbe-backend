@@ -1,6 +1,8 @@
 package kr.co.conceptbe.member.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
+import kr.co.conceptbe.auth.application.dto.UpdateMemberProfileRequest;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.common.auth.Auth;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
@@ -14,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,20 +38,32 @@ public class MemberController implements MemberApi {
 
     @GetMapping("/{id}")
     public ResponseEntity<GetMemberProfileResponse> getMemberProfile(
+        @Auth AuthCredentials authCredentials,
         @PathVariable Long id
     ) {
-        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(id);
+        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(authCredentials, id);
         return ResponseEntity.ok(memberProfileResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateMemberProfile(
+        @RequestBody @Valid UpdateMemberProfileRequest updateMemberProfileRequest,
+        @Auth AuthCredentials authCredentials,
+        @PathVariable Long id
+    ) {
+        memberService.updateMemberProfile(updateMemberProfileRequest, authCredentials, id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/ideas")
     public ResponseEntity<List<MemberIdeaResponse>> findMemberIdeas(
         @Auth AuthCredentials authCredentials,
+        @PathVariable Long id,
         @RequestParam int page,
         @RequestParam int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, pageable);
+        List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, id, pageable);
 
         return ResponseEntity.ok(memberIdeas);
     }
