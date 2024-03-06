@@ -22,6 +22,7 @@ import kr.co.conceptbe.idea.presentation.doc.IdeaApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -117,8 +118,9 @@ public class IdeaController implements IdeaApi {
     @GetMapping("/{ideaId}/comments")
     public ResponseEntity<List<CommentParentResponse>> getIdeaCommentResponse(
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+            @PageableDefault(sort = "createdAt") Pageable pageable,
             @PathVariable(name = "ideaId") Long ideaId) {
-        List<CommentParentResponse> commentParentResponses = ideaService.getIdeaCommentResponse(ideaId);
+        List<CommentParentResponse> commentParentResponses = ideaService.getIdeaCommentResponse(ideaId, pageable);
         return ResponseEntity.ok(commentParentResponses);
     }
 
