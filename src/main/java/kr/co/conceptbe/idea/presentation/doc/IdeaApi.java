@@ -14,6 +14,9 @@ import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
 import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.dto.IdeaHitResponse;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -63,6 +66,7 @@ public interface IdeaApi {
     @Operation(summary = "Idea 상세 댓글 조회", description = "피드글의 댓글을 가져옵니다.")
     ResponseEntity<List<CommentParentResponse>> getIdeaCommentResponse(
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+            @PageableDefault(sort = "createdAt") Pageable pageable,
             @PathVariable(name = "ideaId") Long ideaId
     );
 

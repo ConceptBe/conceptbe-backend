@@ -10,6 +10,7 @@ import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
+import kr.co.conceptbe.comment.repository.CommentRepository;
 import kr.co.conceptbe.idea.application.request.FilteringRequest;
 import kr.co.conceptbe.idea.application.request.IdeaRequest;
 import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
@@ -49,6 +50,7 @@ public class IdeaService {
     private final IdeaLikesRepository ideaLikesRepository;
     private final HitRepository hitRepository;
     private final SkillCategoryRepository skillCategoryRepository;
+    private final CommentRepository commentRepository;
 
     public Long save(AuthCredentials authCredentials, IdeaRequest request) {
         validateMember(authCredentials);
@@ -160,9 +162,9 @@ public class IdeaService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentParentResponse> getIdeaCommentResponse(Long ideaId) {
+    public List<CommentParentResponse> getIdeaCommentResponse(Long ideaId, Pageable pageable) {
         Idea idea = ideaRepository.getById(ideaId);
-        return idea.getComments()
+        return commentRepository.findByIdea(idea)
                 .stream()
                 .filter(Comment::isParentComment)
                 .map(CommentParentResponse::from)
