@@ -39,7 +39,7 @@ public record IdeaDetailResponse (
 			idea.getRecruitmentPlace().getName(),
 			idea.getSkillCategories().stream().map(e -> e.getSkillCategory().getName()).toList(),
 			idea.getLikesCount(),
-			idea.getCommentsCount(),
+			idea.getComments().stream().mapToInt(comment -> comment.getCommentsCount() + 1).sum(),
 			idea.getBookmarksCount(),
 			idea.getHitsCount(),
 			idea.isOwner(tokenMemberId),
