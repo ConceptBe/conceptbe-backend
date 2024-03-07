@@ -21,6 +21,7 @@ create table comment (
                          member_id bigint,
                          parent_comment_id bigint,
                          updated_at timestamp(6),
+                         deleted boolean,
                          content clob not null,
                          primary key (id)
 );
