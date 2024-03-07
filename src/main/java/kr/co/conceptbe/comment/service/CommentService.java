@@ -42,14 +42,13 @@ public class CommentService {
 		Comment comment;
 		if(isParentComment(commentCreateRequest.parentId())) {
 			comment = new Comment(commentCreateRequest.content(), null, member, idea);
-			commentRepository.save(comment);
+			idea.addComment(comment);
 		} else {
 			Comment parentComment = commentRepository.getById(commentCreateRequest.parentId());
 			comment = new Comment(commentCreateRequest.content(), parentComment, member, idea);
 			parentComment.addComment(comment);
-			commentRepository.save(comment);
 		}
-		idea.addComment(comment);
+		commentRepository.save(comment);
 		return comment.getId();
 	}
 

@@ -3,6 +3,7 @@ package kr.co.conceptbe.idea.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.idea.domain.Idea;
 
 public record IdeaDetailResponse (
@@ -39,7 +40,8 @@ public record IdeaDetailResponse (
 			idea.getRecruitmentPlace().getName(),
 			idea.getSkillCategories().stream().map(e -> e.getSkillCategory().getName()).toList(),
 			idea.getLikesCount(),
-			idea.getComments().stream().mapToInt(comment -> comment.getCommentsCount() + 1).sum(),
+			idea.getComments().stream().filter(Comment::isParentComment)
+				.mapToInt(e -> e.getCommentsCount() + 1).sum(),
 			idea.getBookmarksCount(),
 			idea.getHitsCount(),
 			idea.isOwner(tokenMemberId),
