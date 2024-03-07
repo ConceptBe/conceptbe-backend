@@ -17,7 +17,7 @@ public record CommentParentResponse (
 	Integer commentCount,
 	List<CommentChildResponse> commentChildResponses
 ) {
-	public static CommentParentResponse from(Comment comment) {
+	public static CommentParentResponse of(Comment comment, Long tokenMemberId) {
 		return new CommentParentResponse(
 			comment.getId(),
 			comment.getCreator().getNickname(),
@@ -29,8 +29,7 @@ public record CommentParentResponse (
 			comment.getCommentsCount(),
 			comment.getComments()
 				.stream()
-				.map(CommentChildResponse::from)
-				.collect(Collectors.toList())
-		);
+				.map(commentParent -> CommentChildResponse.of(commentParent, tokenMemberId))
+				.toList());
 	}
 }

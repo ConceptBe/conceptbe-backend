@@ -40,8 +40,9 @@ public class CommentController {
 	@Operation(summary = "자식 댓글 가져오기", description = "부모 댓글에 대해 자식 댓글을 가져옵니다.")
 	@GetMapping("/{commentId}")
 	public ResponseEntity<List<CommentChildResponse>> getChildCommentList(
+		@Parameter(hidden = true) @Auth AuthCredentials authCredentials,
 		@PathVariable(name = "commentId") Long commentId) {
-		List<CommentChildResponse> commentChildRespons = commentService.getChildCommentList(commentId);
+		List<CommentChildResponse> commentChildRespons = commentService.getChildCommentList(authCredentials.id(), commentId);
 		return ResponseEntity.ok(commentChildRespons);
 	}
 

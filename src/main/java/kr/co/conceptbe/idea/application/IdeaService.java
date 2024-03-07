@@ -162,12 +162,12 @@ public class IdeaService {
     }
 
     @Transactional(readOnly = true)
-    public List<CommentParentResponse> getIdeaCommentResponse(Long ideaId, Pageable pageable) {
+    public List<CommentParentResponse> getIdeaCommentResponse(Long memberId, Long ideaId, Pageable pageable) {
         Idea idea = ideaRepository.getById(ideaId);
-        return commentRepository.findByIdea(idea)
+        return commentRepository.findByIdea(idea, pageable)
                 .stream()
                 .filter(Comment::isParentComment)
-                .map(CommentParentResponse::from)
+                .map(comment -> CommentParentResponse.of(comment, memberId))
                 .toList();
     }
 

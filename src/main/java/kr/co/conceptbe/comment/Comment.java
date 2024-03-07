@@ -77,4 +77,8 @@ public class Comment extends BaseTimeEntity {
     public boolean isParentComment() {
         return this.parentComment == null;
     }
+
+    public boolean isOwner(Long tokenMemberId) {
+        return creator.getId().equals(tokenMemberId);
+    }
 }

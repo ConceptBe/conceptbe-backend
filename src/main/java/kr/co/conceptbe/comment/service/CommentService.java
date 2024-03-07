@@ -27,11 +27,11 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 
 	@Transactional(readOnly = true)
-	public List<CommentChildResponse> getChildCommentList(Long commentId) {
+	public List<CommentChildResponse> getChildCommentList(Long memberId, Long commentId) {
 		return commentRepository.getById(commentId).getComments()
 			.stream()
 			.sorted(Comparator.comparing(Comment::getCreatedAt))
-			.map(CommentChildResponse::from)
+			.map(comment -> CommentChildResponse.of(comment, memberId))
 			.toList();
 	}
 

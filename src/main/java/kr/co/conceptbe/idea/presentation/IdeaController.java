@@ -120,7 +120,7 @@ public class IdeaController implements IdeaApi {
             @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
             @PageableDefault(sort = "createdAt") Pageable pageable,
             @PathVariable(name = "ideaId") Long ideaId) {
-        List<CommentParentResponse> commentParentResponses = ideaService.getIdeaCommentResponse(ideaId, pageable);
+        List<CommentParentResponse> commentParentResponses = ideaService.getIdeaCommentResponse(authCredentials.id(), ideaId, pageable);
         return ResponseEntity.ok(commentParentResponses);
     }
 

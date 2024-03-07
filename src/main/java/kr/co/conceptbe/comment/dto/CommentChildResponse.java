@@ -8,14 +8,16 @@ public record CommentChildResponse(
 	String nickname,
 	List<String> memberSkills,
 	String content,
-	Integer likesCount
+	Integer likesCount,
+	Boolean owner
 ) {
-	public static CommentChildResponse from(Comment comment) {
+	public static CommentChildResponse of(Comment comment, Long tokenMemberId) {
 		return new CommentChildResponse(
 			comment.getCreator().getNickname(),
 			comment.getCreator().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList(),
 			comment.getContent(),
-			comment.getLikesCount()
+			comment.getLikesCount(),
+			comment.isOwner(tokenMemberId)
 		);
 	}
 }
