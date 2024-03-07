@@ -67,7 +67,7 @@ public class CommentService {
 	public void deleteComment(Long tokenMemberId, Long commentId) {
 		Comment comment = commentRepository.getById(commentId);
 		Member.validateMember(tokenMemberId, comment.getCreator().getId());
-		comment.updateContent("삭제된 댓글입니다.");
+		comment.commentDelete();
 	}
 
 }

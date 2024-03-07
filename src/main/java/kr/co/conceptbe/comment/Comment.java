@@ -39,6 +39,9 @@ public class Comment extends BaseTimeEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Comment parentComment;
 
+    @Column
+    private Boolean deleted;
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member creator;
@@ -58,6 +61,7 @@ public class Comment extends BaseTimeEntity {
         this.parentComment = parentComment;
         this.creator = creator;
         this.idea = idea;
+        this.deleted = false;
     }
 
     public void addParentComment(Comment comment) { this.parentComment = comment; }
@@ -68,6 +72,10 @@ public class Comment extends BaseTimeEntity {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public void commentDelete() {
+        this.deleted = true;
     }
 
     public int getLikesCount() { return likes.size(); }

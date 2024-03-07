@@ -15,7 +15,9 @@ public record CommentParentResponse (
 	String content,
 	Integer likesCount,
 	Integer commentCount,
-	List<CommentChildResponse> commentChildResponses
+	List<CommentChildResponse> commentChildResponses,
+	Boolean owner,
+	Boolean deleted
 ) {
 	public static CommentParentResponse of(Comment comment, Long tokenMemberId) {
 		return new CommentParentResponse(
@@ -30,6 +32,8 @@ public record CommentParentResponse (
 			comment.getComments()
 				.stream()
 				.map(commentParent -> CommentChildResponse.of(commentParent, tokenMemberId))
-				.toList());
+				.toList(),
+			comment.isOwner(tokenMemberId),
+			comment.getDeleted());
 	}
 }
