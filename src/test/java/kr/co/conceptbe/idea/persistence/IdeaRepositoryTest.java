@@ -19,6 +19,7 @@ import kr.co.conceptbe.region.domain.Region;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,15 +42,13 @@ class IdeaRepositoryTest {
     private MemberRepository memberRepository;
     @Autowired
     private RegionRepository regionRepository;
+    private Region region;
+    private Member member;
 
-    @Test
-    void Query_DSL_을_적용한_Repository_Method_들이_정상적으로_동작하는지_확인한다() {
-        // given
-        Branch branch = branchRepository.save(Branch.from("branch"));
-        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
-        SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
-        Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(new Member(
+    @BeforeEach
+    void beforeEach() {
+        region = regionRepository.save(Region.from("BUSAN"));
+        member = memberRepository.save(new Member(
             new OauthId("1", OauthServerType.KAKAO),
             "nickname",
             "profileImageUrl",
@@ -58,6 +57,14 @@ class IdeaRepositoryTest {
             "전국",
             kr.co.conceptbe.member.domain.Region.BUSAN
         ));
+    }
+
+    @Test
+    void Query_DSL_을_적용한_Repository_Method_들이_정상적으로_동작하는지_확인한다() {
+        // given
+        Branch branch = branchRepository.save(Branch.from("branch"));
+        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
+        SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
         Idea idea = IdeaFixture.createIdea(
             region, List.of(branch), List.of(purpose), List.of(skillCategory), member
         );
@@ -80,5 +87,87 @@ class IdeaRepositoryTest {
         // then
         assertThat(resultOfLikesDesc).hasSize(1);
         assertThat(resultOfAllIdeas).hasSize(1);
+    }
+
+    @Test
+    void 최근_게시글_조회에_페이지네이션을_적용한다() {
+        // given
+        Branch branch = branchRepository.save(Branch.from("branch"));
+        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
+        SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
+        Idea notInquiry = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+        Idea result = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+
+        // when
+        List<Idea> queryResults = ideaRepository.findAllByOrderByCreatedAtDesc(
+            new FilteringRequest(
+                null, null, null, null, null
+            ),
+            PageRequest.of(0, 1)
+        );
+
+        // then
+        assertThat(queryResults).hasSize(1)
+            .usingRecursiveComparison()
+            .isEqualTo(List.of(result));
+    }
+
+    @Test
+    void 최근_게시글_조회에_필터링을_적용한다() {
+        // given
+        Branch branch1 = branchRepository.save(Branch.from("branch1"));
+        Branch branch2 = branchRepository.save(Branch.from("branch2"));
+        Branch branch3 = branchRepository.save(Branch.from("branch3"));
+        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
+        SkillCategory skillCategory1 = skillCategoryRepository.save(new SkillCategory("skill1"));
+        SkillCategory skillCategory2 = skillCategoryRepository.save(new SkillCategory("skill2"));
+        SkillCategory skillCategory3 = skillCategoryRepository.save(new SkillCategory("skill3"));
+        Idea result2 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1, branch2), List.of(purpose),
+            List.of(skillCategory1, skillCategory3), member
+        ));
+        Idea result1 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1, branch3), List.of(purpose),
+            List.of(skillCategory1, skillCategory2), member
+        ));
+        Idea notInquiry1 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch2), List.of(purpose),
+            List.of(skillCategory1, skillCategory2), member
+        ));
+        Idea notInquiry2 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1, branch3), List.of(purpose),
+            List.of(skillCategory2), member
+        ));
+
+        // when
+        List<Idea> queryResults = ideaRepository.findAllByOrderByCreatedAtDesc(
+            new FilteringRequest(
+                List.of(branch1.getId(), branch3.getId()),
+                null, null, null,
+                List.of(skillCategory1.getId(), skillCategory3.getId())
+            ),
+            PageRequest.of(0, 4)
+        );
+
+        // then
+        assertThat(queryResults).hasSize(2)
+            .usingRecursiveComparison()
+            .isEqualTo(List.of(result1, result2));
+    }
+
+
+    @Test
+    void 인기_게시글_조회에_필터링을_적용한다() {
+        // given
+
+        // when
+
+        // then
     }
 }

@@ -15,35 +15,39 @@ import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class IdeaRepositoryCustomImpl implements IdeaRepositoryCustom {
+
     private final JPAQueryFactory jpaQueryFactory;
 
-    public List<Idea> findAllByOrderByCreatedAtDesc(FilteringRequest filteringRequest, Pageable pageable) {
+    public List<Idea> findAllByOrderByCreatedAtDesc(FilteringRequest filteringRequest,
+        Pageable pageable) {
         return jpaQueryFactory.selectFrom(idea)
-                .where(
-                        branchIdIn(filteringRequest.branchIds()),
-                        purposeIdIn(filteringRequest.purposeIds()),
-                        cooperationWayEqual(filteringRequest.cooperationWay()),
-                        recruitmentPlaceEqual(filteringRequest.recruitmentPlace()),
-                        skillCategoryIdIn(filteringRequest.skillCategoryIds())
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(idea.likes.size().desc())
-                .fetch();
+            .where(
+                branchIdIn(filteringRequest.branchIds()),
+                purposeIdIn(filteringRequest.purposeIds()),
+                cooperationWayEqual(filteringRequest.cooperationWay()),
+                recruitmentPlaceEqual(filteringRequest.recruitmentPlace()),
+                skillCategoryIdIn(filteringRequest.skillCategoryIds())
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .orderBy(idea.createdAt.desc())
+            .fetch();
     }
 
-    public List<Idea> findAllByOrderByLikesDesc(FilteringRequest filteringRequest, Pageable pageable) {
+    public List<Idea> findAllByOrderByLikesDesc(FilteringRequest filteringRequest,
+        Pageable pageable) {
         return jpaQueryFactory.selectFrom(idea)
-                .where(
-                        branchIdIn(filteringRequest.branchIds()),
-                        purposeIdIn(filteringRequest.purposeIds()),
-                        cooperationWayEqual(filteringRequest.cooperationWay()),
-                        recruitmentPlaceEqual(filteringRequest.recruitmentPlace()),
-                        skillCategoryIdIn(filteringRequest.skillCategoryIds())
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+            .where(
+                branchIdIn(filteringRequest.branchIds()),
+                purposeIdIn(filteringRequest.purposeIds()),
+                cooperationWayEqual(filteringRequest.cooperationWay()),
+                recruitmentPlaceEqual(filteringRequest.recruitmentPlace()),
+                skillCategoryIdIn(filteringRequest.skillCategoryIds())
+            )
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .orderBy(idea.likes.size().desc())
+            .fetch();
     }
 
     private BooleanExpression branchIdIn(List<Long> branchIds) {
@@ -52,10 +56,10 @@ public class IdeaRepositoryCustomImpl implements IdeaRepositoryCustom {
         }
 
         return idea.branches
-                .ideaBranches
-                .any()
-                .branch
-                .id.in(branchIds);
+            .ideaBranches
+            .any()
+            .branch
+            .id.in(branchIds);
     }
 
     private BooleanExpression purposeIdIn(List<Long> purposeIds) {
@@ -64,19 +68,19 @@ public class IdeaRepositoryCustomImpl implements IdeaRepositoryCustom {
         }
 
         return idea.purposes
-                .ideaPurposes
-                .any()
-                .purpose
-                .id.in(purposeIds);
+            .ideaPurposes
+            .any()
+            .purpose
+            .id.in(purposeIds);
     }
 
     private BooleanExpression cooperationWayEqual(String cooperationWay) {
-        if (StringUtils.isEmpty(cooperationWay)){
+        if (StringUtils.isEmpty(cooperationWay)) {
             return null;
         }
 
         return idea.cooperationWay
-                .eq(CooperationWay.from(cooperationWay));
+            .eq(CooperationWay.from(cooperationWay));
     }
 
     private BooleanExpression recruitmentPlaceEqual(Long regionId) {
@@ -85,7 +89,7 @@ public class IdeaRepositoryCustomImpl implements IdeaRepositoryCustom {
         }
 
         return idea.recruitmentPlace
-                .id.eq(regionId);
+            .id.eq(regionId);
     }
 
     private BooleanExpression skillCategoryIdIn(List<Long> skillCategoryIdIn) {
@@ -94,9 +98,9 @@ public class IdeaRepositoryCustomImpl implements IdeaRepositoryCustom {
         }
 
         return idea.skillCategories
-                .ideaSkillCategories
-                .any()
-                .skillCategory
-                .id.in(skillCategoryIdIn);
+            .ideaSkillCategories
+            .any()
+            .skillCategory
+            .id.in(skillCategoryIdIn);
     }
 }
