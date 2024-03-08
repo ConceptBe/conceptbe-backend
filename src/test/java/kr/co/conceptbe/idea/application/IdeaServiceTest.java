@@ -28,6 +28,7 @@ import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -67,6 +68,24 @@ class IdeaServiceTest {
     private IdeaRepository ideaRepository;
     @Autowired
     private RegionRepository regionRepository;
+    private Member member;
+    private AuthCredentials authCredentials;
+    private Region region;
+
+    @BeforeEach
+    void beforeEach() {
+        region = regionRepository.save(Region.from("BUSAN"));
+        member = memberRepository.save(new Member(
+            new OauthId("1", OauthServerType.KAKAO),
+            "nickname",
+            "profileImageUrl",
+            "email",
+            "introduce",
+            "전국",
+            kr.co.conceptbe.member.domain.Region.BUSAN
+        ));
+        authCredentials = new AuthCredentials(member.getId());
+    }
 
     @Test
     void Idea_작성_Filtering_에_필요한_Skill_Categories_를_반환한다() {
@@ -98,17 +117,6 @@ class IdeaServiceTest {
     @Test
     void 게시글을_작성한다() {
         // given
-        Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(new Member(
-            new OauthId("1", OauthServerType.KAKAO),
-            "nickname",
-            "profileImageUrl",
-            "email",
-            "introduce",
-            "전국",
-            kr.co.conceptbe.member.domain.Region.BUSAN
-        ));
-        AuthCredentials authCredentials = new AuthCredentials(member.getId());
         IdeaRequest ideaRequest = new IdeaRequest(
             VALID_TITLE,
             VALID_INTRODUCE,
@@ -147,17 +155,6 @@ class IdeaServiceTest {
         long skillCount
     ) {
         // given
-        Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(new Member(
-            new OauthId("1", OauthServerType.KAKAO),
-            "nickname",
-            "profileImageUrl",
-            "email",
-            "introduce",
-            "전국",
-            kr.co.conceptbe.member.domain.Region.BUSAN
-        ));
-        AuthCredentials authCredentials = new AuthCredentials(member.getId());
         IdeaRequest ideaRequest = new IdeaRequest(
             title,
             introduce,
@@ -182,18 +179,7 @@ class IdeaServiceTest {
     @Test
     void 게시글을_수정_한다() {
         // given
-        Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(new Member(
-            new OauthId("1", OauthServerType.KAKAO),
-            "nickname",
-            "profileImageUrl",
-            "email",
-            "introduce",
-            "전국",
-            kr.co.conceptbe.member.domain.Region.BUSAN
-        ));
-        Idea savedIdea = ideaRepository.save(createValidIdea(region, member));
-        AuthCredentials authCredentials = new AuthCredentials(member.getId());
+        Idea savedIdea = ideaRepository.save(createValidIdea());
         IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
             VALID_TITLE,
             VALID_INTRODUCE,
@@ -236,18 +222,7 @@ class IdeaServiceTest {
         long skillCount
     ) {
         // given
-        Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(new Member(
-            new OauthId("1", OauthServerType.KAKAO),
-            "nickname",
-            "profileImageUrl",
-            "email",
-            "introduce",
-            "전국",
-            kr.co.conceptbe.member.domain.Region.BUSAN
-        ));
-        Idea savedIdea = ideaRepository.save(createValidIdea(region, member));
-        AuthCredentials authCredentials = new AuthCredentials(member.getId());
+        Idea savedIdea = ideaRepository.save(createValidIdea());
         IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
             title,
             introduce,
@@ -270,7 +245,7 @@ class IdeaServiceTest {
             .isInstanceOf(RuntimeException.class);
     }
 
-    private Idea createValidIdea(Region region, Member member) {
+    private Idea createValidIdea() {
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
