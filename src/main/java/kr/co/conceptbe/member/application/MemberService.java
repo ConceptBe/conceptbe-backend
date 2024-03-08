@@ -13,6 +13,7 @@ import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponseOption;
+import kr.co.conceptbe.member.application.dto.MemberProfileSkillResponse;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.MemberPurpose;
 import kr.co.conceptbe.member.domain.MemberSkillCategory;
@@ -71,9 +72,13 @@ public class MemberService {
             .collect(Collectors.toList());
     }
 
-    private List<String> mapToMemberSkills(Member member) {
+    private List<MemberProfileSkillResponse> mapToMemberSkills(Member member) {
         return member.getSkills().stream()
-            .map(skill -> skill.getSkillCategory().getName())
+            .map(skill -> new MemberProfileSkillResponse(
+                skill.getSkillCategory().getId(),
+                skill.getSkillCategory().getName(),
+                skill.getSkillLevel().getName()
+            ))
             .collect(Collectors.toList());
     }
 
