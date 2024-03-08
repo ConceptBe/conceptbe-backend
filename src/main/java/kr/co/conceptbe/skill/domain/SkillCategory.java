@@ -45,6 +45,10 @@ public class SkillCategory {
     }
 
     public boolean isParentSkill() {
-        return Objects.nonNull(parentSkillCategory) && id.equals(parentSkillCategory.getId());
+        return Objects.isNull(parentSkillCategory) || id.equals(parentSkillCategory.getId());
+    }
+
+    public boolean isChildSkill(SkillCategory skillCategory) {
+        return !isParentSkill() && skillCategory.id.equals(parentSkillCategory.id);
     }
 }
