@@ -7,6 +7,9 @@ import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.idea.application.request.FilteringRequest;
 import kr.co.conceptbe.idea.domain.Idea;
+import kr.co.conceptbe.idea.domain.IdeaLike;
+import kr.co.conceptbe.idea.domain.IdeaLikeID;
+import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
@@ -42,6 +45,8 @@ class IdeaRepositoryTest {
     private MemberRepository memberRepository;
     @Autowired
     private RegionRepository regionRepository;
+    @Autowired
+    private IdeaLikesRepository ideaLikesRepository;
     private Region region;
     private Member member;
 
@@ -161,13 +166,81 @@ class IdeaRepositoryTest {
             .isEqualTo(List.of(result1, result2));
     }
 
+    @Test
+    void 인기_게시글_조회에_페이지네이션을_적용한다() {
+        // given
+        Branch branch = branchRepository.save(Branch.from("branch"));
+        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
+        SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
+        Idea notInquiry = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+        Idea result = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+        ideaLikesRepository.save(new IdeaLike(
+            new IdeaLikeID(member.getId(), result.getId()), member, result
+        ));
+
+        // when
+        List<Idea> queryResults = ideaRepository.findAllByOrderByLikesDesc(
+            new FilteringRequest(
+                null, null, null, null, null
+            ),
+            PageRequest.of(0, 1)
+        );
+
+        // then
+        assertThat(queryResults).hasSize(1)
+            .usingRecursiveComparison()
+            .isEqualTo(List.of(result));
+    }
 
     @Test
     void 인기_게시글_조회에_필터링을_적용한다() {
         // given
+        Branch branch1 = branchRepository.save(Branch.from("branch1"));
+        Branch branch2 = branchRepository.save(Branch.from("branch2"));
+        Branch branch3 = branchRepository.save(Branch.from("branch3"));
+        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
+        SkillCategory skillCategory1 = skillCategoryRepository.save(new SkillCategory("skill1"));
+        SkillCategory skillCategory2 = skillCategoryRepository.save(new SkillCategory("skill2"));
+        SkillCategory skillCategory3 = skillCategoryRepository.save(new SkillCategory("skill3"));
+        Idea result2 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1, branch2), List.of(purpose),
+            List.of(skillCategory1, skillCategory3), member
+        ));
+        Idea result1 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1, branch3), List.of(purpose),
+            List.of(skillCategory1, skillCategory2), member
+        ));
+        ideaLikesRepository.save(new IdeaLike(
+            new IdeaLikeID(member.getId(), result1.getId()), member, result1
+        ));
+        Idea notInquiry1 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch2), List.of(purpose),
+            List.of(skillCategory1, skillCategory2), member
+        ));
+        Idea notInquiry2 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1, branch3), List.of(purpose),
+            List.of(skillCategory2), member
+        ));
 
         // when
+        List<Idea> queryResults = ideaRepository.findAllByOrderByLikesDesc(
+            new FilteringRequest(
+                List.of(branch1.getId(), branch3.getId()),
+                null, null, null,
+                List.of(skillCategory1.getId(), skillCategory3.getId())
+            ),
+            PageRequest.of(0, 4)
+        );
 
         // then
+        assertThat(queryResults).hasSize(2)
+            .usingRecursiveComparison()
+            .isEqualTo(List.of(result1, result2));
     }
 }
