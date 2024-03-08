@@ -93,4 +93,9 @@ public class Comment extends BaseTimeEntity {
     public boolean isOwner(Long tokenMemberId) {
         return creator.getId().equals(tokenMemberId);
     }
+
+    public boolean isLike(Long memberId) {
+        return likes.stream()
+            .anyMatch(like -> like.isLike(memberId));
+    }
 }

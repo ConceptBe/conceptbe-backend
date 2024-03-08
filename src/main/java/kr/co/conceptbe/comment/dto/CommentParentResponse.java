@@ -17,7 +17,8 @@ public record CommentParentResponse (
 	Integer commentCount,
 	List<CommentChildResponse> commentChildResponses,
 	Boolean owner,
-	Boolean deleted
+	Boolean deleted,
+	Boolean likes
 ) {
 	public static CommentParentResponse of(Comment comment, Long tokenMemberId) {
 		return new CommentParentResponse(
@@ -34,6 +35,7 @@ public record CommentParentResponse (
 				.map(commentParent -> CommentChildResponse.of(commentParent, tokenMemberId))
 				.toList(),
 			comment.isOwner(tokenMemberId),
-			comment.getDeleted());
+			comment.getDeleted(),
+			comment.isLike(tokenMemberId));
 	}
 }

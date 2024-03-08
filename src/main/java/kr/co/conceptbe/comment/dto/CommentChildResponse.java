@@ -14,7 +14,8 @@ public record CommentChildResponse(
 	String content,
 	Integer likesCount,
 	Boolean owner,
-	Boolean deleted
+	Boolean deleted,
+	Boolean likes
 ) {
 	public static CommentChildResponse of(Comment comment, Long tokenMemberId) {
 		return new CommentChildResponse(
@@ -26,7 +27,8 @@ public record CommentChildResponse(
 			comment.getContent(),
 			comment.getLikesCount(),
 			comment.isOwner(tokenMemberId),
-			comment.getDeleted()
+			comment.getDeleted(),
+			comment.isLike(tokenMemberId)
 		);
 	}
 }

@@ -34,4 +34,7 @@ public class CommentLike extends BaseTimeEntity {
         this.comment = comment;
     }
 
+    public boolean isLike(Long memberId) {
+        return member.getId().equals(memberId);
+    }
 }
