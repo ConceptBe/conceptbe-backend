@@ -55,7 +55,7 @@ public class IdeaController implements IdeaApi {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> modifiedIdea(
+    public ResponseEntity<Void> modifyIdea(
         @Parameter(hidden = true) @Auth AuthCredentials auth,
         @RequestBody IdeaUpdateRequest request,
         @PathVariable Long id

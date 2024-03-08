@@ -32,7 +32,7 @@ public interface IdeaApi {
     );
 
     @Operation(summary = "게시글 수정")
-    ResponseEntity<Void> modifiedIdea(
+    ResponseEntity<Void> modifyIdea(
         @Parameter(hidden = true) @Auth AuthCredentials auth,
         @RequestBody IdeaUpdateRequest request,
         @PathVariable Long id
