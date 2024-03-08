@@ -11,6 +11,7 @@ import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.idea.application.request.IdeaRequest;
+import kr.co.conceptbe.idea.application.request.IdeaUpdateRequest;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.SkillCategoryResponse;
 import kr.co.conceptbe.idea.domain.Idea;
@@ -97,20 +98,40 @@ class IdeaServiceTest {
     @Test
     void 게시글을_작성한다() {
         // given
-        Idea ideaBeforeSaved = createValidIdea();
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(new Member(
+            new OauthId("1", OauthServerType.KAKAO),
+            "nickname",
+            "profileImageUrl",
+            "email",
+            "introduce",
+            "전국",
+            kr.co.conceptbe.member.domain.Region.BUSAN
+        ));
+        AuthCredentials authCredentials = new AuthCredentials(member.getId());
+        IdeaRequest ideaRequest = new IdeaRequest(
+            VALID_TITLE,
+            VALID_INTRODUCE,
+            VALID_COOPERATION,
+            region.getId(),
+            getBranchesByCount(VALID_BRANCH_COUNT).stream().map(Branch::getId).toList(),
+            getPurposesByCount(VALID_PURPOSE_COUNT).stream().map(Purpose::getId).toList(),
+            getSkillCategoriesByCount(VALID_SKILL_COUNT).stream().map(SkillCategory::getId).toList()
+        );
 
         // when
-        Idea savedIdea = ideaRepository.save(ideaBeforeSaved);
+        Long savedIdeaId = ideaService.save(authCredentials, ideaRequest);
+        Idea savedIdea = ideaRepository.findById(savedIdeaId).get();
 
         // then
         assertAll(
-            () -> assertThat(savedIdea.getTitle()).isEqualTo(ideaBeforeSaved.getTitle()),
-            () -> assertThat(savedIdea.getIntroduce()).isEqualTo(ideaBeforeSaved.getIntroduce()),
-            () -> assertThat(savedIdea.getCooperationWay()).isEqualTo(
-                ideaBeforeSaved.getCooperationWay()),
-            () -> assertThat(savedIdea.getBranches()).hasSize(1),
-            () -> assertThat(savedIdea.getPurposes()).hasSize(1),
-            () -> assertThat(savedIdea.getSkillCategories()).hasSize(1)
+            () -> assertThat(savedIdea.getTitle()).isEqualTo(VALID_TITLE),
+            () -> assertThat(savedIdea.getIntroduce()).isEqualTo(VALID_INTRODUCE),
+            () -> assertThat(savedIdea.getCooperationWay()).isEqualTo(VALID_COOPERATION),
+            () -> assertThat(savedIdea.getRecruitmentPlace()).isEqualTo(region.getName()),
+            () -> assertThat(savedIdea.getBranches()).hasSize(VALID_BRANCH_COUNT),
+            () -> assertThat(savedIdea.getPurposes()).hasSize(VALID_PURPOSE_COUNT),
+            () -> assertThat(savedIdea.getSkillCategories()).hasSize(VALID_SKILL_COUNT)
         );
     }
 
@@ -161,30 +182,45 @@ class IdeaServiceTest {
     @Test
     void 게시글을_수정_한다() {
         // given
-        Idea savedIdea = ideaRepository.save(createValidIdea());
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(new Member(
+            new OauthId("1", OauthServerType.KAKAO),
+            "nickname",
+            "profileImageUrl",
+            "email",
+            "introduce",
+            "전국",
+            kr.co.conceptbe.member.domain.Region.BUSAN
+        ));
+        Idea savedIdea = ideaRepository.save(createValidIdea(region, member));
+        AuthCredentials authCredentials = new AuthCredentials(member.getId());
         IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
             VALID_TITLE,
             VALID_INTRODUCE,
             VALID_COOPERATION,
+            region.getId(),
             getBranchesByCount(VALID_BRANCH_COUNT).stream().map(Branch::getId).toList(),
             getPurposesByCount(VALID_PURPOSE_COUNT).stream().map(Purpose::getId).toList(),
             getSkillCategoriesByCount(VALID_SKILL_COUNT).stream().map(SkillCategory::getId).toList()
         );
 
         // when
-        IdeaService.updateIdea(
+        ideaService.updateIdea(
+            authCredentials,
             savedIdea.getId(),
             ideaUpdateRequest
         );
+        Idea ideaByFindById = ideaRepository.findById(savedIdea.getId()).get();
 
         // then
         assertAll(
-            () -> assertThat(savedIdea.getTitle()).isEqualTo(VALID_TITLE),
-            () -> assertThat(savedIdea.getIntroduce()).isEqualTo(VALID_INTRODUCE),
-            () -> assertThat(savedIdea.getCooperationWay()).isEqualTo(VALID_COOPERATION),
-            () -> assertThat(savedIdea.getBranches()).hasSize(VALID_BRANCH_COUNT),
-            () -> assertThat(savedIdea.getPurposes()).hasSize(VALID_PURPOSE_COUNT),
-            () -> assertThat(savedIdea.getSkillCategories()).hasSize(VALID_SKILL_COUNT)
+            () -> assertThat(ideaByFindById.getTitle()).isEqualTo(VALID_TITLE),
+            () -> assertThat(ideaByFindById.getIntroduce()).isEqualTo(VALID_INTRODUCE),
+            () -> assertThat(ideaByFindById.getCooperationWay()).isEqualTo(VALID_COOPERATION),
+            () -> assertThat(ideaByFindById.getRecruitmentPlace()).isEqualTo(region.getName()),
+            () -> assertThat(ideaByFindById.getBranches()).hasSize(VALID_BRANCH_COUNT),
+            () -> assertThat(ideaByFindById.getPurposes()).hasSize(VALID_PURPOSE_COUNT),
+            () -> assertThat(ideaByFindById.getPurposes()).hasSize(VALID_PURPOSE_COUNT)
         );
     }
 
@@ -200,31 +236,6 @@ class IdeaServiceTest {
         long skillCount
     ) {
         // given
-        Idea savedIdea = ideaRepository.save(createValidIdea());
-        IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
-            title,
-            introduce,
-            cooperation,
-            getBranchesByCount(branchCount).stream().map(Branch::getId).toList(),
-            getPurposesByCount(purposeCount).stream().map(Purpose::getId).toList(),
-            getSkillCategoriesByCount(skillCount).stream().map(SkillCategory::getId).toList()
-        );
-
-        // when
-        ThrowingCallable throwingCallable = () -> IdeaService.updateIdea(
-            savedIdea.getId(),
-            ideaUpdateRequest
-        );
-
-        // then
-        assertThatThrownBy(throwingCallable)
-            .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    private Idea createValidIdea() {
-        Branch branch = branchRepository.save(Branch.from("branch"));
-        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
-        SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member = memberRepository.save(new Member(
             new OauthId("1", OauthServerType.KAKAO),
@@ -235,6 +246,34 @@ class IdeaServiceTest {
             "전국",
             kr.co.conceptbe.member.domain.Region.BUSAN
         ));
+        Idea savedIdea = ideaRepository.save(createValidIdea(region, member));
+        AuthCredentials authCredentials = new AuthCredentials(member.getId());
+        IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
+            title,
+            introduce,
+            cooperation,
+            region.getId(),
+            getBranchesByCount(branchCount).stream().map(Branch::getId).toList(),
+            getPurposesByCount(purposeCount).stream().map(Purpose::getId).toList(),
+            getSkillCategoriesByCount(skillCount).stream().map(SkillCategory::getId).toList()
+        );
+
+        // when
+        ThrowingCallable throwingCallable = () -> ideaService.updateIdea(
+            authCredentials,
+            savedIdea.getId(),
+            ideaUpdateRequest
+        );
+
+        // then
+        assertThatThrownBy(throwingCallable)
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    private Idea createValidIdea(Region region, Member member) {
+        Branch branch = branchRepository.save(Branch.from("branch"));
+        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
+        SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
         return IdeaFixture.createIdea(
             region, List.of(branch), List.of(purpose), List.of(skillCategory), member
         );

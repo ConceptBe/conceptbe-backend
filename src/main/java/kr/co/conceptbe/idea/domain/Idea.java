@@ -137,6 +137,10 @@ public class Idea extends BaseTimeEntity {
         return cooperationWay.getValue();
     }
 
+    public String getRecruitmentPlace() {
+        return recruitmentPlace.getName();
+    }
+
     public List<IdeaSkillCategory> getSkillCategories() {
         return skillCategories.getIdeaSkillCategories();
     }
