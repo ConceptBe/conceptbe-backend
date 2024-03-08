@@ -92,14 +92,24 @@ class IdeaServiceTest {
         );
     }
 
-    @ParameterizedTest(name = "유효하지 않은 {0}(이)가 들어오는 경우 게시글 작성에 실패한다.")
-    @MethodSource("invalidWriteIdeaRequest")
+    @Test
     void 게시글을_작성한다() {
         // given
+        Idea ideaBeforeSaved = createValidIdea();
 
         // when
+        Idea savedIdea = ideaRepository.save(ideaBeforeSaved);
 
         // then
+        assertAll(
+            () -> assertThat(savedIdea.getTitle()).isEqualTo(ideaBeforeSaved.getTitle()),
+            () -> assertThat(savedIdea.getIntroduce()).isEqualTo(ideaBeforeSaved.getIntroduce()),
+            () -> assertThat(savedIdea.getCooperationWay()).isEqualTo(
+                ideaBeforeSaved.getCooperationWay()),
+            () -> assertThat(savedIdea.getBranches()).hasSize(1),
+            () -> assertThat(savedIdea.getPurposes()).hasSize(1),
+            () -> assertThat(savedIdea.getSkillCategories()).hasSize(1)
+        );
     }
 
     @Test
