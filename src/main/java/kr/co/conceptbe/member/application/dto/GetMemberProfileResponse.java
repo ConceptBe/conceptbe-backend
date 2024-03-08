@@ -20,9 +20,8 @@ public record GetMemberProfileResponse(
     @Schema(description = "자기소개", example = "안녕하세요 31살 백엔드 개발자입니다.")
     String introduction,
     @ArraySchema( arraySchema =  @Schema(
-        description = "세부 스킬",
-        example ="[\"시각디자인_상\", \"제품디자인_하\"]"))
-    List<String> skills,
+        description = "세부 스킬"))
+    List<MemberProfileSkillResponse> skills,
     @ArraySchema( arraySchema =  @Schema(
         description = "가입목적",
         example ="[\"사이드프로젝트\", \"공모전\"]"))
