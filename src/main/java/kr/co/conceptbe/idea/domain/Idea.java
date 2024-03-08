@@ -81,11 +81,11 @@ public class Idea extends BaseTimeEntity {
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
     private Idea(
-            Title title,
-            Introduce introduce,
-            CooperationWay cooperationWay,
-            Region recruitmentPlace,
-            Member creator
+        Title title,
+        Introduce introduce,
+        CooperationWay cooperationWay,
+        Region recruitmentPlace,
+        Member creator
     ) {
         this.title = title;
         this.introduce = introduce;
@@ -95,21 +95,21 @@ public class Idea extends BaseTimeEntity {
     }
 
     public static Idea of(
-            String title,
-            String introduce,
-            String cooperationWay,
-            Region recruitmentPlace,
-            Member creator,
-            List<Branch> branches,
-            List<Purpose> purposes,
-            List<SkillCategory> skillCategories
+        String title,
+        String introduce,
+        String cooperationWay,
+        Region recruitmentPlace,
+        Member creator,
+        List<Branch> branches,
+        List<Purpose> purposes,
+        List<SkillCategory> skillCategories
     ) {
         Idea idea = new Idea(
-                Title.from(title),
-                Introduce.from(introduce),
-                CooperationWay.from(cooperationWay),
-                recruitmentPlace,
-                creator
+            Title.from(title),
+            Introduce.from(introduce),
+            CooperationWay.from(cooperationWay),
+            recruitmentPlace,
+            creator
         );
         idea.branches = IdeaBranches.of(idea, branches);
         idea.purposes = IdeaPurposes.of(idea, purposes);
@@ -131,6 +131,10 @@ public class Idea extends BaseTimeEntity {
 
     public List<IdeaPurpose> getPurposes() {
         return purposes.getIdeaPurposes();
+    }
+
+    public String getCooperationWay() {
+        return cooperationWay.getValue();
     }
 
     public List<IdeaSkillCategory> getSkillCategories() {
