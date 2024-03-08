@@ -13,6 +13,7 @@ import kr.co.conceptbe.common.auth.OptionalAuth;
 import kr.co.conceptbe.idea.application.IdeaService;
 import kr.co.conceptbe.idea.application.request.FilteringRequest;
 import kr.co.conceptbe.idea.application.request.IdeaRequest;
+import kr.co.conceptbe.idea.application.request.IdeaUpdateRequest;
 import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,13 +45,24 @@ public class IdeaController implements IdeaApi {
 
     @PostMapping
     public ResponseEntity<Void> addIdea(
-            @Parameter(hidden = true) @Auth AuthCredentials auth,
-            @RequestBody IdeaRequest request
+        @Parameter(hidden = true) @Auth AuthCredentials auth,
+        @RequestBody IdeaRequest request
     ) {
         Long savedId = ideaService.save(auth, request);
 
         return ResponseEntity.created(URI.create("/ideas/" + savedId))
-                .build();
+            .build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> modifyIdea(
+        @Parameter(hidden = true) @Auth AuthCredentials auth,
+        @RequestBody IdeaUpdateRequest request,
+        @PathVariable Long id
+    ) {
+        ideaService.updateIdea(auth, id, request);
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("writing")
@@ -61,45 +74,46 @@ public class IdeaController implements IdeaApi {
 
     @GetMapping
     public ResponseEntity<List<IdeaResponse>> findAll(
-            @Parameter(hidden = true) @OptionalAuth AuthCredentials authCredentials,
-            @RequestParam int page,
-            @RequestParam int size,
-            @RequestParam(required = false) List<Long> branchIds,
-            @RequestParam(required = false) List<Long> purposeIds,
-            @RequestParam(required = false) String cooperationWay,
-            @RequestParam(required = false) Long region,
-            @RequestParam(required = false) List<Long> skillCategoryIds
+        @Parameter(hidden = true) @OptionalAuth AuthCredentials authCredentials,
+        @RequestParam int page,
+        @RequestParam int size,
+        @RequestParam(required = false) List<Long> branchIds,
+        @RequestParam(required = false) List<Long> purposeIds,
+        @RequestParam(required = false) String cooperationWay,
+        @RequestParam(required = false) Long region,
+        @RequestParam(required = false) List<Long> skillCategoryIds
     ) {
         Pageable pageable = PageRequest.of(page, size);
         FilteringRequest filteringRequest = new FilteringRequest(
-                branchIds,
-                purposeIds,
-                cooperationWay,
-                region,
-                skillCategoryIds
+            branchIds,
+            purposeIds,
+            cooperationWay,
+            region,
+            skillCategoryIds
         );
-        List<IdeaResponse> responses = ideaService.findAll(authCredentials, filteringRequest, pageable);
+        List<IdeaResponse> responses = ideaService.findAll(authCredentials, filteringRequest,
+            pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/best")
     public ResponseEntity<List<BestIdeaResponse>> findBestIdeas(
-            @RequestParam int page,
-            @RequestParam int size,
-            @RequestParam(required = false) List<Long> branchIds,
-            @RequestParam(required = false) List<Long> purposeIds,
-            @RequestParam(required = false) String cooperationWay,
-            @RequestParam(required = false) Long region,
-            @RequestParam(required = false) List<Long> skillCategoryIds
+        @RequestParam int page,
+        @RequestParam int size,
+        @RequestParam(required = false) List<Long> branchIds,
+        @RequestParam(required = false) List<Long> purposeIds,
+        @RequestParam(required = false) String cooperationWay,
+        @RequestParam(required = false) Long region,
+        @RequestParam(required = false) List<Long> skillCategoryIds
     ) {
         Pageable pageable = PageRequest.of(page, size);
         FilteringRequest filteringRequest = new FilteringRequest(
-                branchIds,
-                purposeIds,
-                cooperationWay,
-                region,
-                skillCategoryIds
+            branchIds,
+            purposeIds,
+            cooperationWay,
+            region,
+            skillCategoryIds
         );
         List<BestIdeaResponse> responses = ideaService.findAllBestIdea(filteringRequest, pageable);
 
@@ -108,36 +122,38 @@ public class IdeaController implements IdeaApi {
 
     @GetMapping("/{ideaId}")
     public ResponseEntity<IdeaDetailResponse> getDetailIdeaResponse(
-            @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
-            @PathVariable(name = "ideaId") Long ideaId
+        @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+        @PathVariable(name = "ideaId") Long ideaId
     ) {
-        IdeaDetailResponse ideaDetailResponse = ideaService.getDetailIdeaResponse(authCredentials.id(), ideaId);
+        IdeaDetailResponse ideaDetailResponse = ideaService.getDetailIdeaResponse(
+            authCredentials.id(), ideaId);
         return ResponseEntity.ok(ideaDetailResponse);
     }
 
     @GetMapping("/{ideaId}/comments")
     public ResponseEntity<List<CommentParentResponse>> getIdeaCommentResponse(
-            @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
-            @PageableDefault(sort = "createdAt") Pageable pageable,
-            @PathVariable(name = "ideaId") Long ideaId) {
-        List<CommentParentResponse> commentParentResponses = ideaService.getIdeaCommentResponse(authCredentials.id(), ideaId, pageable);
+        @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+        @PageableDefault(sort = "createdAt") Pageable pageable,
+        @PathVariable(name = "ideaId") Long ideaId) {
+        List<CommentParentResponse> commentParentResponses = ideaService.getIdeaCommentResponse(
+            authCredentials.id(), ideaId, pageable);
         return ResponseEntity.ok(commentParentResponses);
     }
 
     @PostMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesIdea(
-            @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
-            @PathVariable(name = "ideaId") Long ideaId
+        @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+        @PathVariable(name = "ideaId") Long ideaId
     ) {
         Long id = ideaService.likesIdea(authCredentials.id(), ideaId);
         return ResponseEntity.created(URI.create("/ideas/" + id))
-                .build();
+            .build();
     }
 
     @DeleteMapping("/likes/{ideaId}")
     public ResponseEntity<Void> likesCancelIdea(
-            @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
-            @PathVariable(name = "ideaId") Long ideaId
+        @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+        @PathVariable(name = "ideaId") Long ideaId
     ) {
         ideaService.likesCancelIdea(authCredentials.id(), ideaId);
         return ResponseEntity.noContent().build();
@@ -145,8 +161,8 @@ public class IdeaController implements IdeaApi {
 
     @GetMapping("/{ideaId}/hits")
     public ResponseEntity<List<IdeaHitResponse>> getIdeaHitsResponse(
-            @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
-            @PathVariable(name = "ideaId") Long ideaId
+        @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+        @PathVariable(name = "ideaId") Long ideaId
     ) {
         List<IdeaHitResponse> ideaCommentResponse = ideaService.getIdeaHitsResponse(ideaId);
         return ResponseEntity.ok(ideaCommentResponse);

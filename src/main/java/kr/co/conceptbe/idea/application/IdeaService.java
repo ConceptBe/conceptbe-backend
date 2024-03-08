@@ -13,6 +13,7 @@ import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.comment.repository.CommentRepository;
 import kr.co.conceptbe.idea.application.request.FilteringRequest;
 import kr.co.conceptbe.idea.application.request.IdeaRequest;
+import kr.co.conceptbe.idea.application.request.IdeaUpdateRequest;
 import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
@@ -56,14 +57,14 @@ public class IdeaService {
         validateMember(authCredentials);
 
         Idea idea = Idea.of(
-                request.title(),
-                request.introduce(),
-                request.cooperationWay(),
-                regionRepository.getById(request.recruitmentPlaceId()),
-                memberRepository.getById(authCredentials.id()),
-                branchRepository.findByIdIn(request.branchIds()),
-                purposeRepository.findByIdIn(request.purposeIds()),
-                skillCategoryRepository.findByIdIn(request.skillCategoryIds())
+            request.title(),
+            request.introduce(),
+            request.cooperationWay(),
+            regionRepository.getById(request.recruitmentPlaceId()),
+            memberRepository.getById(authCredentials.id()),
+            branchRepository.findByIdIn(request.branchIds()),
+            purposeRepository.findByIdIn(request.purposeIds()),
+            skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
 
         return ideaRepository.save(idea).getId();
@@ -78,18 +79,19 @@ public class IdeaService {
     }
 
     @Transactional(readOnly = true)
-    public List<BestIdeaResponse> findAllBestIdea(FilteringRequest filteringRequest, Pageable pageable) {
+    public List<BestIdeaResponse> findAllBestIdea(FilteringRequest filteringRequest,
+        Pageable pageable) {
         return ideaRepository.findAllByOrderByLikesDesc(filteringRequest, pageable)
-                .stream()
-                .map(BestIdeaResponse::from)
-                .toList();
+            .stream()
+            .map(BestIdeaResponse::from)
+            .toList();
     }
 
     @Transactional(readOnly = true)
     public List<IdeaResponse> findAll(
-            AuthCredentials authCredentials,
-            FilteringRequest filteringRequest,
-            Pageable pageable
+        AuthCredentials authCredentials,
+        FilteringRequest filteringRequest,
+        Pageable pageable
     ) {
         if (Objects.isNull(authCredentials)) {
             return findAllOfGuest(filteringRequest, pageable);
@@ -98,23 +100,24 @@ public class IdeaService {
         Member member = memberRepository.getById(authCredentials.id());
         Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
         return ideaRepository.findAllByOrderByCreatedAtDesc(filteringRequest, pageable)
-                .stream()
-                .map(idea -> IdeaResponse.ofMember(idea, ideasBookmarkedByMember.contains(idea)))
-                .toList();
+            .stream()
+            .map(idea -> IdeaResponse.ofMember(idea, ideasBookmarkedByMember.contains(idea)))
+            .toList();
     }
 
-    private List<IdeaResponse> findAllOfGuest(FilteringRequest filteringRequest, Pageable pageable) {
+    private List<IdeaResponse> findAllOfGuest(FilteringRequest filteringRequest,
+        Pageable pageable) {
         return ideaRepository.findAllByOrderByCreatedAtDesc(filteringRequest, pageable)
-                .stream()
-                .map(IdeaResponse::ofGuest)
-                .toList();
+            .stream()
+            .map(IdeaResponse::ofGuest)
+            .toList();
     }
 
     private Set<Idea> getIdeasBookmarkedByMember(Member member) {
         return member.getBookmarks()
-                .stream()
-                .map(Bookmark::getIdea)
-                .collect(Collectors.toSet());
+            .stream()
+            .map(Bookmark::getIdea)
+            .collect(Collectors.toSet());
     }
 
     public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
@@ -154,29 +157,50 @@ public class IdeaService {
 
     public FindIdeaWriteResponse getFindIdeaWriteResponse() {
         return FindIdeaWriteResponse.of(
-                regionRepository.findAll(),
-                branchRepository.findAll(),
-                purposeRepository.findAll(),
-                skillCategoryRepository.findAll()
+            regionRepository.findAll(),
+            branchRepository.findAll(),
+            purposeRepository.findAll(),
+            skillCategoryRepository.findAll()
         );
     }
 
     @Transactional(readOnly = true)
-    public List<CommentParentResponse> getIdeaCommentResponse(Long memberId, Long ideaId, Pageable pageable) {
+    public List<CommentParentResponse> getIdeaCommentResponse(Long memberId, Long ideaId,
+        Pageable pageable) {
         Idea idea = ideaRepository.getById(ideaId);
         return commentRepository.findByIdea(idea, pageable)
-                .stream()
-                .filter(Comment::isParentComment)
-                .map(comment -> CommentParentResponse.of(comment, memberId))
-                .toList();
+            .stream()
+            .filter(Comment::isParentComment)
+            .map(comment -> CommentParentResponse.of(comment, memberId))
+            .toList();
     }
 
     public List<IdeaHitResponse> getIdeaHitsResponse(Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
 
         return idea.getHits().stream()
-                .map(Hit::getMember)
-                .map(IdeaHitResponse::from)
-                .toList();
+            .map(Hit::getMember)
+            .map(IdeaHitResponse::from)
+            .toList();
+    }
+
+    public void updateIdea(AuthCredentials auth, Long id, IdeaUpdateRequest request) {
+        Idea idea = ideaRepository.getById(id);
+        validateWriter(auth, idea);
+        idea.update(
+            request.title(),
+            request.introduce(),
+            request.cooperationWay(),
+            regionRepository.getById(request.recruitmentPlaceId()),
+            branchRepository.findByIdIn(request.branchIds()),
+            purposeRepository.findByIdIn(request.purposeIds()),
+            skillCategoryRepository.findByIdIn(request.skillCategoryIds())
+        );
+    }
+
+    private void validateWriter(AuthCredentials auth, Idea idea) {
+        if (!idea.isOwner(auth.id())) {
+            throw new UnAuthorizedMemberException();
+        }
     }
 }
