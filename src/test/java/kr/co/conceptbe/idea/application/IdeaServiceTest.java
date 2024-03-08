@@ -47,9 +47,9 @@ class IdeaServiceTest {
     private static final String INVALID_INTRODUCE = "10글자미만";
     private static final String VALID_COOPERATION = "온라인";
     private static final String INVALID_COOPERATION = "협업선택지아님";
-    private static final int VALID_BRANCH_COUNT = 1;
+    private static final int VALID_BRANCH_COUNT = 2;
     private static final int INVALID_BRANCH_COUNT = 0;
-    private static final int VALID_PURPOSE_COUNT = 1;
+    private static final int VALID_PURPOSE_COUNT = 2;
     private static final int INVALID_PURPOSE_COUNT = 0;
     private static final int VALID_SKILL_COUNT = 8;
     private static final int INVALID_SKILL_COUNT = 11;
