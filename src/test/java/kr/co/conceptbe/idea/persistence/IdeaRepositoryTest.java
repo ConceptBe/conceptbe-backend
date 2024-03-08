@@ -50,28 +50,32 @@ class IdeaRepositoryTest {
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member = memberRepository.save(new Member(
-                new OauthId("1", OauthServerType.KAKAO),
-                "nickname",
-                "profileImageUrl",
-                "email",
-                "introduce",
-                "전국",
-                kr.co.conceptbe.member.domain.Region.BUSAN
+            new OauthId("1", OauthServerType.KAKAO),
+            "nickname",
+            "profileImageUrl",
+            "email",
+            "introduce",
+            "전국",
+            kr.co.conceptbe.member.domain.Region.BUSAN
         ));
-        Idea idea = IdeaFixture.createIdea(region, branch, purpose, skillCategory, member);
+        Idea idea = IdeaFixture.createIdea(
+            region, List.of(branch), List.of(purpose), List.of(skillCategory), member
+        );
         ideaRepository.save(idea);
         PageRequest pageable = PageRequest.of(0, 1);
         FilteringRequest filteringRequest = new FilteringRequest(
-                List.of(branch.getId()),
-                null,
-                null,
-                null,
-                null
+            List.of(branch.getId()),
+            null,
+            null,
+            null,
+            null
         );
 
         // when
-        List<Idea> resultOfLikesDesc = ideaRepository.findAllByOrderByCreatedAtDesc(filteringRequest, pageable);
-        List<Idea> resultOfAllIdeas = ideaRepository.findAllByOrderByLikesDesc(filteringRequest, pageable);
+        List<Idea> resultOfLikesDesc = ideaRepository.findAllByOrderByCreatedAtDesc(
+            filteringRequest, pageable);
+        List<Idea> resultOfAllIdeas = ideaRepository.findAllByOrderByLikesDesc(filteringRequest,
+            pageable);
 
         // then
         assertThat(resultOfLikesDesc).hasSize(1);

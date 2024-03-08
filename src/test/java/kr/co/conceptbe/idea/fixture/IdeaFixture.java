@@ -12,9 +12,9 @@ public class IdeaFixture {
 
     public static Idea createIdea(
             Region region,
-            Branch branch,
-            Purpose purpose,
-            SkillCategory skillCategory,
+            List<Branch> branch,
+            List<Purpose> purpose,
+            List<SkillCategory> skillCategory,
             Member member
     ) {
         return Idea.of(
@@ -23,9 +23,9 @@ public class IdeaFixture {
                 "상관없음",
                 region,
                 member,
-                List.of(branch),
-                List.of(purpose),
-                List.of(skillCategory)
+                branch,
+                purpose,
+                skillCategory
         );
     }
 
