@@ -162,19 +162,19 @@ class IdeaServiceTest {
     void 게시글을_수정_한다() {
         // given
         Idea savedIdea = ideaRepository.save(createValidIdea());
-        List<Branch> branches = getBranchesByCount(VALID_BRANCH_COUNT);
-        List<Purpose> purposes = getPurposesByCount(VALID_PURPOSE_COUNT);
-        List<SkillCategory> skillCategories = getSkillCategoriesByCount(VALID_SKILL_COUNT);
+        IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
+            VALID_TITLE,
+            VALID_INTRODUCE,
+            VALID_COOPERATION,
+            getBranchesByCount(VALID_BRANCH_COUNT).stream().map(Branch::getId).toList(),
+            getPurposesByCount(VALID_PURPOSE_COUNT).stream().map(Purpose::getId).toList(),
+            getSkillCategoriesByCount(VALID_SKILL_COUNT).stream().map(SkillCategory::getId).toList()
+        );
 
         // when
         IdeaService.updateIdea(
             savedIdea.getId(),
-            VALID_TITLE,
-            VALID_INTRODUCE,
-            VALID_COOPERATION,
-            branches,
-            purposes,
-            skillCategories
+            ideaUpdateRequest
         );
 
         // then
@@ -201,19 +201,19 @@ class IdeaServiceTest {
     ) {
         // given
         Idea savedIdea = ideaRepository.save(createValidIdea());
-        List<Branch> branches = getBranchesByCount(branchCount);
-        List<Purpose> purposes = getPurposesByCount(purposeCount);
-        List<SkillCategory> skillCategories = getSkillCategoriesByCount(skillCount);
+        IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
+            title,
+            introduce,
+            cooperation,
+            getBranchesByCount(branchCount).stream().map(Branch::getId).toList(),
+            getPurposesByCount(purposeCount).stream().map(Purpose::getId).toList(),
+            getSkillCategoriesByCount(skillCount).stream().map(SkillCategory::getId).toList()
+        );
 
         // when
         ThrowingCallable throwingCallable = () -> IdeaService.updateIdea(
             savedIdea.getId(),
-            title,
-            introduce,
-            cooperation,
-            branches,
-            purposes,
-            skillCategories
+            ideaUpdateRequest
         );
 
         // then
