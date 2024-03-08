@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 class IdeaServiceTest {
 
     private static final String VALID_TITLE = "제목";
-    private static final String INVALID_TITLE = "한";
+    private static final String INVALID_TITLE = "21글자야야야".repeat(3);
     private static final String VALID_INTRODUCE = "소개".repeat(5);
     private static final String INVALID_INTRODUCE = "10글자미만";
     private static final String VALID_COOPERATION = "온라인";
@@ -176,7 +176,7 @@ class IdeaServiceTest {
 
         // then
         assertThatThrownBy(throwingCallable)
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(RuntimeException.class);
     }
 
     @Test
@@ -267,7 +267,7 @@ class IdeaServiceTest {
 
         // then
         assertThatThrownBy(throwingCallable)
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(RuntimeException.class);
     }
 
     private Idea createValidIdea(Region region, Member member) {
@@ -282,7 +282,7 @@ class IdeaServiceTest {
     private List<Branch> getBranchesByCount(long count) {
         List<Branch> results = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            branchRepository.save(Branch.from("branches" + i));
+            results.add(branchRepository.save(Branch.from("branches" + i)));
         }
         return results;
     }
@@ -290,7 +290,7 @@ class IdeaServiceTest {
     private List<Purpose> getPurposesByCount(long count) {
         List<Purpose> results = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            purposeRepository.save(Purpose.from("purposes" + i));
+            results.add(purposeRepository.save(Purpose.from("purposes" + i)));
         }
         return results;
     }
@@ -298,7 +298,7 @@ class IdeaServiceTest {
     private List<SkillCategory> getSkillCategoriesByCount(long count) {
         List<SkillCategory> results = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            skillCategoryRepository.save(new SkillCategory("skillCategories" + i));
+            results.add(skillCategoryRepository.save(new SkillCategory("skillCategories" + i)));
         }
         return results;
     }

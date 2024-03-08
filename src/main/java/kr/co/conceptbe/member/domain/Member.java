@@ -138,7 +138,6 @@ public class Member extends BaseTimeEntity {
         this.mainSkill = mainSkill;
         this.profileImageUrl = profileImageUrl;
         updateLivingPlace(livingPlace);
-
         this.workingPlace = from;
         this.introduce = introduction;
     }

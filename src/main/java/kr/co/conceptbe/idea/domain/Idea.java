@@ -117,6 +117,24 @@ public class Idea extends BaseTimeEntity {
         return idea;
     }
 
+    public void update(
+        String title,
+        String introduce,
+        String cooperationWay,
+        Region recruitmentPlace,
+        List<Branch> branches,
+        List<Purpose> purposes,
+        List<SkillCategory> skillCategories
+    ) {
+        this.title = Title.from(title);
+        this.introduce = Introduce.from(introduce);
+        this.cooperationWay = CooperationWay.from(cooperationWay);
+        this.recruitmentPlace = recruitmentPlace;
+        this.branches = IdeaBranches.of(this, branches);
+        this.purposes = IdeaPurposes.of(this, purposes);
+        this.skillCategories = IdeaSkillCategories.of(this, skillCategories);
+    }
+
     public String getTitle() {
         return title.getTitle();
     }
@@ -177,17 +195,17 @@ public class Idea extends BaseTimeEntity {
         this.likes.add(ideaLike);
     }
 
-    public boolean isOwner(Long tokenMemberId) {
-        return creator.getId().equals(tokenMemberId);
+    public boolean isOwner(Long memberId) {
+        return creator.getId().equals(memberId);
     }
 
-    public boolean isOwnerLike(Long tokenMemberId) {
+    public boolean isOwnerLike(Long memberId) {
         return likes.stream()
-            .anyMatch(like -> like.isOwnerOfLike(tokenMemberId));
+            .anyMatch(like -> like.isOwnerOfLike(memberId));
     }
 
-    public boolean isOwnerScrap(Long tokenMemberId) {
+    public boolean isOwnerScrap(Long memberId) {
         return bookmarks.stream()
-            .anyMatch(bookmark -> bookmark.isOwnerOfBookmark(tokenMemberId));
+            .anyMatch(bookmark -> bookmark.isOwnerOfBookmark(memberId));
     }
 }
