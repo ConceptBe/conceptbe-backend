@@ -13,8 +13,7 @@ import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
-import kr.co.conceptbe.member.domain.OauthId;
-import kr.co.conceptbe.member.domain.OauthServerType;
+import kr.co.conceptbe.member.fixture.MemberFixture;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
@@ -22,7 +21,6 @@ import kr.co.conceptbe.region.domain.Region;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,26 +45,12 @@ class IdeaRepositoryTest {
     private RegionRepository regionRepository;
     @Autowired
     private IdeaLikesRepository ideaLikesRepository;
-    private Region region;
-    private Member member;
-
-    @BeforeEach
-    void beforeEach() {
-        region = regionRepository.save(Region.from("BUSAN"));
-        member = memberRepository.save(new Member(
-            new OauthId("1", OauthServerType.KAKAO),
-            "nickname",
-            "profileImageUrl",
-            "email",
-            "introduce",
-            "전국",
-            kr.co.conceptbe.member.domain.Region.BUSAN
-        ));
-    }
 
     @Test
     void Query_DSL_을_적용한_Repository_Method_들이_정상적으로_동작하는지_확인한다() {
         // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
@@ -97,6 +81,8 @@ class IdeaRepositoryTest {
     @Test
     void 최근_게시글_조회에_페이지네이션을_적용한다() {
         // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
@@ -126,6 +112,8 @@ class IdeaRepositoryTest {
     @Test
     void 최근_게시글_조회에_필터링을_적용한다() {
         // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
         Branch branch1 = branchRepository.save(Branch.from("branch1"));
         Branch branch2 = branchRepository.save(Branch.from("branch2"));
         Branch branch3 = branchRepository.save(Branch.from("branch3"));
@@ -169,6 +157,8 @@ class IdeaRepositoryTest {
     @Test
     void 인기_게시글_조회에_페이지네이션을_적용한다() {
         // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
@@ -201,6 +191,8 @@ class IdeaRepositoryTest {
     @Test
     void 인기_게시글_조회에_필터링을_적용한다() {
         // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
         Branch branch1 = branchRepository.save(Branch.from("branch1"));
         Branch branch2 = branchRepository.save(Branch.from("branch2"));
         Branch branch3 = branchRepository.save(Branch.from("branch3"));

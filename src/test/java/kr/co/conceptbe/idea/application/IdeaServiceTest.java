@@ -18,8 +18,7 @@ import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
-import kr.co.conceptbe.member.domain.OauthId;
-import kr.co.conceptbe.member.domain.OauthServerType;
+import kr.co.conceptbe.member.fixture.MemberFixture;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
@@ -28,7 +27,6 @@ import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -68,24 +66,6 @@ class IdeaServiceTest {
     private IdeaRepository ideaRepository;
     @Autowired
     private RegionRepository regionRepository;
-    private Member member;
-    private AuthCredentials authCredentials;
-    private Region region;
-
-    @BeforeEach
-    void beforeEach() {
-        region = regionRepository.save(Region.from("BUSAN"));
-        member = memberRepository.save(new Member(
-            new OauthId("1", OauthServerType.KAKAO),
-            "nickname",
-            "profileImageUrl",
-            "email",
-            "introduce",
-            "전국",
-            kr.co.conceptbe.member.domain.Region.BUSAN
-        ));
-        authCredentials = new AuthCredentials(member.getId());
-    }
 
     @Test
     void Idea_작성_Filtering_에_필요한_Skill_Categories_를_반환한다() {
@@ -117,6 +97,9 @@ class IdeaServiceTest {
     @Test
     void 게시글을_작성한다() {
         // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
+        AuthCredentials authCredentials = new AuthCredentials(member.getId());
         IdeaRequest ideaRequest = new IdeaRequest(
             VALID_TITLE,
             VALID_INTRODUCE,
@@ -155,6 +138,9 @@ class IdeaServiceTest {
         long skillCount
     ) {
         // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
+        AuthCredentials authCredentials = new AuthCredentials(member.getId());
         IdeaRequest ideaRequest = new IdeaRequest(
             title,
             introduce,
@@ -179,7 +165,10 @@ class IdeaServiceTest {
     @Test
     void 게시글을_수정_한다() {
         // given
-        Idea savedIdea = ideaRepository.save(createValidIdea());
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
+        AuthCredentials authCredentials = new AuthCredentials(member.getId());
+        Idea savedIdea = ideaRepository.save(createValidIdea(region, member));
         IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
             VALID_TITLE,
             VALID_INTRODUCE,
@@ -222,7 +211,10 @@ class IdeaServiceTest {
         long skillCount
     ) {
         // given
-        Idea savedIdea = ideaRepository.save(createValidIdea());
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
+        AuthCredentials authCredentials = new AuthCredentials(member.getId());
+        Idea savedIdea = ideaRepository.save(createValidIdea(region, member));
         IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
             title,
             introduce,
@@ -245,7 +237,7 @@ class IdeaServiceTest {
             .isInstanceOf(RuntimeException.class);
     }
 
-    private Idea createValidIdea() {
+    private Idea createValidIdea(Region region, Member member) {
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
