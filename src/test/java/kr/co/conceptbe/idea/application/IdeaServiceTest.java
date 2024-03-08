@@ -26,7 +26,7 @@ class IdeaServiceTest {
         // given
         SkillCategory develop = skillCategoryRepository.save(new SkillCategory("개발"));
         SkillCategory backend = skillCategoryRepository.save(new SkillCategory(develop, "BE"));
-        SkillCategory frontend = skillCategoryRepository.save(new SkillCategory(backend, "FE"));
+        SkillCategory frontend = skillCategoryRepository.save(new SkillCategory(develop, "FE"));
 
         // when
         FindIdeaWriteResponse response = ideaService.getFindIdeaWriteResponse();
