@@ -7,8 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
+import kr.co.conceptbe.idea.application.request.IdeaRequest;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.SkillCategoryResponse;
 import kr.co.conceptbe.idea.domain.Idea;
@@ -112,8 +114,52 @@ class IdeaServiceTest {
         );
     }
 
+    @ParameterizedTest(name = "유효하지 않은 {0}으로 게시글을 작성하는 경우 게시글 작성에 실패한다.")
+    @MethodSource("invalidWriteIdeaRequest")
+    void 유효하지_않은_내용으로_게시글을_작성하는_경우_게시글_작성에_실패한다(
+        String testName,
+        String title,
+        String introduce,
+        String cooperation,
+        long branchCount,
+        long purposeCount,
+        long skillCount
+    ) {
+        // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(new Member(
+            new OauthId("1", OauthServerType.KAKAO),
+            "nickname",
+            "profileImageUrl",
+            "email",
+            "introduce",
+            "전국",
+            kr.co.conceptbe.member.domain.Region.BUSAN
+        ));
+        AuthCredentials authCredentials = new AuthCredentials(member.getId());
+        IdeaRequest ideaRequest = new IdeaRequest(
+            title,
+            introduce,
+            cooperation,
+            region.getId(),
+            getBranchesByCount(branchCount).stream().map(Branch::getId).toList(),
+            getPurposesByCount(purposeCount).stream().map(Purpose::getId).toList(),
+            getSkillCategoriesByCount(skillCount).stream().map(SkillCategory::getId).toList()
+        );
+
+        // when
+        ThrowingCallable throwingCallable = () -> ideaService.save(
+            authCredentials,
+            ideaRequest
+        );
+
+        // then
+        assertThatThrownBy(throwingCallable)
+            .isInstanceOf(IllegalArgumentException.class);
+    }
+
     @Test
-    void 게시글을_update_한다() {
+    void 게시글을_수정_한다() {
         // given
         Idea savedIdea = ideaRepository.save(createValidIdea());
         List<Branch> branches = getBranchesByCount(VALID_BRANCH_COUNT);
@@ -142,9 +188,9 @@ class IdeaServiceTest {
         );
     }
 
-    @ParameterizedTest(name = "유효하지 않은 {0}(이)가 들어오는 경우 게시글 수정에 실패한다.")
+    @ParameterizedTest(name = "유효하지 않은 {0}으로 게시글을 수정하는 경우 게시글 수정에 실패한다.")
     @MethodSource("invalidWriteIdeaRequest")
-    void 유효하지_않은_내용으로_게시글을_수정하는_경우_게시글_작성에_실패한다(
+    void 유효하지_않은_내용으로_게시글을_수정하는_경우_게시글_수정에_실패한다(
         String testName,
         String title,
         String introduce,
