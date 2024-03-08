@@ -75,4 +75,23 @@ public class CommentController {
 		commentService.deleteComment(authCredentials.id(), commentId);
 		return ResponseEntity.noContent().build();
 	}
+
+	@PostMapping("/likes/{commentId}")
+	public ResponseEntity<Void> likesComment(
+		@Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+		@PathVariable(name = "commentId") Long commentId
+	) {
+		Long id = commentService.likesComment(authCredentials.id(), commentId);
+		return ResponseEntity.created(URI.create("/ideas/" + id))
+			.build();
+	}
+
+	@DeleteMapping("/likes/{commentId}")
+	public ResponseEntity<Void> likesCancelComment(
+		@Parameter(hidden = true) @Auth AuthCredentials authCredentials,
+		@PathVariable(name = "commentId") Long commentId
+	) {
+		commentService.likesCancelComment(authCredentials.id(), commentId);
+		return ResponseEntity.noContent().build();
+	}
 }

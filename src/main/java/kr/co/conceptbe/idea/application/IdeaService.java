@@ -137,8 +137,8 @@ public class IdeaService {
 
         if (optionalIdeaLike.isEmpty()) {
             IdeaLike ideaLike = new IdeaLike(ideaLikeID, member, idea);
-            ideaLikesRepository.save(ideaLike);
             idea.addIdeaLikes(ideaLike);
+            ideaLikesRepository.save(ideaLike);
         } else {
             throw new IdeaLikeException();
         }

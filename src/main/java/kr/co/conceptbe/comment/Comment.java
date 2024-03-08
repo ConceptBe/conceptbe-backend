@@ -70,6 +70,10 @@ public class Comment extends BaseTimeEntity {
         this.comments.add(comment);
     }
 
+    public void addCommentLike(CommentLike commentLike) {
+        this.likes.add(commentLike);
+    }
+
     public void updateContent(String content) {
         this.content = content;
     }

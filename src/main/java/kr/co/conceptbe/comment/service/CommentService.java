@@ -2,14 +2,18 @@ package kr.co.conceptbe.comment.service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.conceptbe.comment.Comment;
+import kr.co.conceptbe.comment.CommentLike;
 import kr.co.conceptbe.comment.dto.CommentCreateRequest;
 import kr.co.conceptbe.comment.dto.CommentChildResponse;
 import kr.co.conceptbe.comment.dto.CommentUpdateRequest;
+import kr.co.conceptbe.comment.exception.CommentLikeException;
+import kr.co.conceptbe.comment.repository.CommentLikeRepository;
 import kr.co.conceptbe.comment.repository.CommentRepository;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
@@ -25,6 +29,7 @@ public class CommentService {
 	private final MemberRepository memberRepository;
 	private final IdeaRepository ideaRepository;
 	private final CommentRepository commentRepository;
+	private final CommentLikeRepository commentLikeRepository;
 
 	@Transactional(readOnly = true)
 	public List<CommentChildResponse> getChildCommentList(Long memberId, Long commentId) {
@@ -69,4 +74,24 @@ public class CommentService {
 		comment.commentDelete();
 	}
 
+	public Long likesComment(Long tokenMemberId, Long commentId) {
+		Member member = memberRepository.getById(tokenMemberId);
+		Comment comment = commentRepository.getById(commentId);
+
+		Optional<CommentLike> optionalCommentLike = commentLikeRepository.findByMemberAndComment(member, comment);
+		if(optionalCommentLike.isEmpty()) {
+			CommentLike commentLike = new CommentLike(member, comment);
+			comment.addCommentLike(commentLike);
+			commentLikeRepository.save(commentLike);
+		} else {
+			throw new CommentLikeException();
+		}
+		return comment.getId();
+	}
+
+	public void likesCancelComment(Long tokenMemberId, Long commentId) {
+		Member member = memberRepository.getById(tokenMemberId);
+		Comment comment = commentRepository.getById(commentId);
+		commentLikeRepository.findByMemberAndComment(member, comment).ifPresent(commentLikeRepository::delete);
+	}
 }

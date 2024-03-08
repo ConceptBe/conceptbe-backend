@@ -29,8 +29,7 @@ public class CommentLike extends BaseTimeEntity {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    public CommentLike(Long id, Member member, Comment comment) {
-        this.id = id;
+    public CommentLike(Member member, Comment comment) {
         this.member = member;
         this.comment = comment;
     }
