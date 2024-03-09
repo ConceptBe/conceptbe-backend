@@ -18,4 +18,17 @@ public class MemberFixture {
         );
     }
 
+    public static Member createMemberByOauthId(OauthId oauthId) {
+        return new Member(
+            oauthId,
+            "nickname",
+            "profileImageUrl",
+            "email",
+            "introduce",
+            "전국",
+            kr.co.conceptbe.member.domain.Region.BUSAN
+        );
+
+    }
+
 }

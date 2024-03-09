@@ -19,6 +19,8 @@ import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
+import kr.co.conceptbe.member.domain.OauthId;
+import kr.co.conceptbe.member.domain.OauthServerType;
 import kr.co.conceptbe.member.fixture.MemberFixture;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
@@ -257,8 +259,10 @@ class IdeaServiceTest {
     void 게시글_작성자가_아닌_유저가_게시글을_삭제하려는_경우_게시글_삭제에_실패한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member1 = memberRepository.save(MemberFixture.createMember());
-        Member member2 = memberRepository.save(MemberFixture.createMember());
+        Member member1 = memberRepository.save(
+            MemberFixture.createMemberByOauthId(new OauthId("1", OauthServerType.KAKAO)));
+        Member member2 = memberRepository.save(
+            MemberFixture.createMemberByOauthId(new OauthId("2", OauthServerType.KAKAO)));
         Idea idea = ideaRepository.save(createValidIdea(region, member1));
 
         // when
