@@ -203,4 +203,10 @@ public class IdeaService {
             throw new UnAuthorizedMemberException();
         }
     }
+
+    public void deleteIdea(AuthCredentials auth, Long id) {
+        Idea idea = ideaRepository.getById(id);
+        validateWriter(auth, idea);
+        ideaRepository.deleteById(idea.getId());
+    }
 }

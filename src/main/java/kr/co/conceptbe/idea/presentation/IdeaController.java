@@ -65,6 +65,16 @@ public class IdeaController implements IdeaApi {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> removeIdea(
+        @Parameter(hidden = true) @Auth AuthCredentials auth,
+        @PathVariable Long id
+    ) {
+        ideaService.deleteIdea(auth, id);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("writing")
     public ResponseEntity<FindIdeaWriteResponse> getIdeaWriteResponses() {
         FindIdeaWriteResponse response = ideaService.getFindIdeaWriteResponse();
