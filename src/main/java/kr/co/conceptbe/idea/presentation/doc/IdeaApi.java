@@ -38,6 +38,12 @@ public interface IdeaApi {
         @PathVariable Long id
     );
 
+    @Operation(summary = "게시글 삭제")
+    ResponseEntity<Void> removeIdea(
+        @Parameter(hidden = true) @Auth AuthCredentials auth,
+        @PathVariable Long id
+    );
+
     @Operation(summary = "게시글 작성 정보 조회")
     ResponseEntity<FindIdeaWriteResponse> getIdeaWriteResponses();
 
