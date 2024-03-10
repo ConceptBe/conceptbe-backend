@@ -7,6 +7,8 @@ import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.MemberSkillCategory;
 
 public record MemberResponse(
+    @Schema(description = "멤버 ID", example = "1")
+    Long id,
     @Schema(description = "프로필 이미지 URL", example = "https://conceptbe.png")
     String profileImageUrl,
     @Schema(description = "닉네임", example = "conceptbe")
@@ -23,6 +25,7 @@ public record MemberResponse(
             .toList();
 
         return new MemberResponse(
+            member.getId(),
             member.getProfileImageUrl(),
             member.getNickname(),
             skills
