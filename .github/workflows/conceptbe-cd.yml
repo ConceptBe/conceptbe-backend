@@ -9,31 +9,31 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          
+          java-version: "17"
+          distribution: "temurin"
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-        
+
       - name: Build with Gradle
         run: ./gradlew build
-        
+
       - name: Docker Image Build
         run: docker build -t pjhg410/conceptbe .
-        
+
       - name: Docker Hub Login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
+
       - name: Docker Hub push
         run: docker push pjhg410/conceptbe
-        
+
       - name: Docker Pull And run
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -45,4 +45,4 @@ jobs:
             docker stop backend
             docker rm backend
             docker pull pjhg410/conceptbe
-            docker run -d -p 8080:8080 --name backend -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} -e KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} -e KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} -e KAKAO_SCOPE=${{ secrets.KAKAO_SCOPE }} -e NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }} -e NAVER_REDIRECT_URI=${{ secrets.NAVER_REDIRECT_URI }} -e NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }} -e NAVER_SCOPE=${{ secrets.NAVER_SCOPE }} -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} -e JWT_ACCESS_TOKEN_EXPIRATION_TIME=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION_TIME }} pjhg410/conceptbe
+            docker run -d -p 8080:8080 --name backend -e RDS_URL=${{ secrets.RDS_URL }} -e RDS_USERNAME=${{ secrets.RDS_USERNAME }} -e RDS_PASSWORD=${{ secrets.RDS_PASSWORD }} -e KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }} -e KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }} -e KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }} -e KAKAO_SCOPE=${{ secrets.KAKAO_SCOPE }} -e NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }} -e NAVER_REDIRECT_URI=${{ secrets.NAVER_REDIRECT_URI }} -e NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }} -e NAVER_SCOPE=${{ secrets.NAVER_SCOPE }} -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} -e JWT_ACCESS_TOKEN_EXPIRATION_TIME=${{ secrets.JWT_ACCESS_TOKEN_EXPIRATION_TIME }} pjhg410/conceptbe
