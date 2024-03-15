@@ -1,16 +1,16 @@
 package kr.co.conceptbe.auth.fixture;
 
 import java.util.List;
-import kr.co.conceptbe.auth.application.dto.SignUpRequest;
-import kr.co.conceptbe.auth.application.dto.SkillRequests;
 import kr.co.conceptbe.member.domain.OauthServerType;
 import kr.co.conceptbe.member.domain.Region;
+import kr.co.conceptbe.auth.application.dto.SignUpRequest;
+import kr.co.conceptbe.auth.application.dto.SkillRequest;
 
 public class AuthFixture {
 
     public static SignUpRequest createSignUpRequest(
         Long mainSkillId,
-        SkillRequests skills,
+        List<SkillRequest> skills,
         Long purposeId
     ) {
         return new SignUpRequest("nickname",
