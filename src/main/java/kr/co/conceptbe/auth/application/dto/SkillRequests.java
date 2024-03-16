@@ -8,9 +8,8 @@ public record SkillRequests(
     List<SkillRequest> skills
 ) {
 
-    public SkillRequests(List<SkillRequest> skills) {
+    public SkillRequests {
         checkDuplicatedSkillCategory(skills);
-        this.skills = skills;
     }
 
     private void checkDuplicatedSkillCategory(List<SkillRequest> skills) {
