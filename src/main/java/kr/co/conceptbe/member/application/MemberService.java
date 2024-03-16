@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import kr.co.conceptbe.auth.application.dto.SkillRequest;
 import kr.co.conceptbe.member.application.dto.UpdateMemberProfileRequest;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
@@ -150,9 +151,10 @@ public class MemberService {
     private List<SkillCategory> mapToSkillCategories(
         UpdateMemberProfileRequest updateMemberProfileRequest
     ) {
-        return updateMemberProfileRequest.skills().stream()
-            .map(skillRequest -> skillCategoryRepository.getById(skillRequest.skillId()))
+        List<Long> skillIds = updateMemberProfileRequest.skills().stream()
+            .map(SkillRequest::skillId)
             .toList();
+        return skillCategoryRepository.findByIdIn(skillIds);
     }
 
     private static List<SkillLevel> mapToSkillLevels(

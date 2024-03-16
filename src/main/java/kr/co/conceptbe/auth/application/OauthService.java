@@ -9,6 +9,7 @@ import kr.co.conceptbe.auth.application.dto.MainSkillResponse;
 import kr.co.conceptbe.auth.application.dto.OauthMemberResponse;
 import kr.co.conceptbe.auth.application.dto.PurposeResponse;
 import kr.co.conceptbe.auth.application.dto.SignUpRequest;
+import kr.co.conceptbe.auth.application.dto.SkillRequest;
 import kr.co.conceptbe.auth.domain.authcode.AuthCodeRequestUrlProviderHandler;
 import kr.co.conceptbe.auth.domain.client.OauthMemberClientHandler;
 import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;
@@ -90,9 +91,10 @@ public class OauthService {
     }
 
     private List<SkillCategory> mapToSkillCategories(SignUpRequest signUpRequest) {
-        return signUpRequest.skills().stream()
-            .map(skillRequest -> skillCategoryRepository.getById(skillRequest.skillId()))
+        List<Long> skillIds = signUpRequest.skills().stream()
+            .map(SkillRequest::skillId)
             .toList();
+        return skillCategoryRepository.findByIdIn(skillIds);
     }
 
     private  List<SkillLevel> mapToSkillLevels(SignUpRequest signUpRequest) {
