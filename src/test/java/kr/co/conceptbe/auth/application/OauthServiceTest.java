@@ -80,13 +80,13 @@ class OauthServiceTest {
     }
 
     private List<String> mapToSkillLevels(Member member) {
-        return member.getSkills().getSkills().stream()
+        return member.getSkills().getValues().stream()
             .map(memberSkill -> memberSkill.getSkillLevel().getName())
             .toList();
     }
 
     private List<String> mapToSkillNames(Member member) {
-        return member.getSkills().getSkills().stream()
+        return member.getSkills().getValues().stream()
             .map(memberSkill -> memberSkill.getSkillCategory().getName())
             .toList();
     }

@@ -21,10 +21,10 @@ import lombok.NoArgsConstructor;
 public class MemberSkills {
 
     @OneToMany(mappedBy = "member",  cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
-    private List<MemberSkillCategory> skills = new ArrayList<>();
+    private List<MemberSkillCategory> values = new ArrayList<>();
 
     private MemberSkills(List<MemberSkillCategory> memberSkillCategories) {
-        this.skills = memberSkillCategories;
+        this.values = memberSkillCategories;
     }
 
     public static MemberSkills of(Member member, List<SkillCategory> skillCategories, List<SkillLevel> skillLevels) {
@@ -54,6 +54,6 @@ public class MemberSkills {
     }
 
     public void clear() {
-        skills.clear();
+        values.clear();
     }
 }

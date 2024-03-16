@@ -72,7 +72,7 @@ public class MemberService {
     }
 
     private List<MemberProfileSkillResponse> mapToMemberSkills(Member member) {
-        return member.getSkills().getSkills().stream()
+        return member.getSkills().getValues().stream()
             .map(skill -> new MemberProfileSkillResponse(
                 skill.getSkillCategory().getId(),
                 skill.getSkillCategory().getName(),

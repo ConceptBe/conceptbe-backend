@@ -18,7 +18,7 @@ public record MemberResponse(
 ) {
 
     public static MemberResponse from(Member member) {
-        List<String> skills = member.getSkills().getSkills()
+        List<String> skills = member.getSkills().getValues()
             .stream()
             .map(MemberSkillCategory::getSkillCategory)
             .map(SkillCategory::getName)
