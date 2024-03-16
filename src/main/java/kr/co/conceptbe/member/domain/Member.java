@@ -153,7 +153,7 @@ public class Member extends BaseTimeEntity {
 
     public void updateSkills(Member member, List<SkillCategory> skillCategories, List<SkillLevel> skillLevels) {
         this.skills.clear();
-        addSkills(member, skillCategories, skillLevels);
+        this.skills.addSkills(member, skillCategories, skillLevels);
     }
 
     public void updateJoinPurposes(List<MemberPurpose> memberPurposes) {

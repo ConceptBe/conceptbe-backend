@@ -56,4 +56,14 @@ public class MemberSkills {
     public void clear() {
         values.clear();
     }
+
+    public void addSkills(Member member, List<SkillCategory> skillCategories, List<SkillLevel> skillLevels) {
+        validateDuplication(skillCategories);
+
+        for (int index = 0; index < skillCategories.size(); index++) {
+            values.add(new MemberSkillCategory(
+                member, skillCategories.get(index), skillLevels.get(index))
+            );
+        }
+    }
 }
