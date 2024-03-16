@@ -6,13 +6,14 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 import kr.co.conceptbe.auth.application.dto.AuthResponse;
 import kr.co.conceptbe.auth.application.dto.SignUpRequest;
-import kr.co.conceptbe.auth.application.dto.SignUpSkillRequest;
+import kr.co.conceptbe.auth.application.dto.SkillRequest;
+import kr.co.conceptbe.auth.application.dto.SkillRequests;
 import kr.co.conceptbe.auth.fixture.AuthFixture;
 import kr.co.conceptbe.auth.support.JwtProvider;
-import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
+import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import kr.co.conceptbe.skill.domain.SkillLevel;
@@ -50,10 +51,10 @@ class OauthServiceTest {
         Purpose purpose = purposeRepository.save(Purpose.from("창업"));
         SignUpRequest signUpRequest = AuthFixture.createSignUpRequest(
             mainSkill.getId(),
-            List.of(
-                new SignUpSkillRequest(beDetailSkill.getId(), SkillLevel.HIGH.getName()),
-                new SignUpSkillRequest(feDetailSkill.getId(), SkillLevel.LOW.getName())
-            ),
+            new SkillRequests(List.of(
+                new SkillRequest(beDetailSkill.getId(), SkillLevel.HIGH.getName()),
+                new SkillRequest(feDetailSkill.getId(), SkillLevel.LOW.getName())
+            )),
             purpose.getId()
         );
 
