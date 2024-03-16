@@ -1,4 +1,4 @@
-package kr.co.conceptbe.auth.application.dto;
+package kr.co.conceptbe.member.application.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.List;
+import kr.co.conceptbe.auth.application.dto.SkillRequest;
 
 public record UpdateMemberProfileRequest(
     @Schema(description = "닉네임", example = "닉네임")

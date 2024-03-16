@@ -24,6 +24,7 @@ import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.skill.domain.SkillCategory;
+import kr.co.conceptbe.skill.domain.SkillLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -79,8 +80,8 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member",  cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
-    private final List<MemberSkillCategory> skills = new ArrayList<>();
+    @Embedded
+    private MemberSkills skills;
 
     @OneToMany(mappedBy = "member")
     private final List<MemberBranch> branches = new ArrayList<>();
@@ -117,8 +118,8 @@ public class Member extends BaseTimeEntity {
         this.mainSkill = mainSkill;
     }
 
-    public void addSkill(MemberSkillCategory memberSkill) {
-        this.skills.add(memberSkill);
+    public void addSkills(Member member, List<SkillCategory> skillCategories, List<SkillLevel> skillLevels) {
+        this.skills = MemberSkills.of(member, skillCategories, skillLevels);
     }
 
     public void addPurpose(MemberPurpose memberPurpose) {
@@ -150,9 +151,9 @@ public class Member extends BaseTimeEntity {
         this.livingPlace = null;
     }
 
-    public void updateSkills(List<MemberSkillCategory> memberSkillCategories) {
+    public void updateSkills(Member member, List<SkillCategory> skillCategories, List<SkillLevel> skillLevels) {
         this.skills.clear();
-        this.skills.addAll(memberSkillCategories);
+        addSkills(member, skillCategories, skillLevels);
     }
 
     public void updateJoinPurposes(List<MemberPurpose> memberPurposes) {

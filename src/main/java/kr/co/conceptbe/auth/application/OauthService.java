@@ -9,7 +9,6 @@ import kr.co.conceptbe.auth.application.dto.MainSkillResponse;
 import kr.co.conceptbe.auth.application.dto.OauthMemberResponse;
 import kr.co.conceptbe.auth.application.dto.PurposeResponse;
 import kr.co.conceptbe.auth.application.dto.SignUpRequest;
-import kr.co.conceptbe.auth.application.dto.SkillRequests;
 import kr.co.conceptbe.auth.domain.authcode.AuthCodeRequestUrlProviderHandler;
 import kr.co.conceptbe.auth.domain.client.OauthMemberClientHandler;
 import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;
@@ -17,7 +16,6 @@ import kr.co.conceptbe.auth.support.JwtProvider;
 import kr.co.conceptbe.member.application.MemberService;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.MemberPurpose;
-import kr.co.conceptbe.member.domain.MemberSkillCategory;
 import kr.co.conceptbe.member.domain.OauthId;
 import kr.co.conceptbe.member.domain.OauthServerType;
 import kr.co.conceptbe.member.persistence.MemberRepository;
@@ -85,19 +83,22 @@ public class OauthService {
     private void processSkill(SignUpRequest signUpRequest, Member member) {
         SkillCategory mainSkill = skillCategoryRepository.getById(signUpRequest.mainSkillId());
         member.updateMainSkill(mainSkill);
-        List<MemberSkillCategory> memberSkills = mapToMemberSkills(signUpRequest, member);
-        for (MemberSkillCategory memberSkill : memberSkills) {
-            member.addSkill(memberSkill);
-        }
+
+        List<SkillCategory> skillCategories = mapToSkillCategories(signUpRequest);
+        List<SkillLevel> skillLevels = mapToSkillLevels(signUpRequest);
+        member.addSkills(member, skillCategories, skillLevels);
     }
 
-    private List<MemberSkillCategory> mapToMemberSkills(SignUpRequest signUpRequest, Member member) {
-        SkillRequests skillRequests = signUpRequest.skills();
-        return skillRequests.skills().stream()
-            .map(skillRequest -> {
-                SkillCategory skill = skillCategoryRepository.getById(skillRequest.skillId());
-                return new MemberSkillCategory(member, skill, SkillLevel.from(skillRequest.level()));
-            }).toList();
+    private List<SkillCategory> mapToSkillCategories(SignUpRequest signUpRequest) {
+        return signUpRequest.skills().stream()
+            .map(skillRequest -> skillCategoryRepository.getById(skillRequest.skillId()))
+            .toList();
+    }
+
+    private  List<SkillLevel> mapToSkillLevels(SignUpRequest signUpRequest) {
+        return signUpRequest.skills().stream()
+            .map(skillRequest -> SkillLevel.from(skillRequest.level()))
+            .toList();
     }
 
     private void processPurpose(SignUpRequest signUpRequest, Member member) {

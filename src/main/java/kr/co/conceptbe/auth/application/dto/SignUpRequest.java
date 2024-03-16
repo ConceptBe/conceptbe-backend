@@ -30,7 +30,7 @@ public record SignUpRequest(
     @Schema(description = "세부 스킬 리스트")
     @NotNull(message = "스킬은 빈 값일 수 없습니다.")
     @Size(min = 1, max = 3, message = "스킬은 1개 이상 3개이하로 선택해야 됩니다.")
-    SkillRequests skills,
+    List<SkillRequest> skills,
 
     @Schema(description = "가입 목적 리스트")
     @NotNull(message = "가입목적은 빈 값일 수 없습니다.")

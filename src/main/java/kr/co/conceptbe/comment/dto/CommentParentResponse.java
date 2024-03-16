@@ -25,7 +25,7 @@ public record CommentParentResponse (
 			comment.getId(),
 			comment.getCreator().getNickname(),
 			comment.getCreator().getProfileImageUrl(),
-			comment.getCreator().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList(),
+			comment.getCreator().getSkills().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList(),
 			comment.getCreatedAt(),
 			comment.getContent(),
 			comment.getLikesCount(),

@@ -30,7 +30,7 @@ public record IdeaDetailResponse (
 		return new IdeaDetailResponse(
 			idea.getCreator().getProfileImageUrl(),
 			idea.getCreator().getNickname(),
-			idea.getCreator().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList(),
+			idea.getCreator().getSkills().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList(),
 			idea.getTitle(),
 			idea.getCreatedAt(),
 			idea.getIntroduce(),
