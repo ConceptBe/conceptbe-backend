@@ -151,10 +151,9 @@ public class MemberService {
     private List<SkillCategory> mapToSkillCategories(
         UpdateMemberProfileRequest updateMemberProfileRequest
     ) {
-        List<Long> skillIds = updateMemberProfileRequest.skills().stream()
-            .map(SkillRequest::skillId)
+        return updateMemberProfileRequest.skills().stream()
+            .map(skillRequest -> skillCategoryRepository.getById(skillRequest.skillId()))
             .toList();
-        return skillCategoryRepository.findByIdIn(skillIds);
     }
 
     private static List<SkillLevel> mapToSkillLevels(

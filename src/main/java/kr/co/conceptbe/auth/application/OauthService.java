@@ -91,10 +91,9 @@ public class OauthService {
     }
 
     private List<SkillCategory> mapToSkillCategories(SignUpRequest signUpRequest) {
-        List<Long> skillIds = signUpRequest.skills().stream()
-            .map(SkillRequest::skillId)
+        return signUpRequest.skills().stream()
+            .map(skillRequest -> skillCategoryRepository.getById(skillRequest.skillId()))
             .toList();
-        return skillCategoryRepository.findByIdIn(skillIds);
     }
 
     private  List<SkillLevel> mapToSkillLevels(SignUpRequest signUpRequest) {
