@@ -2,7 +2,6 @@ package kr.co.conceptbe.comment.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import kr.co.conceptbe.comment.Comment;
 
@@ -25,7 +24,7 @@ public record CommentParentResponse (
 			comment.getId(),
 			comment.getCreator().getNickname(),
 			comment.getCreator().getProfileImageUrl(),
-			comment.getCreator().getSkills().stream().map(e -> e.getSkillCategory().getName()).toList(),
+			comment.getCreator().getSkills().getValues().stream().map(e -> e.getSkillCategory().getName()).toList(),
 			comment.getCreatedAt(),
 			comment.getContent(),
 			comment.getLikesCount(),

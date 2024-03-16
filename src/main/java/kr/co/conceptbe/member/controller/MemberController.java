@@ -2,7 +2,7 @@ package kr.co.conceptbe.member.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import kr.co.conceptbe.auth.application.dto.UpdateMemberProfileRequest;
+import kr.co.conceptbe.member.application.dto.UpdateMemberProfileRequest;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.common.auth.Auth;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;

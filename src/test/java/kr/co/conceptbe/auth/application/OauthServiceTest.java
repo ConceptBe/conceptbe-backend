@@ -1,13 +1,13 @@
 package kr.co.conceptbe.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import kr.co.conceptbe.auth.application.dto.AuthResponse;
 import kr.co.conceptbe.auth.application.dto.SignUpRequest;
 import kr.co.conceptbe.auth.application.dto.SkillRequest;
-import kr.co.conceptbe.auth.application.dto.SkillRequests;
 import kr.co.conceptbe.auth.fixture.AuthFixture;
 import kr.co.conceptbe.auth.support.JwtProvider;
 import kr.co.conceptbe.member.domain.Member;
@@ -17,6 +17,7 @@ import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import kr.co.conceptbe.skill.domain.SkillLevel;
+import kr.co.conceptbe.skill.exception.DuplicatedSkillCategoryException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,10 +52,10 @@ class OauthServiceTest {
         Purpose purpose = purposeRepository.save(Purpose.from("창업"));
         SignUpRequest signUpRequest = AuthFixture.createSignUpRequest(
             mainSkill.getId(),
-            new SkillRequests(List.of(
+            List.of(
                 new SkillRequest(beDetailSkill.getId(), SkillLevel.HIGH.getName()),
                 new SkillRequest(feDetailSkill.getId(), SkillLevel.LOW.getName())
-            )),
+            ),
             purpose.getId()
         );
 
@@ -79,13 +80,13 @@ class OauthServiceTest {
     }
 
     private List<String> mapToSkillLevels(Member member) {
-        return member.getSkills().stream()
+        return member.getSkills().getValues().stream()
             .map(memberSkill -> memberSkill.getSkillLevel().getName())
             .toList();
     }
 
     private List<String> mapToSkillNames(Member member) {
-        return member.getSkills().stream()
+        return member.getSkills().getValues().stream()
             .map(memberSkill -> memberSkill.getSkillCategory().getName())
             .toList();
     }
@@ -94,5 +95,27 @@ class OauthServiceTest {
         return member.getPurposes().stream()
             .map(memberPurpose -> memberPurpose.getPurpose().getName())
             .toList();
+    }
+
+    @Test
+    void 중복된_스킬으로_회원가입을_할_수_없다() {
+        //given
+        SkillCategory mainSkill = skillCategoryRepository.save(new SkillCategory("개발"));
+        SkillCategory beDetailSkill = skillCategoryRepository.save(new SkillCategory(mainSkill, "BE"));
+        SkillCategory feDetailSkill = skillCategoryRepository.save(new SkillCategory(mainSkill, "FE"));
+        Purpose purpose = purposeRepository.save(Purpose.from("창업"));
+        SignUpRequest signUpRequest = AuthFixture.createSignUpRequest(
+            mainSkill.getId(),
+            List.of(
+                new SkillRequest(beDetailSkill.getId(), SkillLevel.HIGH.getName()),
+                new SkillRequest(beDetailSkill.getId(), SkillLevel.LOW.getName()),
+                new SkillRequest(feDetailSkill.getId(), SkillLevel.LOW.getName())
+            ),
+            purpose.getId()
+        );
+
+        //when, then
+        assertThatThrownBy(() -> oauthService.signUp(signUpRequest))
+            .isInstanceOf(DuplicatedSkillCategoryException.class);
     }
 }
