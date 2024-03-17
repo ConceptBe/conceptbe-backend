@@ -262,7 +262,7 @@ class IdeaRepositoryTest {
         // when
         List<Idea> queryResults = ideaRepository.findAllByOrderByCreatedAtDesc(
             new FilteringRequest(
-                null, null, CooperationWay.NO_MATTER, null, null
+                null, null, "상관없음", null, null
             ),
             PageRequest.of(0, 3)
         );
@@ -297,13 +297,13 @@ class IdeaRepositoryTest {
         // when
         List<Idea> queryResults1 = ideaRepository.findAllByOrderByCreatedAtDesc(
             new FilteringRequest(
-                null, null, CooperationWay.ONLINE, null, null
+                null, null, "온라인", null, null
             ),
             PageRequest.of(0, 4)
         );
         List<Idea> queryResults2 = ideaRepository.findAllByOrderByCreatedAtDesc(
             new FilteringRequest(
-                null, null, CooperationWay.OFFLINE, null, null
+                null, null, "오프라인", null, null
             ),
             PageRequest.of(0, 4)
         );
