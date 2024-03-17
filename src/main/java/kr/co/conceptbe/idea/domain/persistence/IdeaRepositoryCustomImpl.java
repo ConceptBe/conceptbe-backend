@@ -74,12 +74,13 @@ public class IdeaRepositoryCustomImpl implements IdeaRepositoryCustom {
     }
 
     private BooleanExpression cooperationWayEqual(CooperationWay cooperationWay) {
-        if (cooperationWay == CooperationWay.NO_MATTER) {
+        if (Objects.isNull(cooperationWay) || cooperationWay == CooperationWay.NO_MATTER) {
             return null;
         }
 
         return idea.cooperationWay
-            .eq(CooperationWay.from(cooperationWay.getValue()));
+            .eq(cooperationWay)
+            .or(idea.cooperationWay.eq(CooperationWay.NO_MATTER));
     }
 
     private BooleanExpression recruitmentPlaceEqual(Long regionId) {

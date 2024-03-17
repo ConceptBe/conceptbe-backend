@@ -1,6 +1,7 @@
 package kr.co.conceptbe.idea.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import kr.co.conceptbe.branch.domain.Branch;
@@ -11,6 +12,7 @@ import kr.co.conceptbe.idea.domain.IdeaLike;
 import kr.co.conceptbe.idea.domain.IdeaLikeID;
 import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
+import kr.co.conceptbe.idea.domain.vo.CooperationWay;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.fixture.MemberFixture;
@@ -235,4 +237,86 @@ class IdeaRepositoryTest {
             .usingRecursiveComparison()
             .isEqualTo(List.of(result1, result2));
     }
+
+    @Test
+    void Filtering_조건으로_상관없음을_선택시에_상관없음_온라인_오프라인_모두_조회한다() {
+        // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
+        Branch branch = branchRepository.save(Branch.from("branch"));
+        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
+        SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
+        Idea result3 = ideaRepository.save(IdeaFixture.createIdeaByCooperationWay(
+            "상관없음", region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+        Idea result2 = ideaRepository.save(IdeaFixture.createIdeaByCooperationWay(
+            "오프라인", region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+        Idea result1 = ideaRepository.save(IdeaFixture.createIdeaByCooperationWay(
+            "온라인", region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+
+        // when
+        List<Idea> queryResults = ideaRepository.findAllByOrderByCreatedAtDesc(
+            new FilteringRequest(
+                null, null, CooperationWay.NO_MATTER, null, null
+            ),
+            PageRequest.of(0, 3)
+        );
+
+        // then
+        assertThat(queryResults).hasSize(3)
+            .usingRecursiveComparison()
+            .isEqualTo(List.of(result1, result2, result3));
+    }
+
+    @Test
+    void Filtering_조건으로_협업방식을_선택하여_조회한다() {
+        // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
+        Branch branch = branchRepository.save(Branch.from("branch"));
+        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
+        SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
+        Idea result3 = ideaRepository.save(IdeaFixture.createIdeaByCooperationWay(
+            "상관없음", region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+        Idea result2 = ideaRepository.save(IdeaFixture.createIdeaByCooperationWay(
+            "오프라인", region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+        Idea result1 = ideaRepository.save(IdeaFixture.createIdeaByCooperationWay(
+            "온라인", region, List.of(branch), List.of(purpose),
+            List.of(skillCategory), member
+        ));
+
+        // when
+        List<Idea> queryResults1 = ideaRepository.findAllByOrderByCreatedAtDesc(
+            new FilteringRequest(
+                null, null, CooperationWay.ONLINE, null, null
+            ),
+            PageRequest.of(0, 4)
+        );
+        List<Idea> queryResults2 = ideaRepository.findAllByOrderByCreatedAtDesc(
+            new FilteringRequest(
+                null, null, CooperationWay.OFFLINE, null, null
+            ),
+            PageRequest.of(0, 4)
+        );
+
+        // then
+        assertAll(
+            () -> assertThat(queryResults1).hasSize(2)
+                .usingRecursiveComparison()
+                .isEqualTo(List.of(result1, result3)),
+            () -> assertThat(queryResults2).hasSize(2)
+                .usingRecursiveComparison()
+                .isEqualTo(List.of(result2, result3))
+        );
+    }
+
 }
