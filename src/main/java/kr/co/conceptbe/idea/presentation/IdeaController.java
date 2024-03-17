@@ -17,6 +17,7 @@ import kr.co.conceptbe.idea.application.request.IdeaUpdateRequest;
 import kr.co.conceptbe.idea.application.response.BestIdeaResponse;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
+import kr.co.conceptbe.idea.domain.vo.CooperationWay;
 import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.dto.IdeaHitResponse;
 import kr.co.conceptbe.idea.presentation.doc.IdeaApi;
@@ -97,7 +98,7 @@ public class IdeaController implements IdeaApi {
         FilteringRequest filteringRequest = new FilteringRequest(
             branchIds,
             purposeIds,
-            cooperationWay,
+            CooperationWay.from(cooperationWay),
             region,
             skillCategoryIds
         );
@@ -121,7 +122,7 @@ public class IdeaController implements IdeaApi {
         FilteringRequest filteringRequest = new FilteringRequest(
             branchIds,
             purposeIds,
-            cooperationWay,
+            CooperationWay.from(cooperationWay),
             region,
             skillCategoryIds
         );

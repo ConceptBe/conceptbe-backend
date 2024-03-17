@@ -4,7 +4,6 @@ import static kr.co.conceptbe.idea.domain.QIdea.idea;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import io.micrometer.common.util.StringUtils;
 import java.util.List;
 import java.util.Objects;
 import kr.co.conceptbe.idea.application.request.FilteringRequest;
@@ -74,13 +73,14 @@ public class IdeaRepositoryCustomImpl implements IdeaRepositoryCustom {
             .id.in(purposeIds);
     }
 
-    private BooleanExpression cooperationWayEqual(String cooperationWay) {
-        if (StringUtils.isEmpty(cooperationWay)) {
+    private BooleanExpression cooperationWayEqual(CooperationWay cooperationWay) {
+        if (Objects.isNull(cooperationWay) || cooperationWay == CooperationWay.NO_MATTER) {
             return null;
         }
 
         return idea.cooperationWay
-            .eq(CooperationWay.from(cooperationWay));
+            .eq(cooperationWay)
+            .or(idea.cooperationWay.eq(CooperationWay.NO_MATTER));
     }
 
     private BooleanExpression recruitmentPlaceEqual(Long regionId) {
