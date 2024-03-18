@@ -202,7 +202,7 @@ class IdeaServiceTest {
             () -> assertThat(ideaByFindById.getRecruitmentPlace()).isEqualTo(region.getName()),
             () -> assertThat(ideaByFindById.getBranches()).hasSize(VALID_BRANCH_COUNT),
             () -> assertThat(ideaByFindById.getPurposes()).hasSize(VALID_PURPOSE_COUNT),
-            () -> assertThat(ideaByFindById.getPurposes()).hasSize(VALID_PURPOSE_COUNT)
+            () -> assertThat(ideaByFindById.getSkillCategories()).hasSize(VALID_SKILL_COUNT)
         );
     }
 
@@ -265,7 +265,8 @@ class IdeaServiceTest {
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member = memberRepository.save(MemberFixture.createMember());
         Idea idea = ideaRepository.save(createValidIdea(region, member));
-        Comment parentComment = Comment.createCommentAssociatedWithIdeaAndCreator("댓글", null, idea, member);
+        Comment parentComment = Comment.createCommentAssociatedWithIdeaAndCreator("댓글", null, idea,
+            member);
         Comment.createCommentAssociatedWithIdeaAndCreator("대댓글", parentComment, idea, member);
         IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
         Hit.ofIdeaAndMember(idea, member);
