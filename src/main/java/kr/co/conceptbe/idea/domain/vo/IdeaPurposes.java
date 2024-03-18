@@ -7,9 +7,9 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
-import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaPurpose;
+import kr.co.conceptbe.purpose.domain.Purpose;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +20,7 @@ public class IdeaPurposes {
 
     private static final int IDEA_PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE = 1;
 
-    @OneToMany(mappedBy = "idea", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "idea", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<IdeaPurpose> ideaPurposes;
 
     private IdeaPurposes(List<IdeaPurpose> ideaPurposes) {
@@ -31,8 +31,8 @@ public class IdeaPurposes {
         validateSize(purposes);
 
         List<IdeaPurpose> ideaPurposes = purposes.stream()
-                .map(purpose -> IdeaPurpose.of(idea, purpose))
-                .toList();
+            .map(purpose -> IdeaPurpose.of(idea, purpose))
+            .toList();
 
         return new IdeaPurposes(ideaPurposes);
     }

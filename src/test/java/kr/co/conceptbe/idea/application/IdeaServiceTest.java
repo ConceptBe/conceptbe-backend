@@ -9,13 +9,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
+import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
+import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.idea.application.request.IdeaRequest;
 import kr.co.conceptbe.idea.application.request.IdeaUpdateRequest;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
 import kr.co.conceptbe.idea.application.response.SkillCategoryResponse;
+import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.Idea;
+import kr.co.conceptbe.idea.domain.IdeaLike;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
@@ -30,7 +34,6 @@ import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -247,6 +250,26 @@ class IdeaServiceTest {
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member = memberRepository.save(MemberFixture.createMember());
         Idea idea = ideaRepository.save(createValidIdea(region, member));
+
+        // when
+        ideaService.deleteIdea(new AuthCredentials(member.getId()), idea.getId());
+        Optional<Idea> deletedIdea = ideaRepository.findById(idea.getId());
+
+        // then
+        assertThat(deletedIdea).isEmpty();
+    }
+
+    @Test
+    void 게시글과_연관된_데이터가_존재하더라도_삭제에_성공한다() {
+        // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
+        Idea idea = ideaRepository.save(createValidIdea(region, member));
+        Comment parentComment = Comment.createCommentAssociatedWithIdeaAndCreator("댓글", null, idea, member);
+        Comment.createCommentAssociatedWithIdeaAndCreator("대댓글", parentComment, idea, member);
+        IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
+        Hit.ofIdeaAndMember(idea, member);
+        Bookmark.createBookmarkAssociatedWithIdeaAndMember(idea, member);
 
         // when
         ideaService.deleteIdea(new AuthCredentials(member.getId()), idea.getId());

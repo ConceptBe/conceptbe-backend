@@ -2,13 +2,12 @@ package kr.co.conceptbe.idea.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
-import java.io.Serializable;
-
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import java.io.Serializable;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.member.domain.Member;
 import lombok.Getter;
@@ -36,6 +35,13 @@ public class IdeaLike extends BaseTimeEntity implements Serializable {
         this.ideaLikeID = ideaLikeID;
         this.member = member;
         this.idea = idea;
+    }
+
+    public static IdeaLike createIdeaLikeAssociatedWithIdeaAndMember(Idea idea, Member member) {
+        IdeaLikeID ideaLikeID = new IdeaLikeID(member.getId(), idea.getId());
+        IdeaLike ideaLike = new IdeaLike(ideaLikeID, member, idea);
+        idea.addIdeaLikes(ideaLike);
+        return ideaLike;
     }
 
     public boolean isOwnerOfLike(Long tokenMemberId) {

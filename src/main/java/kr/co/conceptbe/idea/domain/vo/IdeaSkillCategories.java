@@ -19,7 +19,7 @@ public class IdeaSkillCategories {
 
     private static final int IDEA_SKILL_CATEGORIES_SIZE_UPPER_BOUND_INCLUSIVE = 10;
 
-    @OneToMany(mappedBy = "idea", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "idea", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<IdeaSkillCategory> ideaSkillCategories;
 
     private IdeaSkillCategories(List<IdeaSkillCategory> ideaSkillCategories) {
@@ -30,8 +30,8 @@ public class IdeaSkillCategories {
         validateSize(skillCategories);
 
         List<IdeaSkillCategory> ideaSkillCategories = skillCategories.stream()
-                .map(skillCategory -> IdeaSkillCategory.of(idea, skillCategory))
-                .toList();
+            .map(skillCategory -> IdeaSkillCategory.of(idea, skillCategory))
+            .toList();
 
         return new IdeaSkillCategories(ideaSkillCategories);
     }
