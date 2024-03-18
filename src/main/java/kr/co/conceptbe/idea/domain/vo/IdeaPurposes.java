@@ -20,7 +20,11 @@ public class IdeaPurposes {
 
     private static final int IDEA_PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE = 1;
 
-    @OneToMany(mappedBy = "idea", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(
+        mappedBy = "idea",
+        orphanRemoval = true,
+        cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
     private List<IdeaPurpose> ideaPurposes;
 
     private IdeaPurposes(List<IdeaPurpose> ideaPurposes) {

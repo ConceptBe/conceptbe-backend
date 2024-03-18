@@ -19,7 +19,11 @@ public class IdeaSkillCategories {
 
     private static final int IDEA_SKILL_CATEGORIES_SIZE_UPPER_BOUND_INCLUSIVE = 10;
 
-    @OneToMany(mappedBy = "idea", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(
+        mappedBy = "idea",
+        orphanRemoval = true,
+        cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+    )
     private List<IdeaSkillCategory> ideaSkillCategories;
 
     private IdeaSkillCategories(List<IdeaSkillCategory> ideaSkillCategories) {
