@@ -64,8 +64,12 @@ public class Comment extends BaseTimeEntity {
         this.deleted = false;
     }
 
-    public static Comment ofWithIdeaAndCreator(String content, Comment parentComment,
-        Idea idea, Member creator) {
+    public static Comment createCommentAssociatedWithIdeaAndCreator(
+        String content,
+        Comment parentComment,
+        Idea idea,
+        Member creator
+    ) {
         Comment comment = new Comment(content, parentComment, creator, idea);
         idea.addComment(comment);
         return comment;

@@ -265,11 +265,11 @@ class IdeaServiceTest {
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member = memberRepository.save(MemberFixture.createMember());
         Idea idea = ideaRepository.save(createValidIdea(region, member));
-        Comment parentComment = Comment.ofWithIdeaAndCreator("댓글", null, idea, member);
-        Comment.ofWithIdeaAndCreator("대댓글", parentComment, idea, member);
-        IdeaLike.ofWithIdeaAndMember(idea, member);
+        Comment parentComment = Comment.createCommentAssociatedWithIdeaAndCreator("댓글", null, idea, member);
+        Comment.createCommentAssociatedWithIdeaAndCreator("대댓글", parentComment, idea, member);
+        IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
         Hit.ofIdeaAndMember(idea, member);
-        Bookmark.ofWithIdeaAndMember(idea, member);
+        Bookmark.createBookmarkAssociatedWithIdeaAndMember(idea, member);
 
         // when
         ideaService.deleteIdea(new AuthCredentials(member.getId()), idea.getId());

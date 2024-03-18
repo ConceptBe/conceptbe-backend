@@ -37,7 +37,7 @@ public class Bookmark extends BaseTimeEntity implements Serializable {
         this.idea = idea;
     }
 
-    public static Bookmark ofWithIdeaAndMember(Idea idea, Member member) {
+    public static Bookmark createBookmarkAssociatedWithIdeaAndMember(Idea idea, Member member) {
         BookmarkID bookmarkID = new BookmarkID(member.getId(), idea.getId());
         Bookmark bookmark = new Bookmark(bookmarkID, member, idea);
         idea.addBookmark(bookmark);

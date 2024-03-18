@@ -37,7 +37,7 @@ public class IdeaLike extends BaseTimeEntity implements Serializable {
         this.idea = idea;
     }
 
-    public static IdeaLike ofWithIdeaAndMember(Idea idea, Member member) {
+    public static IdeaLike createIdeaLikeAssociatedWithIdeaAndMember(Idea idea, Member member) {
         IdeaLikeID ideaLikeID = new IdeaLikeID(member.getId(), idea.getId());
         IdeaLike ideaLike = new IdeaLike(ideaLikeID, member, idea);
         idea.addIdeaLikes(ideaLike);
