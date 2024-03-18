@@ -265,14 +265,10 @@ class IdeaServiceTest {
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member = memberRepository.save(MemberFixture.createMember());
         Idea idea = ideaRepository.save(createValidIdea(region, member));
-        // 댓글, 대댓글
         Comment parentComment = Comment.ofWithIdeaAndCreator("댓글", null, idea, member);
         Comment.ofWithIdeaAndCreator("대댓글", parentComment, idea, member);
-        // 좋아요
         IdeaLike.ofWithIdeaAndMember(idea, member);
-        // 조회수
-        Hit.of(member, idea);
-        // 북마크
+        Hit.ofIdeaAndMember(idea, member);
         Bookmark.ofWithIdeaAndMember(idea, member);
 
         // when
