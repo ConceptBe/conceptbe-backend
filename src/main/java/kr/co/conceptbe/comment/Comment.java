@@ -64,7 +64,16 @@ public class Comment extends BaseTimeEntity {
         this.deleted = false;
     }
 
-    public void addParentComment(Comment comment) { this.parentComment = comment; }
+    public static Comment ofWithIdeaAndCreator(String content, Comment parentComment,
+        Idea idea, Member creator) {
+        Comment comment = new Comment(content, parentComment, creator, idea);
+        idea.addComment(comment);
+        return comment;
+    }
+
+    public void addParentComment(Comment comment) {
+        this.parentComment = comment;
+    }
 
     public void addComment(Comment comment) {
         this.comments.add(comment);
@@ -82,9 +91,13 @@ public class Comment extends BaseTimeEntity {
         this.deleted = true;
     }
 
-    public int getLikesCount() { return likes.size(); }
+    public int getLikesCount() {
+        return likes.size();
+    }
 
-    public int getCommentsCount() { return comments.size(); }
+    public int getCommentsCount() {
+        return comments.size();
+    }
 
     public boolean isParentComment() {
         return this.parentComment == null;
