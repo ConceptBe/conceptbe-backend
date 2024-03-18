@@ -19,7 +19,7 @@ public class IdeaBranches {
 
     private static final int IDEA_BRANCHES_SIZE_LOWER_BOUND_INCLUSIVE = 1;
 
-    @OneToMany(mappedBy = "idea", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "idea", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<IdeaBranch> ideaBranches;
 
     private IdeaBranches(List<IdeaBranch> ideaBranches) {
@@ -30,8 +30,8 @@ public class IdeaBranches {
         validateSize(branches);
 
         List<IdeaBranch> ideaBranches = branches.stream()
-                .map(branch -> IdeaBranch.of(idea, branch))
-                .toList();
+            .map(branch -> IdeaBranch.of(idea, branch))
+            .toList();
 
         return new IdeaBranches(ideaBranches);
     }

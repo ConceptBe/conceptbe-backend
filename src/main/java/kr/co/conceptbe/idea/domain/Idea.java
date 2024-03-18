@@ -2,6 +2,7 @@ package kr.co.conceptbe.idea.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -68,16 +69,16 @@ public class Idea extends BaseTimeEntity {
     @Embedded
     private IdeaSkillCategories skillCategories;
 
-    @OneToMany(mappedBy = "idea")
+    @OneToMany(mappedBy = "idea", cascade = {CascadeType.REMOVE})
     private final List<Hit> hits = new ArrayList<>();
 
-    @OneToMany(mappedBy = "idea")
+    @OneToMany(mappedBy = "idea", cascade = {CascadeType.REMOVE})
     private final List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "idea", orphanRemoval = true)
+    @OneToMany(mappedBy = "idea", orphanRemoval = true, cascade = {CascadeType.REMOVE})
     private final List<IdeaLike> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "idea")
+    @OneToMany(mappedBy = "idea", cascade = {CascadeType.REMOVE})
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
     private Idea(
