@@ -131,9 +131,9 @@ public class Idea extends BaseTimeEntity {
         this.introduce = Introduce.from(introduce);
         this.cooperationWay = CooperationWay.from(cooperationWay);
         this.recruitmentPlace = recruitmentPlace;
-        this.branches = IdeaBranches.of(this, branches);
-        this.purposes = IdeaPurposes.of(this, purposes);
-        this.skillCategories = IdeaSkillCategories.of(this, skillCategories);
+        this.branches.update(this, branches);
+        this.purposes.update(this, purposes);
+        this.skillCategories.update(this, skillCategories);
     }
 
     public String getTitle() {

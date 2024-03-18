@@ -7,6 +7,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
+import java.util.stream.Collectors;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaPurpose;
 import kr.co.conceptbe.purpose.domain.Purpose;
@@ -36,9 +37,17 @@ public class IdeaPurposes {
 
         List<IdeaPurpose> ideaPurposes = purposes.stream()
             .map(purpose -> IdeaPurpose.of(idea, purpose))
-            .toList();
+            .collect(Collectors.toList());
 
         return new IdeaPurposes(ideaPurposes);
+    }
+
+    public void update(Idea idea, List<Purpose> purposes) {
+        validateSize(purposes);
+        ideaPurposes.clear();
+        ideaPurposes.addAll(purposes.stream()
+            .map(purpose -> IdeaPurpose.of(idea, purpose))
+            .collect(Collectors.toList()));
     }
 
     private static void validateSize(List<Purpose> purposes) {

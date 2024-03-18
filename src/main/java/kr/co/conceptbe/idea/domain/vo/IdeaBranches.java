@@ -6,6 +6,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.List;
+import java.util.stream.Collectors;
 import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaBranch;
@@ -35,9 +36,17 @@ public class IdeaBranches {
 
         List<IdeaBranch> ideaBranches = branches.stream()
             .map(branch -> IdeaBranch.of(idea, branch))
-            .toList();
+            .collect(Collectors.toList());
 
         return new IdeaBranches(ideaBranches);
+    }
+
+    public void update(Idea idea, List<Branch> branches) {
+        validateSize(branches);
+        ideaBranches.clear();
+        ideaBranches.addAll(branches.stream()
+            .map(branch -> IdeaBranch.of(idea, branch))
+            .collect(Collectors.toList()));
     }
 
     private static void validateSize(List<Branch> branches) {
