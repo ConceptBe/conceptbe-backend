@@ -1,5 +1,6 @@
 package kr.co.conceptbe.idea.application;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -125,8 +126,12 @@ public class IdeaService {
         IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea);
 
         Member member = memberRepository.getById(tokenMemberId);
-        Hit hit = Hit.ofIdeaAndMember(idea, member);
-        hitRepository.save(hit);
+
+        Optional<Hit> hitOptional = hitRepository.findByMemberAndIdeaOrderByCreatedAtDesc(member, idea);
+        if (hitOptional.isEmpty() || hitOptional.get().isBeforeNow()) {
+            Hit hit = Hit.ofIdeaAndMember(idea, member);
+            hitRepository.save(hit);
+        }
 
         return ideaDetailResponse;
     }
