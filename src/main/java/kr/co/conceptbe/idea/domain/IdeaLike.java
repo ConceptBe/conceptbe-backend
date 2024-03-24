@@ -31,15 +31,19 @@ public class IdeaLike extends BaseTimeEntity implements Serializable {
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    public IdeaLike(IdeaLikeID ideaLikeID, Member member, Idea idea) {
+    private IdeaLike(IdeaLikeID ideaLikeID, Member member, Idea idea) {
         this.ideaLikeID = ideaLikeID;
         this.member = member;
         this.idea = idea;
     }
 
+    public static IdeaLike of(IdeaLikeID ideaLikeID, Member member, Idea idea) {
+        return new IdeaLike(ideaLikeID, member, idea);
+    }
+
     public static IdeaLike createIdeaLikeAssociatedWithIdeaAndMember(Idea idea, Member member) {
-        IdeaLikeID ideaLikeID = new IdeaLikeID(member.getId(), idea.getId());
-        IdeaLike ideaLike = new IdeaLike(ideaLikeID, member, idea);
+        IdeaLikeID ideaLikeID = IdeaLikeID.of(member, idea);
+        IdeaLike ideaLike = IdeaLike.of(ideaLikeID, member, idea);
         idea.addIdeaLikes(ideaLike);
         return ideaLike;
     }

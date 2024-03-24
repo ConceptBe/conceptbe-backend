@@ -1,6 +1,5 @@
 package kr.co.conceptbe.idea.application;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -127,35 +126,33 @@ public class IdeaService {
 
         Member member = memberRepository.getById(tokenMemberId);
 
-        Optional<Hit> hitOptional = hitRepository.findByMemberAndIdeaOrderByCreatedAtDesc(member, idea);
-        if (hitOptional.isEmpty() || hitOptional.get().isBeforeNow()) {
-            Hit hit = Hit.ofIdeaAndMember(idea, member);
-            hitRepository.save(hit);
+        Optional<Hit> hitOptional = hitRepository.findFirstByMemberAndIdeaOrderByCreatedAtDesc(member, idea);
+        if (hitOptional.isEmpty() || hitOptional.get().isBeforeLocalDate()) {
+            Hit.ofIdeaAndMember(idea, member);
         }
 
         return ideaDetailResponse;
     }
 
     public Long likesIdea(Long tokenMemberId, Long ideaId) {
-        Idea idea = ideaRepository.getById(ideaId);
         Member member = memberRepository.getById(tokenMemberId);
+        Idea idea = ideaRepository.getById(ideaId);
 
-        IdeaLikeID ideaLikeID = new IdeaLikeID(tokenMemberId, ideaId);
-        Optional<IdeaLike> optionalIdeaLike = ideaLikesRepository.findById(ideaLikeID);
+        IdeaLikeID ideaLikeID = IdeaLikeID.of(member, idea);
+        ideaLikesRepository.findById(ideaLikeID)
+            .ifPresent(ideaLike -> {
+                throw new IdeaLikeException();
+            });
 
-        if (optionalIdeaLike.isEmpty()) {
-            IdeaLike ideaLike = new IdeaLike(ideaLikeID, member, idea);
-            idea.addIdeaLikes(ideaLike);
-            ideaLikesRepository.save(ideaLike);
-        } else {
-            throw new IdeaLikeException();
-        }
+        IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
 
         return idea.getId();
     }
 
     public void likesCancelIdea(Long tokenMemberId, Long ideaId) {
-        IdeaLikeID ideaLikeID = new IdeaLikeID(tokenMemberId, ideaId);
+        Member member = memberRepository.getById(tokenMemberId);
+        Idea idea = ideaRepository.getById(ideaId);
+        IdeaLikeID ideaLikeID = IdeaLikeID.of(member, idea);
         ideaLikesRepository.getById(ideaLikeID);
         ideaLikesRepository.deleteById(ideaLikeID);
     }

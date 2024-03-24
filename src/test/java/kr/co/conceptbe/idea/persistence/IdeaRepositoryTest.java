@@ -172,8 +172,8 @@ class IdeaRepositoryTest {
             region, List.of(branch), List.of(purpose),
             List.of(skillCategory), member
         ));
-        ideaLikesRepository.save(new IdeaLike(
-            new IdeaLikeID(member.getId(), result.getId()), member, result
+        ideaLikesRepository.save(IdeaLike.of(
+            IdeaLikeID.of(member, result), member, result
         ));
 
         // when
@@ -210,8 +210,8 @@ class IdeaRepositoryTest {
             region, List.of(branch1, branch3), List.of(purpose),
             List.of(skillCategory1, skillCategory2), member
         ));
-        ideaLikesRepository.save(new IdeaLike(
-            new IdeaLikeID(member.getId(), result1.getId()), member, result1
+        ideaLikesRepository.save(IdeaLike.of(
+            IdeaLikeID.of(member, result1), member, result1
         ));
         Idea notInquiry1 = ideaRepository.save(IdeaFixture.createIdea(
             region, List.of(branch2), List.of(purpose),

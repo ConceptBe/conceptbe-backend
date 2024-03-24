@@ -43,7 +43,7 @@ public class Hit extends BaseTimeEntity {
         return hit;
     }
 
-    public boolean isBeforeNow() {
+    public boolean isBeforeLocalDate() {
         return this.getCreatedAt().toLocalDate().isBefore(LocalDate.now());
     }
 }
