@@ -2,6 +2,8 @@ package kr.co.conceptbe.idea.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,5 +41,9 @@ public class Hit extends BaseTimeEntity {
         Hit hit = new Hit(member, idea);
         idea.addHit(hit);
         return hit;
+    }
+
+    public boolean isBeforeLocalDate() {
+        return this.getCreatedAt().toLocalDate().isBefore(LocalDate.now());
     }
 }

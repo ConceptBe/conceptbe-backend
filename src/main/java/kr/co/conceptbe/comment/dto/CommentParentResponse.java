@@ -6,6 +6,7 @@ import java.util.List;
 import kr.co.conceptbe.comment.Comment;
 
 public record CommentParentResponse (
+	Long memberId,
 	Long parentCommentId,
 	String nickname,
 	String profileImageUrl,
@@ -21,6 +22,7 @@ public record CommentParentResponse (
 ) {
 	public static CommentParentResponse of(Comment comment, Long tokenMemberId) {
 		return new CommentParentResponse(
+			comment.getCreator().getId(),
 			comment.getId(),
 			comment.getCreator().getNickname(),
 			comment.getCreator().getProfileImageUrl(),

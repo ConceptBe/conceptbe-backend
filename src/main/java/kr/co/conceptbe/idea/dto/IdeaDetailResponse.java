@@ -7,6 +7,7 @@ import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.idea.domain.Idea;
 
 public record IdeaDetailResponse (
+	Long memberId,
 	String imageUrl,
 	String nickname,
 	List<String> skillList,
@@ -28,6 +29,7 @@ public record IdeaDetailResponse (
 ) {
 	public static IdeaDetailResponse of(Long tokenMemberId, Idea idea) {
 		return new IdeaDetailResponse(
+			idea.getCreator().getId(),
 			idea.getCreator().getProfileImageUrl(),
 			idea.getCreator().getNickname(),
 			idea.getCreator().getSkills().getValues().stream().map(e -> e.getSkillCategory().getName()).toList(),
