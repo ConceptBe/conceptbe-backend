@@ -74,16 +74,16 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "main_skill_id")
     private SkillCategory mainSkill;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private final List<Idea> createdIdea = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
     @Embedded
     private MemberSkills skills;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private final List<MemberBranch> branches = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)

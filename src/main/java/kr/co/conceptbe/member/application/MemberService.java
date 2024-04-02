@@ -174,4 +174,13 @@ public class MemberService {
             })
             .toList();
     }
+
+    public void deleteMember(AuthCredentials authCredentials, Long id) {
+        if (!Objects.equals(authCredentials.id(), id)) {
+            throw new NotOwnerException(authCredentials.id());
+        }
+
+        Member member = memberRepository.getById(authCredentials.id());
+        memberRepository.delete(member);
+    }
 }
