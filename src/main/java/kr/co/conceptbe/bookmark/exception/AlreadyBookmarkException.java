@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import kr.co.conceptbe.common.exception.ConceptBeException;
 import kr.co.conceptbe.common.exception.ErrorCode;
 
-public class BookmarkException extends ConceptBeException {
+public class AlreadyBookmarkException extends ConceptBeException {
 
-	public BookmarkException() { super(new ErrorCode(HttpStatus.CONFLICT, "이미 스크랩 했습니다.")); }
+	public AlreadyBookmarkException() { super(new ErrorCode(HttpStatus.CONFLICT, "이미 스크랩 했습니다.")); }
 }

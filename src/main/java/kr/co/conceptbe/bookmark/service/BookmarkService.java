@@ -1,13 +1,12 @@
 package kr.co.conceptbe.bookmark.service;
 
-import java.util.Optional;
-
 import org.springframework.stereotype.Service;
 
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.bookmark.BookmarkID;
+import kr.co.conceptbe.bookmark.exception.OwnerNotBookmarkException;
 import kr.co.conceptbe.bookmark.repository.BookmarkRepository;
-import kr.co.conceptbe.bookmark.exception.BookmarkException;
+import kr.co.conceptbe.bookmark.exception.AlreadyBookmarkException;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.member.domain.Member;
@@ -25,22 +24,25 @@ public class BookmarkService {
 	public Long addBookmark(Long tokenMemberId, Long ideaId) {
 		Idea idea = ideaRepository.getById(ideaId);
 		Member member = memberRepository.getById(tokenMemberId);
-
-		BookmarkID bookmarkID = new BookmarkID(tokenMemberId, ideaId);
-		Optional<Bookmark> optionalBookmark = bookmarkRepository.findById(bookmarkID);
-
-		if(optionalBookmark.isEmpty()) {
-			Bookmark bookmark = new Bookmark(bookmarkID, member, idea);
-			bookmarkRepository.save(bookmark);
-			idea.addBookmark(bookmark);
-		} else {
-			throw new BookmarkException();
+		if(idea.isOwner(member.getId())) {
+			throw new OwnerNotBookmarkException();
 		}
+
+		BookmarkID bookmarkID = BookmarkID.of(tokenMemberId, ideaId);
+		bookmarkRepository.findById(bookmarkID)
+			.ifPresent(bookmark -> {
+				throw new AlreadyBookmarkException();
+			});
+
+		Bookmark bookmark = Bookmark.of(bookmarkID, member, idea);
+		bookmarkRepository.save(bookmark);
+		idea.addBookmark(bookmark);
+
 		return idea.getId();
 	}
 
 	public void cancelBookmark(Long tokenMemberId, Long ideaId) {
-		BookmarkID bookmarkID = new BookmarkID(tokenMemberId, ideaId);
+		BookmarkID bookmarkID = BookmarkID.of(tokenMemberId, ideaId);
 		bookmarkRepository.getById(bookmarkID);
 		bookmarkRepository.deleteById(bookmarkID);
 	}
