@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Bookmark extends BaseTimeEntity implements Serializable {
+public class Bookmark extends BaseTimeEntity {
 
     @EmbeddedId
     private BookmarkID bookmarkID;
@@ -31,14 +31,20 @@ public class Bookmark extends BaseTimeEntity implements Serializable {
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    public Bookmark(BookmarkID bookmarkID, Member member, Idea idea) {
+    private Bookmark(BookmarkID bookmarkID, Member member, Idea idea) {
         this.bookmarkID = bookmarkID;
         this.member = member;
         this.idea = idea;
     }
 
+    public static Bookmark of(BookmarkID bookmarkID, Member member, Idea idea) {
+        Bookmark bookmark = new Bookmark(bookmarkID, member, idea);
+        idea.addBookmark(bookmark);
+        return bookmark;
+    }
+
     public static Bookmark createBookmarkAssociatedWithIdeaAndMember(Idea idea, Member member) {
-        BookmarkID bookmarkID = new BookmarkID(member.getId(), idea.getId());
+        BookmarkID bookmarkID = BookmarkID.of(member.getId(), idea.getId());
         Bookmark bookmark = new Bookmark(bookmarkID, member, idea);
         idea.addBookmark(bookmark);
         return bookmark;
