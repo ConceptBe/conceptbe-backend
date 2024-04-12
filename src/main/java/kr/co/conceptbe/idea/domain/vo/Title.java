@@ -25,8 +25,8 @@ public class Title {
 
     public static Title from(String title) {
         validateNull(title);
+        title = title.trim();
         validateLength(title);
-
         return new Title(title);
     }
 
@@ -39,7 +39,8 @@ public class Title {
     }
 
     private static void validateLength(String title) {
-        if (TITLE_LENGTH_LOWER_BOUND_INCLUSIVE <= title.length() && title.length() <= TITLE_LENGTH_UPPER_BOUND_INCLUSIVE) {
+        if (TITLE_LENGTH_LOWER_BOUND_INCLUSIVE <= title.length()
+            && title.length() <= TITLE_LENGTH_UPPER_BOUND_INCLUSIVE) {
             return;
         }
 

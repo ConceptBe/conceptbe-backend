@@ -27,6 +27,7 @@ public class Introduce {
 
     public static Introduce from(String introduce) {
         validateNull(introduce);
+        introduce = introduce.trim();
         validateLength(introduce);
 
         return new Introduce(introduce);
@@ -42,7 +43,7 @@ public class Introduce {
 
     private static void validateLength(String introduce) {
         if (INTRODUCE_LENGTH_LOWER_BOUND_INCLUSIVE <= introduce.length()
-                && introduce.length() <= INTRODUCE_LENGTH_UPPER_BOUND_INCLUSIVE) {
+            && introduce.length() <= INTRODUCE_LENGTH_UPPER_BOUND_INCLUSIVE) {
             return;
         }
 
