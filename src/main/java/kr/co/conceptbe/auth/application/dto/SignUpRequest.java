@@ -11,6 +11,7 @@ import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.OauthId;
 import kr.co.conceptbe.member.domain.OauthServerType;
 import kr.co.conceptbe.member.domain.Region;
+import kr.co.conceptbe.member.domain.vo.Nickname;
 
 public record SignUpRequest(
     @Schema(description = "닉네임", example = "닉네임")
@@ -63,7 +64,7 @@ public record SignUpRequest(
     public Member toMember() {
         return new Member(
             new OauthId(oauthId, OauthServerType.from(oauthServerType)),
-            nickname,
+            Nickname.from(nickname),
             profileImageUrl,
             email,
             introduction,

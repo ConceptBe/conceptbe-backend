@@ -5,6 +5,7 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +16,7 @@ public class Nickname {
 
     private static final int NICKNAME_LENGTH_LOWER_BOUND_INCLUSIVE = 2;
     private static final int NICKNAME_LENGTH_UPPER_BOUND_INCLUSIVE = 10;
-    private static final String NICKNAME_PATTERN = "/^[a-zA-Z0-9ㄱ-힣]+$/g";
+    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣a-zA-Z0-9]*$");
 
     @Column(nullable = false, length = 10)
     private String nickname;
@@ -48,7 +49,7 @@ public class Nickname {
     }
 
     private static void validatePattern(String nickname) {
-        if (nickname.matches(NICKNAME_PATTERN)) {
+        if (NICKNAME_PATTERN.matcher(nickname).find()) {
             return;
         }
         throw new IllegalArgumentException("닉네임은 한글/영어/숫자 중 구성되어야 합니다.");

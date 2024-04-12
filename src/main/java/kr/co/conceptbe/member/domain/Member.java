@@ -163,4 +163,8 @@ public class Member extends BaseTimeEntity {
         this.purposes.clear();
         this.purposes.addAll(memberPurposes);
     }
+
+    public String getNickname(){
+        return nickname.getNickname();
+    }
 }
