@@ -12,7 +12,7 @@ public record UpdateMemberProfileRequest(
     @Schema(description = "닉네임", example = "닉네임")
     @NotNull(message = "닉네임은 빈 값일 수 없습니다.")
     @Size(min = 2, max = 10, message = "닉네임은 2자이상 10자 이하여야 합니다.")
-    @Pattern(regexp = "^[가-힣a-zA-Z0-9]*$", message = "닉네임은 한글/영어/숫자 중 구성되어야 하며 공백은 불가합니다.")
+    @Pattern(regexp = "/^[a-zA-Z0-9ㄱ-힣]+$/g", message = "닉네임은 한글/영어/숫자 중 구성되어야 합니다.")
     String nickname,
 
     @Schema(description = "대표스킬 ID", example = "1")

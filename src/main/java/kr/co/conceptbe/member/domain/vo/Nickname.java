@@ -1,15 +1,26 @@
 package kr.co.conceptbe.member.domain.vo;
 
-import java.util.Objects;
+import static lombok.AccessLevel.PROTECTED;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import java.util.Objects;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Embeddable
+@Getter
+@NoArgsConstructor(access = PROTECTED)
 public class Nickname {
 
     private static final int NICKNAME_LENGTH_LOWER_BOUND_INCLUSIVE = 2;
     private static final int NICKNAME_LENGTH_UPPER_BOUND_INCLUSIVE = 10;
     private static final String NICKNAME_PATTERN = "/^[a-zA-Z0-9ㄱ-힣]+$/g";
-    private final String nickname;
 
-    public Nickname(String nickname) {
+    @Column(nullable = false, length = 10)
+    private String nickname;
+
+    private Nickname(String nickname) {
         this.nickname = nickname;
     }
 
@@ -40,10 +51,6 @@ public class Nickname {
         if (nickname.matches(NICKNAME_PATTERN)) {
             return;
         }
-        throw new IllegalArgumentException("닉네임는 한글/영어/숫자로만 구성되어야 합니다.");
-    }
-
-    public String getNickname() {
-        return nickname;
+        throw new IllegalArgumentException("닉네임은 한글/영어/숫자 중 구성되어야 합니다.");
     }
 }
