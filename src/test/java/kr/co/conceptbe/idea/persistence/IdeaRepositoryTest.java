@@ -12,7 +12,6 @@ import kr.co.conceptbe.idea.domain.IdeaLike;
 import kr.co.conceptbe.idea.domain.IdeaLikeID;
 import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
-import kr.co.conceptbe.idea.domain.vo.CooperationWay;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.fixture.MemberFixture;
@@ -236,6 +235,42 @@ class IdeaRepositoryTest {
         assertThat(queryResults).hasSize(2)
             .usingRecursiveComparison()
             .isEqualTo(List.of(result1, result2));
+    }
+
+    @Test
+    void 인기_게시글_조회_시_최근_게시글이면서_좋아요_개수가_많은_것들을_가져온다() {
+        // given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        Member member = memberRepository.save(MemberFixture.createMember());
+        Branch branch1 = branchRepository.save(Branch.from("branch1"));
+        Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
+        Idea result1 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1), List.of(purpose), List.of(), member
+        ));
+        Idea result4 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1), List.of(purpose), List.of(), member
+        ));
+        Idea result3 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1), List.of(purpose), List.of(), member
+        ));
+        Idea result2 = ideaRepository.save(IdeaFixture.createIdea(
+            region, List.of(branch1), List.of(purpose), List.of(), member
+        ));
+        ideaLikesRepository.save(
+            IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(result1, member));
+
+        // when
+        List<Idea> queryResults = ideaRepository.findAllByOrderByLikesDesc(
+            new FilteringRequest(
+                List.of(branch1.getId()), List.of(purpose.getId()), null, null, null
+            ),
+            PageRequest.of(0, 5)
+        );
+
+        // then
+        assertThat(queryResults).hasSize(4)
+            .usingRecursiveComparison()
+            .isEqualTo(List.of(result1, result2, result3, result4));
     }
 
     @Test
