@@ -13,6 +13,7 @@ import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.comment.Comment;
+import kr.co.conceptbe.comment.CommentLike;
 import kr.co.conceptbe.idea.application.request.IdeaRequest;
 import kr.co.conceptbe.idea.application.request.IdeaUpdateRequest;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
@@ -264,9 +265,12 @@ class IdeaServiceTest {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member = memberRepository.save(MemberFixture.createMember());
+        Member notCreator = memberRepository.save(
+            MemberFixture.createMemberByOauthId(new OauthId("notAuthor", OauthServerType.KAKAO)));
         Idea idea = ideaRepository.save(createValidIdea(region, member));
         Comment parentComment = Comment.createCommentAssociatedWithIdeaAndCreator("댓글", null, idea,
             member);
+        CommentLike.createCommentLikeAssociatedWithMemberAndCreator(notCreator, parentComment);
         Comment.createCommentAssociatedWithIdeaAndCreator("대댓글", parentComment, idea, member);
         IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
         Hit.ofIdeaAndMember(idea, member);
