@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum RegionName {
 
-    KOREA("전국"),
+    NO_MATTER("상관없음"),
     SEOUL("서울특별시"),
     BUSAN("부산광역시"),
     DAEGU("대구광역시"),
