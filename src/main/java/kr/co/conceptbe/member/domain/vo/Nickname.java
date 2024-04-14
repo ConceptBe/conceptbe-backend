@@ -6,6 +6,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import kr.co.conceptbe.idea.exception.EmptyBranchNameException;
+import kr.co.conceptbe.idea.exception.InvalidBranchLengthException;
+import kr.co.conceptbe.member.exception.EmptyNicknameException;
+import kr.co.conceptbe.member.exception.InvalidNicknameLengthException;
+import kr.co.conceptbe.member.exception.InvalidNicknamePatternException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,7 +42,7 @@ public class Nickname {
         if (Objects.nonNull(nickname)) {
             return;
         }
-        throw new IllegalArgumentException("닉네임은 필수로 입력하셔야합니다.");
+        throw new EmptyNicknameException();
     }
 
     private static void validateLength(String nickname) {
@@ -45,13 +50,13 @@ public class Nickname {
             && nickname.length() <= NICKNAME_LENGTH_UPPER_BOUND_INCLUSIVE) {
             return;
         }
-        throw new IllegalArgumentException("닉네임은 2글자에서 10글자 사이여야합니다.");
+        throw new InvalidNicknameLengthException();
     }
 
     private static void validatePattern(String nickname) {
         if (NICKNAME_PATTERN.matcher(nickname).find()) {
             return;
         }
-        throw new IllegalArgumentException("닉네임은 한글/영어/숫자 중 구성되어야 합니다.");
+        throw new InvalidNicknamePatternException();
     }
 }
