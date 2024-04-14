@@ -3,6 +3,7 @@ package kr.co.conceptbe.idea.domain.vo;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import kr.co.conceptbe.common.exception.ConceptBeException;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,7 +28,7 @@ class TitleTest {
 
         //then
         assertThatThrownBy(throwingCallable)
-            .isInstanceOf(IllegalArgumentException.class);
+            .isInstanceOf(ConceptBeException.class);
     }
 
 }
