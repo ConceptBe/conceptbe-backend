@@ -34,7 +34,7 @@ public class CommentLike extends BaseTimeEntity {
         this.comment = comment;
     }
 
-    public static CommentLike createCommentLikeAssociatedWithMemberAndCreator(Member member, Comment comment) {
+    public static CommentLike createAssociatedWithMemberAndCreator(Member member, Comment comment) {
         CommentLike commentLike = new CommentLike(member, comment);
         comment.addCommentLike(commentLike);
         return commentLike;

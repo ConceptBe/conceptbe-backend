@@ -313,7 +313,7 @@ class IdeaServiceTest {
         Idea idea = ideaRepository.save(createValidIdea(region, member));
         Comment parentComment = Comment.createCommentAssociatedWithIdeaAndCreator("댓글", null, idea,
             member);
-        CommentLike.createCommentLikeAssociatedWithMemberAndCreator(notCreator, parentComment);
+        CommentLike.createAssociatedWithMemberAndCreator(notCreator, parentComment);
         Comment.createCommentAssociatedWithIdeaAndCreator("대댓글", parentComment, idea, member);
         IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
         Hit.ofIdeaAndMember(idea, member);
