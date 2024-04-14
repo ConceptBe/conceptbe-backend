@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.Objects;
+import kr.co.conceptbe.purpose.exception.EmptyPurposeNameException;
+import kr.co.conceptbe.purpose.exception.InvalidPurposeLengthException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,15 +43,15 @@ public class Purpose {
             return;
         }
 
-        throw new IllegalArgumentException("목적은 필수로 입력되어야 합니다.");
+        throw new EmptyPurposeNameException();
     }
 
     private static void validateLength(String purpose) {
-        if (PURPOSE_LENGTH_LOWER_BOUND_INCLUSIVE <= purpose.length()) {
+        if (!purpose.isEmpty()) {
             return;
         }
 
-        throw new IllegalArgumentException("목적의 이름은 최소 1자 이상이어야 합니다.");
+        throw new InvalidPurposeLengthException();
     }
 
 }

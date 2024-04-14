@@ -6,8 +6,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import kr.co.conceptbe.idea.exception.EmptyBranchNameException;
-import kr.co.conceptbe.idea.exception.InvalidBranchLengthException;
 import kr.co.conceptbe.member.exception.EmptyNicknameException;
 import kr.co.conceptbe.member.exception.InvalidNicknameLengthException;
 import kr.co.conceptbe.member.exception.InvalidNicknamePatternException;

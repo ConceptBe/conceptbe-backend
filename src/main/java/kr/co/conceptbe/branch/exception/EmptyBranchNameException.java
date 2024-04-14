@@ -1,4 +1,4 @@
-package kr.co.conceptbe.idea.exception;
+package kr.co.conceptbe.branch.exception;
 
 import kr.co.conceptbe.common.exception.ConceptBeException;
 import kr.co.conceptbe.common.exception.ErrorCode;
