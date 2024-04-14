@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaSkillCategory;
+import kr.co.conceptbe.idea.exception.ExceedIdeaSkillCategoriesSizeException;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,7 +55,7 @@ public class IdeaSkillCategories {
             return;
         }
 
-        throw new IllegalArgumentException("스킬은 최대 10개 고르실 수 있습니다.");
+        throw new ExceedIdeaSkillCategoriesSizeException();
     }
 
 }

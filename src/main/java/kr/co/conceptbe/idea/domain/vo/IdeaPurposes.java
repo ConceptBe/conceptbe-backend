@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaPurpose;
+import kr.co.conceptbe.idea.exception.EmptyIdeaPurposesException;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,11 +52,11 @@ public class IdeaPurposes {
     }
 
     private static void validateSize(List<Purpose> purposes) {
-        if (IDEA_PURPOSES_SIZE_LOWER_BOUND_INCLUSIVE <= purposes.size()) {
+        if (!purposes.isEmpty()) {
             return;
         }
 
-        throw new IllegalArgumentException("목적은 최소 한 개 이상 고르셔야 합니다.");
+        throw new EmptyIdeaPurposesException();
     }
 
 }

@@ -9,7 +9,6 @@ import kr.co.conceptbe.auth.application.dto.MainSkillResponse;
 import kr.co.conceptbe.auth.application.dto.OauthMemberResponse;
 import kr.co.conceptbe.auth.application.dto.PurposeResponse;
 import kr.co.conceptbe.auth.application.dto.SignUpRequest;
-import kr.co.conceptbe.auth.application.dto.SkillRequest;
 import kr.co.conceptbe.auth.domain.authcode.AuthCodeRequestUrlProviderHandler;
 import kr.co.conceptbe.auth.domain.client.OauthMemberClientHandler;
 import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;

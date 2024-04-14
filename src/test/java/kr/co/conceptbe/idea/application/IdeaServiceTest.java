@@ -13,9 +13,12 @@ import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.comment.Comment;
+import kr.co.conceptbe.comment.CommentLike;
+import kr.co.conceptbe.idea.application.request.FilteringRequest;
 import kr.co.conceptbe.idea.application.request.IdeaRequest;
 import kr.co.conceptbe.idea.application.request.IdeaUpdateRequest;
 import kr.co.conceptbe.idea.application.response.FindIdeaWriteResponse;
+import kr.co.conceptbe.idea.application.response.IdeaResponse;
 import kr.co.conceptbe.idea.application.response.SkillCategoryResponse;
 import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.Idea;
@@ -40,6 +43,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -73,6 +77,46 @@ class IdeaServiceTest {
     private IdeaRepository ideaRepository;
     @Autowired
     private RegionRepository regionRepository;
+
+    @Test
+    void 게시글을_조회한다() {
+        //given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        SkillCategory java = skillCategoryRepository.save(new SkillCategory("Java"));
+        Member member = memberRepository.save(MemberFixture.createMemberByMainSkill(java));
+        Idea save = ideaRepository.save(
+            Idea.of(
+                VALID_TITLE,
+                VALID_INTRODUCE,
+                VALID_COOPERATION,
+                region,
+                member,
+                getBranchesByCount(VALID_BRANCH_COUNT),
+                getPurposesByCount(VALID_PURPOSE_COUNT),
+                getSkillCategoriesByCount(VALID_SKILL_COUNT)
+            )
+        );
+        AuthCredentials authCredentials = new AuthCredentials(member.getId());
+        FilteringRequest nonFilter = new FilteringRequest(null, null, null, null, null);
+        PageRequest pageRequest = PageRequest.of(0, 5);
+
+        //when
+        List<IdeaResponse> ideaResponses = ideaService.findAll(authCredentials, nonFilter,
+            pageRequest);
+
+        //then
+        assertAll(
+            () -> assertThat(ideaResponses).hasSize(1),
+            () -> assertThat(ideaResponses.get(0).id()).isEqualTo(save.getId()),
+            () -> assertThat(ideaResponses.get(0).title()).isEqualTo(save.getTitle()),
+            () -> assertThat(ideaResponses.get(0).introduce()).isEqualTo(save.getIntroduce()),
+            () -> assertThat(ideaResponses.get(0).memberResponse().mainSkill()).isEqualTo(
+                member.getMainSkill().getName()),
+            () -> assertThat(ideaResponses.get(0).branches()).hasSize(2),
+            () -> assertThat(ideaResponses.get(0).skillCategories()).hasSize(8)
+        );
+    }
+
 
     @Test
     void Idea_작성_Filtering_에_필요한_Skill_Categories_를_반환한다() {
@@ -264,9 +308,12 @@ class IdeaServiceTest {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member = memberRepository.save(MemberFixture.createMember());
+        Member notCreator = memberRepository.save(
+            MemberFixture.createMemberByOauthId(new OauthId("notAuthor", OauthServerType.KAKAO)));
         Idea idea = ideaRepository.save(createValidIdea(region, member));
         Comment parentComment = Comment.createCommentAssociatedWithIdeaAndCreator("댓글", null, idea,
             member);
+        CommentLike.createAssociatedWithMemberAndCreator(notCreator, parentComment);
         Comment.createCommentAssociatedWithIdeaAndCreator("대댓글", parentComment, idea, member);
         IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
         Hit.ofIdeaAndMember(idea, member);

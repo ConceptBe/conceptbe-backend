@@ -1,5 +1,6 @@
 package kr.co.conceptbe.comment;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -50,7 +51,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
     private final List<CommentLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "parentComment")

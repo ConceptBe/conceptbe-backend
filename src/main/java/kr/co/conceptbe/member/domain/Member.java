@@ -23,6 +23,7 @@ import kr.co.conceptbe.auth.exception.TokenInvalidException;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.domain.Idea;
+import kr.co.conceptbe.member.domain.vo.Nickname;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillLevel;
 import lombok.Getter;
@@ -51,8 +52,8 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private OauthId oauthId;
 
-    @Column(nullable = false)
-    private String nickname;
+    @Embedded
+    private Nickname nickname;
 
     @Column(nullable = false)
     private String profileImageUrl;
@@ -91,7 +92,7 @@ public class Member extends BaseTimeEntity {
 
     public Member(
         OauthId oauthId,
-        String nickname,
+        Nickname nickname,
         String profileImageUrl,
         String email,
         String introduce,
@@ -108,7 +109,7 @@ public class Member extends BaseTimeEntity {
     }
 
     public static void validateMember(Long tokenMemberId, Long validateId) {
-        if(tokenMemberId.equals(validateId)) {
+        if (tokenMemberId.equals(validateId)) {
             return;
         }
         throw new TokenInvalidException();
@@ -118,7 +119,8 @@ public class Member extends BaseTimeEntity {
         this.mainSkill = mainSkill;
     }
 
-    public void addSkills(Member member, List<SkillCategory> skillCategories, List<SkillLevel> skillLevels) {
+    public void addSkills(Member member, List<SkillCategory> skillCategories,
+        List<SkillLevel> skillLevels) {
         this.skills = MemberSkills.of(member, skillCategories, skillLevels);
     }
 
@@ -135,7 +137,7 @@ public class Member extends BaseTimeEntity {
         String from,
         String introduction
     ) {
-        this.nickname = nickname;
+        this.nickname = Nickname.from(nickname);
         this.mainSkill = mainSkill;
         this.profileImageUrl = profileImageUrl;
         updateLivingPlace(livingPlace);
@@ -151,7 +153,8 @@ public class Member extends BaseTimeEntity {
         this.livingPlace = null;
     }
 
-    public void updateSkills(Member member, List<SkillCategory> skillCategories, List<SkillLevel> skillLevels) {
+    public void updateSkills(Member member, List<SkillCategory> skillCategories,
+        List<SkillLevel> skillLevels) {
         this.skills.clear();
         this.skills.addSkills(member, skillCategories, skillLevels);
     }
@@ -159,5 +162,9 @@ public class Member extends BaseTimeEntity {
     public void updateJoinPurposes(List<MemberPurpose> memberPurposes) {
         this.purposes.clear();
         this.purposes.addAll(memberPurposes);
+    }
+
+    public String getNickname(){
+        return nickname.getNickname();
     }
 }

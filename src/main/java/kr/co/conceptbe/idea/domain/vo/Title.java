@@ -5,6 +5,8 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.Objects;
+import kr.co.conceptbe.idea.exception.EmptyTitleException;
+import kr.co.conceptbe.idea.exception.InvalidTitleLengthException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,8 +27,8 @@ public class Title {
 
     public static Title from(String title) {
         validateNull(title);
+        title = title.trim();
         validateLength(title);
-
         return new Title(title);
     }
 
@@ -35,15 +37,15 @@ public class Title {
             return;
         }
 
-        throw new IllegalArgumentException("제목은 필수로 입력하셔야 합니다.");
+        throw new EmptyTitleException();
     }
 
     private static void validateLength(String title) {
-        if (TITLE_LENGTH_LOWER_BOUND_INCLUSIVE <= title.length() && title.length() <= TITLE_LENGTH_UPPER_BOUND_INCLUSIVE) {
+        if (!title.isEmpty() && title.length() <= TITLE_LENGTH_UPPER_BOUND_INCLUSIVE) {
             return;
         }
 
-        throw new IllegalArgumentException("제목은 최소 1자에서 최대 20자로 입력하셔야 합니다.");
+        throw new InvalidTitleLengthException();
     }
 
 }
