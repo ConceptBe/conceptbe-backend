@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import kr.co.conceptbe.branch.domain.Branch;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaBranch;
+import kr.co.conceptbe.idea.exception.EmptyIdeaBracnhesException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -50,11 +51,11 @@ public class IdeaBranches {
     }
 
     private static void validateSize(List<Branch> branches) {
-        if (IDEA_BRANCHES_SIZE_LOWER_BOUND_INCLUSIVE <= branches.size()) {
+        if (!branches.isEmpty()) {
             return;
         }
 
-        throw new IllegalArgumentException("분야는 최소 한 개 이상 고르셔야 합니다.");
+        throw new EmptyIdeaBracnhesException();
     }
 
 }
