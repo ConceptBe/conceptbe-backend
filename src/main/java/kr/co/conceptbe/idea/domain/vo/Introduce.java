@@ -7,7 +7,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.Lob;
 import java.util.Objects;
 import kr.co.conceptbe.idea.exception.EmptyIntroduceException;
-import kr.co.conceptbe.idea.exception.InvalidLengthIntroduceException;
+import kr.co.conceptbe.idea.exception.InvalidIntroduceLengthException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -49,7 +49,7 @@ public class Introduce {
             return;
         }
 
-        throw new InvalidLengthIntroduceException();
+        throw new InvalidIntroduceLengthException();
     }
 
 }

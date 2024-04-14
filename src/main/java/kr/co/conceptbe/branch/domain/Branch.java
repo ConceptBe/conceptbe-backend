@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.util.Objects;
+import kr.co.conceptbe.idea.exception.EmptyBranchNameException;
+import kr.co.conceptbe.idea.exception.InvalidBranchLengthException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -41,7 +43,7 @@ public class Branch {
             return;
         }
 
-        throw new IllegalArgumentException("분야는 필수로 입력되어야 합니다.");
+        throw new EmptyBranchNameException();
     }
 
     private static void validateLength(String name) {
@@ -49,7 +51,7 @@ public class Branch {
             return;
         }
 
-        throw new IllegalArgumentException("분야의 이름은 최소 1자 이상이어야 합니다.");
+        throw new InvalidBranchLengthException();
     }
 
 }
