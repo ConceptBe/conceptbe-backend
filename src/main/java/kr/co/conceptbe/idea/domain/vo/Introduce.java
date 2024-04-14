@@ -6,6 +6,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Lob;
 import java.util.Objects;
+import kr.co.conceptbe.idea.exception.EmptyIntroduceException;
+import kr.co.conceptbe.idea.exception.InvalidLengthIntroduceException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -38,7 +40,7 @@ public class Introduce {
             return;
         }
 
-        throw new IllegalArgumentException("본문은 필수로 입력하셔야 합니다.");
+        throw new EmptyIntroduceException();
     }
 
     private static void validateLength(String introduce) {
@@ -47,7 +49,7 @@ public class Introduce {
             return;
         }
 
-        throw new IllegalArgumentException("본문은 최소 10자에서 최대 2000자로 입력하셔야 합니다.");
+        throw new InvalidLengthIntroduceException();
     }
 
 }
