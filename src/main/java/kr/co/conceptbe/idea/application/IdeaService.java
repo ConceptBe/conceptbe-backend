@@ -144,7 +144,8 @@ public class IdeaService {
                 throw new IdeaLikeException();
             });
 
-        IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
+        IdeaLike ideaLike = IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
+        ideaLikesRepository.save(ideaLike);
 
         return idea.getId();
     }
