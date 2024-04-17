@@ -17,6 +17,7 @@ import kr.co.conceptbe.member.application.dto.MemberIdeaResponseOption;
 import kr.co.conceptbe.member.application.dto.MemberProfileSkillResponse;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.MemberPurpose;
+import kr.co.conceptbe.member.domain.vo.Nickname;
 import kr.co.conceptbe.member.exception.NotOwnerException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
@@ -41,7 +42,7 @@ public class MemberService {
     private final PurposeRepository purposeRepository;
 
     public boolean validateDuplicatedNickName(String nickname) {
-        return !memberRepository.existsByNickname(nickname);
+        return !memberRepository.existsByNickname(Nickname.from(nickname));
     }
 
     public GetMemberProfileResponse getMemberProfileBy(AuthCredentials authCredentials, Long id) {

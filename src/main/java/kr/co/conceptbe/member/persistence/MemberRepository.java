@@ -3,6 +3,7 @@ package kr.co.conceptbe.member.persistence;
 import java.util.Optional;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.OauthId;
+import kr.co.conceptbe.member.domain.vo.Nickname;
 import kr.co.conceptbe.member.exception.NotFoundMemberException;
 import kr.co.conceptbe.member.exception.NotFoundOauthMemberException;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,5 +24,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             () -> new NotFoundMemberException(memberId));
     }
 
-    boolean existsByNickname(String nickname);
+    boolean existsByNickname(Nickname nickname);
 }
