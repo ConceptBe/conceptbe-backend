@@ -9,7 +9,6 @@ import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
 import kr.co.conceptbe.idea.application.request.FilteringRequest;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
-import kr.co.conceptbe.idea.domain.IdeaLikeID;
 import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
@@ -171,9 +170,7 @@ class IdeaRepositoryTest {
             region, List.of(branch), List.of(purpose),
             List.of(skillCategory), member
         ));
-        ideaLikesRepository.save(IdeaLike.of(
-            IdeaLikeID.of(member, result), member, result
-        ));
+        ideaLikesRepository.save(IdeaLike.of(member, result));
 
         // when
         List<Idea> queryResults = ideaRepository.findAllByOrderByLikesDesc(
@@ -209,9 +206,7 @@ class IdeaRepositoryTest {
             region, List.of(branch1, branch3), List.of(purpose),
             List.of(skillCategory1, skillCategory2), member
         ));
-        ideaLikesRepository.save(IdeaLike.of(
-            IdeaLikeID.of(member, result1), member, result1
-        ));
+        ideaLikesRepository.save(IdeaLike.of(member, result1));
         Idea notInquiry1 = ideaRepository.save(IdeaFixture.createIdea(
             region, List.of(branch2), List.of(purpose),
             List.of(skillCategory1, skillCategory2), member
@@ -257,7 +252,7 @@ class IdeaRepositoryTest {
             region, List.of(branch1), List.of(purpose), List.of(), member
         ));
         ideaLikesRepository.save(
-            IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(result1, member));
+            IdeaLike.createAssociatedWithIdeaAndMember(result1, member));
 
         // when
         List<Idea> queryResults = ideaRepository.findAllByOrderByLikesDesc(

@@ -315,7 +315,7 @@ class IdeaServiceTest {
             member);
         CommentLike.createAssociatedWithMemberAndCreator(notCreator, parentComment);
         Comment.createCommentAssociatedWithIdeaAndCreator("대댓글", parentComment, idea, member);
-        IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
+        IdeaLike.createAssociatedWithIdeaAndMember(idea, member);
         Hit.ofIdeaAndMember(idea, member);
         Bookmark.createBookmarkAssociatedWithIdeaAndMember(idea, member);
 

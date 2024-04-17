@@ -20,13 +20,13 @@ import kr.co.conceptbe.idea.application.response.IdeaResponse;
 import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
-import kr.co.conceptbe.idea.domain.IdeaLikeID;
 import kr.co.conceptbe.idea.domain.persistence.HitRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.dto.IdeaHitResponse;
-import kr.co.conceptbe.idea.exception.IdeaLikeException;
+import kr.co.conceptbe.idea.exception.AlreadyIdeaLikeException;
+import kr.co.conceptbe.idea.exception.NotFoundIdeaLikeException;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
@@ -138,13 +138,13 @@ public class IdeaService {
         Member member = memberRepository.getById(tokenMemberId);
         Idea idea = ideaRepository.getById(ideaId);
 
-        IdeaLikeID ideaLikeID = IdeaLikeID.of(member, idea);
-        ideaLikesRepository.findById(ideaLikeID)
+        ideaLikesRepository.findByMemberAndIdea(member, idea)
             .ifPresent(ideaLike -> {
-                throw new IdeaLikeException();
+                throw new AlreadyIdeaLikeException();
             });
 
-        IdeaLike.createIdeaLikeAssociatedWithIdeaAndMember(idea, member);
+        IdeaLike ideaLike = IdeaLike.createAssociatedWithIdeaAndMember(idea, member);
+        ideaLikesRepository.save(ideaLike);
 
         return idea.getId();
     }
@@ -152,9 +152,11 @@ public class IdeaService {
     public void likesCancelIdea(Long tokenMemberId, Long ideaId) {
         Member member = memberRepository.getById(tokenMemberId);
         Idea idea = ideaRepository.getById(ideaId);
-        IdeaLikeID ideaLikeID = IdeaLikeID.of(member, idea);
-        ideaLikesRepository.getById(ideaLikeID);
-        ideaLikesRepository.deleteById(ideaLikeID);
+
+        ideaLikesRepository.findByMemberAndIdea(member, idea)
+            .orElseThrow(NotFoundIdeaLikeException::new);
+
+        ideaLikesRepository.deleteByMemberAndIdea(member, idea);
     }
 
     public FindIdeaWriteResponse getFindIdeaWriteResponse() {
