@@ -13,13 +13,13 @@ class RegionNameTest {
     @Test
     void 올바른_지역으로_Region_을_생성하는_경우_성공한다() {
         //given
-        String validName = "NO_MATTER";
+        String validName = "NO_SELECTED";
 
         //when
         RegionName regionName = RegionName.from(validName);
 
         //then
-        assertThat(regionName.getName()).isEqualTo("상관없음");
+        assertThat(regionName.getName()).isEqualTo("선택 안 함");
     }
 
     @Test
