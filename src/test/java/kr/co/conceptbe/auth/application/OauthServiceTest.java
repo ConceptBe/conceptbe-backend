@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import kr.co.conceptbe.auth.application.dto.AuthResponse;
+import kr.co.conceptbe.auth.application.dto.FindSignUpResponse;
 import kr.co.conceptbe.auth.application.dto.SignUpRequest;
 import kr.co.conceptbe.auth.application.dto.SkillRequest;
 import kr.co.conceptbe.auth.fixture.AuthFixture;
@@ -14,6 +15,8 @@ import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
+import kr.co.conceptbe.region.domain.Region;
+import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import kr.co.conceptbe.skill.domain.SkillLevel;
@@ -40,6 +43,9 @@ class OauthServiceTest {
     private PurposeRepository purposeRepository;
 
     @Autowired
+    private RegionRepository regionRepository;
+
+    @Autowired
     private JwtProvider jwtProvider;
 
 
@@ -47,8 +53,10 @@ class OauthServiceTest {
     void 회원가입을_할_수_있다() {
         //given
         SkillCategory mainSkill = skillCategoryRepository.save(new SkillCategory("개발"));
-        SkillCategory beDetailSkill = skillCategoryRepository.save(new SkillCategory(mainSkill, "BE"));
-        SkillCategory feDetailSkill = skillCategoryRepository.save(new SkillCategory(mainSkill, "FE"));
+        SkillCategory beDetailSkill = skillCategoryRepository.save(
+            new SkillCategory(mainSkill, "BE"));
+        SkillCategory feDetailSkill = skillCategoryRepository.save(
+            new SkillCategory(mainSkill, "FE"));
         Purpose purpose = purposeRepository.save(Purpose.from("창업"));
         SignUpRequest signUpRequest = AuthFixture.createSignUpRequest(
             mainSkill.getId(),
@@ -74,8 +82,10 @@ class OauthServiceTest {
             () -> assertThat(skillNames).contains("BE", "FE"),
             () -> assertThat(purposeNames).contains("창업"),
             () -> assertThat(authResponse.authMemberInformation().id()).isEqualTo(member.getId()),
-            () -> assertThat(authResponse.authMemberInformation().nickname()).isEqualTo(member.getNickname()),
-            () -> assertThat(authResponse.authMemberInformation().profileImageUrl()).isEqualTo(member.getProfileImageUrl())
+            () -> assertThat(authResponse.authMemberInformation().nickname()).isEqualTo(
+                member.getNickname()),
+            () -> assertThat(authResponse.authMemberInformation().profileImageUrl()).isEqualTo(
+                member.getProfileImageUrl())
         );
     }
 
@@ -101,8 +111,10 @@ class OauthServiceTest {
     void 중복된_스킬으로_회원가입을_할_수_없다() {
         //given
         SkillCategory mainSkill = skillCategoryRepository.save(new SkillCategory("개발"));
-        SkillCategory beDetailSkill = skillCategoryRepository.save(new SkillCategory(mainSkill, "BE"));
-        SkillCategory feDetailSkill = skillCategoryRepository.save(new SkillCategory(mainSkill, "FE"));
+        SkillCategory beDetailSkill = skillCategoryRepository.save(
+            new SkillCategory(mainSkill, "BE"));
+        SkillCategory feDetailSkill = skillCategoryRepository.save(
+            new SkillCategory(mainSkill, "FE"));
         Purpose purpose = purposeRepository.save(Purpose.from("창업"));
         SignUpRequest signUpRequest = AuthFixture.createSignUpRequest(
             mainSkill.getId(),
@@ -118,4 +130,27 @@ class OauthServiceTest {
         assertThatThrownBy(() -> oauthService.signUp(signUpRequest))
             .isInstanceOf(DuplicatedSkillCategoryException.class);
     }
+
+    @Test
+    void 회원가입에_필요한_정보들을_반환한다() {
+        //given
+        SkillCategory 개발 = skillCategoryRepository.save(new SkillCategory("개발"));
+        개발.updateParentSkill(개발);
+        purposeRepository.save(Purpose.from("창업"));
+        regionRepository.save(Region.from("SEOUL"));
+
+        //when
+        FindSignUpResponse findSignUpResponse = oauthService.getSignUpInFormation();
+
+        //then
+        assertAll(
+            () -> assertThat(findSignUpResponse.mainSkillResponses()).hasSize(1),
+            () -> assertThat(findSignUpResponse.purposeResponses()).hasSize(1),
+            () -> assertThat(findSignUpResponse.regionResponses()).hasSize(1),
+            () -> assertThat(findSignUpResponse.mainSkillResponses().get(0).name()).isEqualTo("개발"),
+            () -> assertThat(findSignUpResponse.purposeResponses().get(0).name()).isEqualTo("창업"),
+            () -> assertThat(findSignUpResponse.regionResponses().get(0).name()).isEqualTo("서울특별시")
+        );
+    }
+
 }
