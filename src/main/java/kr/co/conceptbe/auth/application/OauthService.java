@@ -13,6 +13,7 @@ import kr.co.conceptbe.auth.domain.authcode.AuthCodeRequestUrlProviderHandler;
 import kr.co.conceptbe.auth.domain.client.OauthMemberClientHandler;
 import kr.co.conceptbe.auth.infra.oauth.dto.OauthMemberInformation;
 import kr.co.conceptbe.auth.support.JwtProvider;
+import kr.co.conceptbe.idea.application.response.RegionResponse;
 import kr.co.conceptbe.member.application.MemberService;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.MemberPurpose;
@@ -21,6 +22,7 @@ import kr.co.conceptbe.member.domain.OauthServerType;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
+import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import kr.co.conceptbe.skill.domain.SkillLevel;
@@ -40,14 +42,17 @@ public class OauthService {
     private final MemberService memberService;
     private final SkillCategoryRepository skillCategoryRepository;
     private final PurposeRepository purposeRepository;
+    private final RegionRepository regionRepository;
 
     public String getAuthCodeRequestUrl(OauthServerType oauthServerType) {
         return authCodeRequestUrlProviderHandler.provideUrl(oauthServerType);
     }
 
     //TODO 외부와 Transactional 분리 예정
-    public OauthMemberResponse getOauthMemberInformationBy(OauthServerType oauthServerType, String code) {
-        OauthMemberInformation oauthMemberInformation = oauthMemberClientHandler.getOauthMemberInformation(oauthServerType, code);
+    public OauthMemberResponse getOauthMemberInformationBy(OauthServerType oauthServerType,
+        String code) {
+        OauthMemberInformation oauthMemberInformation = oauthMemberClientHandler.getOauthMemberInformation(
+            oauthServerType, code);
         boolean isMember = memberRepository.existsByOauthId(
             new OauthId(String.valueOf(oauthMemberInformation.oauthId()), oauthServerType)
         );
@@ -59,7 +64,8 @@ public class OauthService {
         String accessToken = jwtProvider.createAccessToken(member.getId());
         return new AuthResponse(
             accessToken,
-            new AuthMemberInformation(member.getId(), member.getNickname(), member.getProfileImageUrl())
+            new AuthMemberInformation(member.getId(), member.getNickname(),
+                member.getProfileImageUrl())
         );
     }
 
@@ -68,7 +74,8 @@ public class OauthService {
         String accessToken = jwtProvider.createAccessToken(member.getId());
         return new AuthResponse(
             accessToken,
-            new AuthMemberInformation(member.getId(), member.getNickname(), member.getProfileImageUrl())
+            new AuthMemberInformation(member.getId(), member.getNickname(),
+                member.getProfileImageUrl())
         );
     }
 
@@ -95,7 +102,7 @@ public class OauthService {
             .toList();
     }
 
-    private  List<SkillLevel> mapToSkillLevels(SignUpRequest signUpRequest) {
+    private List<SkillLevel> mapToSkillLevels(SignUpRequest signUpRequest) {
         return signUpRequest.skills().stream()
             .map(skillRequest -> SkillLevel.from(skillRequest.level()))
             .toList();
@@ -122,8 +129,9 @@ public class OauthService {
         List<MainSkillResponse> mainSkillResponses = createMainSkillResponses(skills, mainSkills);
 
         List<PurposeResponse> purposeResponses = createPurposeResponses();
+        List<RegionResponse> regionResponses = createRegionResponses();
 
-        return new FindSignUpResponse(mainSkillResponses, purposeResponses);
+        return new FindSignUpResponse(mainSkillResponses, purposeResponses, regionResponses);
     }
 
     private List<SkillCategory> categorizeMainSkills(List<SkillCategory> skills) {
@@ -160,6 +168,12 @@ public class OauthService {
     private List<PurposeResponse> createPurposeResponses() {
         return purposeRepository.findAll().stream()
             .map(purpose -> new PurposeResponse(purpose.getId(), purpose.getName()))
+            .toList();
+    }
+
+    private List<RegionResponse> createRegionResponses() {
+        return regionRepository.findAll().stream()
+            .map(RegionResponse::from)
             .toList();
     }
 }
