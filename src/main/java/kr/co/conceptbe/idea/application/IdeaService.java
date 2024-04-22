@@ -131,7 +131,6 @@ public class IdeaService {
             Hit.ofIdeaAndMember(idea, member);
         }
 
-        ideaRepository.save(idea);
         return ideaDetailResponse;
     }
 
