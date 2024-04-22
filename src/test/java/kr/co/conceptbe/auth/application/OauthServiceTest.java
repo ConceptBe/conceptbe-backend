@@ -58,13 +58,15 @@ class OauthServiceTest {
         SkillCategory feDetailSkill = skillCategoryRepository.save(
             new SkillCategory(mainSkill, "FE"));
         Purpose purpose = purposeRepository.save(Purpose.from("창업"));
+        Region region=regionRepository.save(Region.from("SEOUL"));
         SignUpRequest signUpRequest = AuthFixture.createSignUpRequest(
             mainSkill.getId(),
             List.of(
                 new SkillRequest(beDetailSkill.getId(), SkillLevel.HIGH.getName()),
                 new SkillRequest(feDetailSkill.getId(), SkillLevel.LOW.getName())
             ),
-            purpose.getId()
+            purpose.getId(),
+            region
         );
 
         //when
@@ -116,6 +118,7 @@ class OauthServiceTest {
         SkillCategory feDetailSkill = skillCategoryRepository.save(
             new SkillCategory(mainSkill, "FE"));
         Purpose purpose = purposeRepository.save(Purpose.from("창업"));
+        Region region=regionRepository.save(Region.from("SEOUL"));
         SignUpRequest signUpRequest = AuthFixture.createSignUpRequest(
             mainSkill.getId(),
             List.of(
@@ -123,7 +126,8 @@ class OauthServiceTest {
                 new SkillRequest(beDetailSkill.getId(), SkillLevel.LOW.getName()),
                 new SkillRequest(feDetailSkill.getId(), SkillLevel.LOW.getName())
             ),
-            purpose.getId()
+            purpose.getId(),
+            region
         );
 
         //when, then
