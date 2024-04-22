@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import kr.co.conceptbe.auth.application.dto.SkillRequest;
-import kr.co.conceptbe.member.application.dto.UpdateMemberProfileRequest;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.bookmark.repository.BookmarkRepository;
@@ -15,6 +13,7 @@ import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponseOption;
 import kr.co.conceptbe.member.application.dto.MemberProfileSkillResponse;
+import kr.co.conceptbe.member.application.dto.UpdateMemberProfileRequest;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.MemberPurpose;
 import kr.co.conceptbe.member.domain.vo.Nickname;
@@ -62,13 +61,6 @@ public class MemberService {
         );
     }
 
-    private String getLivingPlace(Member member) {
-        if (member.getLivingPlace() == null) {
-            return null;
-        }
-        return member.getLivingPlace().getName();
-    }
-
     private List<String> mapToMemberPurposes(Member member) {
         return member.getPurposes().stream()
             .map(purpose -> purpose.getPurpose().getName())
@@ -86,9 +78,11 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemberIdeaResponse> findMemberIdeas(AuthCredentials authCredentials, Long id, Pageable pageable) {
+    public List<MemberIdeaResponse> findMemberIdeas(AuthCredentials authCredentials, Long id,
+        Pageable pageable) {
         if (isMyMemberIdeas(authCredentials, id)) {
-            return ideaRepository.findAllByCreatorIdOrderByCreatedAtDesc(authCredentials.id(), pageable)
+            return ideaRepository.findAllByCreatorIdOrderByCreatedAtDesc(authCredentials.id(),
+                    pageable)
                 .stream()
                 .map(idea -> MemberIdeaResponse.ofMember(idea, MemberIdeaResponseOption.IS_MINE))
                 .toList();
@@ -98,9 +92,11 @@ public class MemberService {
         return ideaRepository.findAllByCreatorIdOrderByCreatedAtDesc(id, pageable).stream()
             .map(idea -> {
                 if (guestBookmarkedIdeaIds.contains(idea.getId())) {
-                    return MemberIdeaResponse.ofMember(idea, MemberIdeaResponseOption.IS_BOOKMARKED); 
+                    return MemberIdeaResponse.ofMember(idea,
+                        MemberIdeaResponseOption.IS_BOOKMARKED);
                 }
-                return MemberIdeaResponse.ofMember(idea, MemberIdeaResponseOption.IS_NOT_BOOKMARKED);
+                return MemberIdeaResponse.ofMember(idea,
+                    MemberIdeaResponseOption.IS_NOT_BOOKMARKED);
             }).collect(Collectors.toList());
     }
 
@@ -116,8 +112,10 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<IdeaResponse> findMemberBookMarks(AuthCredentials authCredentials, Pageable pageable) {
-        List<Bookmark> bookmarks = bookmarkRepository.findAllByMemberIdOrderByIdeaCreatedAtDesc(authCredentials.id(), pageable);
+    public List<IdeaResponse> findMemberBookMarks(AuthCredentials authCredentials,
+        Pageable pageable) {
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByMemberIdOrderByIdeaCreatedAtDesc(
+            authCredentials.id(), pageable);
         return bookmarks.stream()
             .map(bookmark -> IdeaResponse.ofMember(bookmark.getIdea(), true))
             .toList();
@@ -133,7 +131,8 @@ public class MemberService {
         }
 
         Member member = memberRepository.getById(authCredentials.id());
-        SkillCategory mainSkill = skillCategoryRepository.getById(updateMemberProfileRequest.mainSkillId());
+        SkillCategory mainSkill = skillCategoryRepository.getById(
+            updateMemberProfileRequest.mainSkillId());
         member.updateProfile(
             updateMemberProfileRequest.nickname(),
             mainSkill,
@@ -147,7 +146,8 @@ public class MemberService {
         List<SkillLevel> skillLevels = mapToSkillLevels(updateMemberProfileRequest);
         member.updateSkills(member, skillCategories, skillLevels);
 
-        List<MemberPurpose> memberPurposes = mapToMemberPurposes(updateMemberProfileRequest, member);
+        List<MemberPurpose> memberPurposes = mapToMemberPurposes(updateMemberProfileRequest,
+            member);
         member.updateJoinPurposes(memberPurposes);
     }
 
