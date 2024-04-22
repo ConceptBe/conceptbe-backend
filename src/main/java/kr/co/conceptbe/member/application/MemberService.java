@@ -22,6 +22,7 @@ import kr.co.conceptbe.member.exception.NotOwnerException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
+import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import kr.co.conceptbe.skill.domain.SkillLevel;
@@ -40,6 +41,7 @@ public class MemberService {
     private final BookmarkRepository bookmarkRepository;
     private final SkillCategoryRepository skillCategoryRepository;
     private final PurposeRepository purposeRepository;
+    private final RegionRepository regionRepository;
 
     public boolean validateDuplicatedNickName(String nickname) {
         return !memberRepository.existsByNickname(Nickname.from(nickname));
@@ -52,7 +54,7 @@ public class MemberService {
             member.getNickname(),
             Objects.equals(authCredentials.id(), id),
             member.getMainSkill().getName(),
-            getLivingPlace(member),
+            member.getLivingPlace().getId(),
             member.getWorkingPlace(),
             member.getIntroduce(),
             mapToMemberSkills(member),
@@ -136,7 +138,7 @@ public class MemberService {
             updateMemberProfileRequest.nickname(),
             mainSkill,
             updateMemberProfileRequest.profileImageUrl(),
-            updateMemberProfileRequest.livingPlace(),
+            regionRepository.getById(updateMemberProfileRequest.livingPlaceId()),
             updateMemberProfileRequest.workingPlace(),
             updateMemberProfileRequest.introduction()
         );

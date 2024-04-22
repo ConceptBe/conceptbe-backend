@@ -32,7 +32,10 @@ public record UpdateMemberProfileRequest(
     @NotNull(message = "가입목적은 빈 값일 수 없습니다.")
     @Size(min = 1, max = 3, message = "가입목적은 1개 이상 3개이하로 선택해야 됩니다.")
     List<Long> joinPurposes,
-    String livingPlace,
+
+    @Schema(description = "지역 ID", example = "1")
+    @NotNull(message = "지역을 선택해주세요.")
+    Long livingPlaceId,
 
     @Schema(description = "직장명", example = "토스")
     @Size(max = 10, message = "직장명은 10자 이하여야 합니다.")

@@ -19,6 +19,7 @@ import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.MemberPurpose;
 import kr.co.conceptbe.member.domain.OauthId;
 import kr.co.conceptbe.member.domain.OauthServerType;
+import kr.co.conceptbe.member.domain.vo.Nickname;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
@@ -80,11 +81,24 @@ public class OauthService {
     }
 
     private Member saveMember(SignUpRequest signUpRequest) {
-        Member member = signUpRequest.toMember();
+        Member member = toMember(signUpRequest);
         memberService.validateDuplicatedNickName(member.getNickname());
         processSkill(signUpRequest, member);
         processPurpose(signUpRequest, member);
         return memberRepository.save(member);
+    }
+
+    private Member toMember(SignUpRequest signUpRequest) {
+        return new Member(
+            new OauthId(signUpRequest.oauthId(),
+                OauthServerType.from(signUpRequest.oauthServerType())),
+            Nickname.from(signUpRequest.nickname()),
+            signUpRequest.profileImageUrl(),
+            signUpRequest.email(),
+            signUpRequest.introduction(),
+            signUpRequest.workingPlace(),
+            regionRepository.getById(signUpRequest.livingPlace())
+        );
     }
 
     private void processSkill(SignUpRequest signUpRequest, Member member) {
