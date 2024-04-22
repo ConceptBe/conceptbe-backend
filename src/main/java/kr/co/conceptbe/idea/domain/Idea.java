@@ -76,7 +76,8 @@ public class Idea extends BaseTimeEntity {
     @OneToMany(mappedBy = "idea", orphanRemoval = true, cascade = {CascadeType.REMOVE})
     private final List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "idea", orphanRemoval = true, cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "idea", orphanRemoval = true, cascade = {CascadeType.REMOVE,
+        CascadeType.PERSIST})
     private final List<IdeaLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "idea", orphanRemoval = true, cascade = {CascadeType.REMOVE})
