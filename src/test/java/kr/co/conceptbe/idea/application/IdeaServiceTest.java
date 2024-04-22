@@ -24,6 +24,7 @@ import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
 import kr.co.conceptbe.idea.domain.persistence.HitRepository;
+import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
@@ -80,6 +81,8 @@ class IdeaServiceTest {
     private RegionRepository regionRepository;
     @Autowired
     private HitRepository hitRepository;
+    @Autowired
+    private IdeaLikesRepository ideaLikesRepository;
 
     @Test
     void 게시글을_상세_조회했을_때_조회_기록이_남는다() {
@@ -108,6 +111,34 @@ class IdeaServiceTest {
 
         //then
         assertThat(firstByMemberAndIdeaOrderByCreatedAtDesc).isPresent();
+    }
+
+    @Test
+    void 게시글을_좋아요를_남긴다() {
+        //given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        SkillCategory java = skillCategoryRepository.save(new SkillCategory("Java"));
+        Member member = memberRepository.save(MemberFixture.createMemberByMainSkill(java, region));
+        Idea savedIdea = ideaRepository.save(
+            Idea.of(
+                VALID_TITLE,
+                VALID_INTRODUCE,
+                VALID_COOPERATION,
+                region,
+                member,
+                getBranchesByCount(VALID_BRANCH_COUNT),
+                getPurposesByCount(VALID_PURPOSE_COUNT),
+                getSkillCategoriesByCount(VALID_SKILL_COUNT)
+            )
+        );
+
+        //when
+        ideaService.likesIdea(member.getId(), savedIdea.getId());
+        Optional<IdeaLike> like = ideaLikesRepository.findByMemberAndIdea(member,
+            savedIdea);
+
+        //then
+        assertThat(like).isPresent();
     }
 
     @Test
