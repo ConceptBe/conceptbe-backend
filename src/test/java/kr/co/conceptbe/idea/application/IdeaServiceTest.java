@@ -23,7 +23,9 @@ import kr.co.conceptbe.idea.application.response.SkillCategoryResponse;
 import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
+import kr.co.conceptbe.idea.domain.persistence.HitRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
+import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.OauthId;
@@ -37,6 +39,7 @@ import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -77,6 +80,37 @@ class IdeaServiceTest {
     private IdeaRepository ideaRepository;
     @Autowired
     private RegionRepository regionRepository;
+    @Autowired
+    private HitRepository hitRepository;
+
+    @Test
+    void 게시글을_상세_조회했을_때_조회_기록이_남는다() {
+        //given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        SkillCategory java = skillCategoryRepository.save(new SkillCategory("Java"));
+        Member member = memberRepository.save(MemberFixture.createMemberByMainSkill(java));
+        Idea savedIdea = ideaRepository.save(
+            Idea.of(
+                VALID_TITLE,
+                VALID_INTRODUCE,
+                VALID_COOPERATION,
+                region,
+                member,
+                getBranchesByCount(VALID_BRANCH_COUNT),
+                getPurposesByCount(VALID_PURPOSE_COUNT),
+                getSkillCategoriesByCount(VALID_SKILL_COUNT)
+            )
+        );
+
+        //when
+        ideaService.getDetailIdeaResponse(member.getId(),
+            savedIdea.getId());
+        Optional<Hit> firstByMemberAndIdeaOrderByCreatedAtDesc = hitRepository.findFirstByMemberAndIdeaOrderByCreatedAtDesc(
+            member, savedIdea);
+
+        //then
+        assertThat(firstByMemberAndIdeaOrderByCreatedAtDesc).isPresent();
+    }
 
     @Test
     void 게시글을_조회한다() {
