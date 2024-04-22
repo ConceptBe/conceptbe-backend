@@ -97,7 +97,7 @@ public class OauthService {
             signUpRequest.email(),
             signUpRequest.introduction(),
             signUpRequest.workingPlace(),
-            regionRepository.getById(signUpRequest.livingPlace())
+            regionRepository.getById(signUpRequest.livingPlaceId())
         );
     }
 

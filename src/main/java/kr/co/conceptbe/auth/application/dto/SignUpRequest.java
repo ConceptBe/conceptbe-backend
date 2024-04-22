@@ -35,7 +35,7 @@ public record SignUpRequest(
 
     @Schema(description = "지역 ID", example = "1")
     @NotNull(message = "지역을 선택해주세요.")
-    Long livingPlace,
+    Long livingPlaceId,
 
     @Schema(description = "직장명", example = "토스")
     @Size(max = 10, message = "직장명은 10자 이하여야 합니다.")
