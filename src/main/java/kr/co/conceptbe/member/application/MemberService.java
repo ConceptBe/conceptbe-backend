@@ -53,7 +53,7 @@ public class MemberService {
             member.getNickname(),
             Objects.equals(authCredentials.id(), id),
             member.getMainSkill().getName(),
-            member.getLivingPlace().getId(),
+            member.getLivingPlace().getName(),
             member.getWorkingPlace(),
             member.getIntroduce(),
             mapToMemberSkills(member),
