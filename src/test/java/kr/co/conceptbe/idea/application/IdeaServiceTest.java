@@ -23,6 +23,8 @@ import kr.co.conceptbe.idea.application.response.SkillCategoryResponse;
 import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
+import kr.co.conceptbe.idea.domain.persistence.HitRepository;
+import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.idea.fixture.IdeaFixture;
 import kr.co.conceptbe.member.domain.Member;
@@ -77,13 +79,74 @@ class IdeaServiceTest {
     private IdeaRepository ideaRepository;
     @Autowired
     private RegionRepository regionRepository;
+    @Autowired
+    private HitRepository hitRepository;
+    @Autowired
+    private IdeaLikesRepository ideaLikesRepository;
+
+    @Test
+    void 게시글을_상세_조회했을_때_조회_기록이_남는다() {
+        //given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        SkillCategory java = skillCategoryRepository.save(new SkillCategory("Java"));
+        Member member = memberRepository.save(MemberFixture.createMemberByMainSkill(java, region));
+        Idea savedIdea = ideaRepository.save(
+            Idea.of(
+                VALID_TITLE,
+                VALID_INTRODUCE,
+                VALID_COOPERATION,
+                region,
+                member,
+                getBranchesByCount(VALID_BRANCH_COUNT),
+                getPurposesByCount(VALID_PURPOSE_COUNT),
+                getSkillCategoriesByCount(VALID_SKILL_COUNT)
+            )
+        );
+
+        //when
+        ideaService.getDetailIdeaResponse(member.getId(),
+            savedIdea.getId());
+        Optional<Hit> firstByMemberAndIdeaOrderByCreatedAtDesc = hitRepository.findFirstByMemberAndIdeaOrderByCreatedAtDesc(
+            member, savedIdea);
+
+        //then
+        assertThat(firstByMemberAndIdeaOrderByCreatedAtDesc).isPresent();
+    }
+
+    @Test
+    void 게시글을_좋아요를_남긴다() {
+        //given
+        Region region = regionRepository.save(Region.from("BUSAN"));
+        SkillCategory java = skillCategoryRepository.save(new SkillCategory("Java"));
+        Member member = memberRepository.save(MemberFixture.createMemberByMainSkill(java, region));
+        Idea savedIdea = ideaRepository.save(
+            Idea.of(
+                VALID_TITLE,
+                VALID_INTRODUCE,
+                VALID_COOPERATION,
+                region,
+                member,
+                getBranchesByCount(VALID_BRANCH_COUNT),
+                getPurposesByCount(VALID_PURPOSE_COUNT),
+                getSkillCategoriesByCount(VALID_SKILL_COUNT)
+            )
+        );
+
+        //when
+        ideaService.likesIdea(member.getId(), savedIdea.getId());
+        Optional<IdeaLike> like = ideaLikesRepository.findByMemberAndIdea(member,
+            savedIdea);
+
+        //then
+        assertThat(like).isPresent();
+    }
 
     @Test
     void 게시글을_조회한다() {
         //given
         Region region = regionRepository.save(Region.from("BUSAN"));
         SkillCategory java = skillCategoryRepository.save(new SkillCategory("Java"));
-        Member member = memberRepository.save(MemberFixture.createMemberByMainSkill(java));
+        Member member = memberRepository.save(MemberFixture.createMemberByMainSkill(java, region));
         Idea save = ideaRepository.save(
             Idea.of(
                 VALID_TITLE,
@@ -149,7 +212,7 @@ class IdeaServiceTest {
     void 게시글을_작성한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         AuthCredentials authCredentials = new AuthCredentials(member.getId());
         IdeaRequest ideaRequest = new IdeaRequest(
             VALID_TITLE,
@@ -190,7 +253,7 @@ class IdeaServiceTest {
     ) {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         AuthCredentials authCredentials = new AuthCredentials(member.getId());
         IdeaRequest ideaRequest = new IdeaRequest(
             title,
@@ -217,7 +280,7 @@ class IdeaServiceTest {
     void 게시글을_수정_한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         AuthCredentials authCredentials = new AuthCredentials(member.getId());
         Idea savedIdea = ideaRepository.save(createValidIdea(region, member));
         IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
@@ -263,7 +326,7 @@ class IdeaServiceTest {
     ) {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         AuthCredentials authCredentials = new AuthCredentials(member.getId());
         Idea savedIdea = ideaRepository.save(createValidIdea(region, member));
         IdeaUpdateRequest ideaUpdateRequest = new IdeaUpdateRequest(
@@ -292,7 +355,7 @@ class IdeaServiceTest {
     void 게시글을_삭제한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Idea idea = ideaRepository.save(createValidIdea(region, member));
 
         // when
@@ -307,9 +370,9 @@ class IdeaServiceTest {
     void 게시글과_연관된_데이터가_존재하더라도_삭제에_성공한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Member notCreator = memberRepository.save(
-            MemberFixture.createMemberByOauthId(new OauthId("notAuthor", OauthServerType.KAKAO)));
+            MemberFixture.createMemberByOauthId(new OauthId("notAuthor", OauthServerType.KAKAO),region));
         Idea idea = ideaRepository.save(createValidIdea(region, member));
         Comment parentComment = Comment.createCommentAssociatedWithIdeaAndCreator("댓글", null, idea,
             member);
@@ -332,9 +395,9 @@ class IdeaServiceTest {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member1 = memberRepository.save(
-            MemberFixture.createMemberByOauthId(new OauthId("1", OauthServerType.KAKAO)));
+            MemberFixture.createMemberByOauthId(new OauthId("1", OauthServerType.KAKAO),region));
         Member member2 = memberRepository.save(
-            MemberFixture.createMemberByOauthId(new OauthId("2", OauthServerType.KAKAO)));
+            MemberFixture.createMemberByOauthId(new OauthId("2", OauthServerType.KAKAO),region));
         Idea idea = ideaRepository.save(createValidIdea(region, member1));
 
         // when

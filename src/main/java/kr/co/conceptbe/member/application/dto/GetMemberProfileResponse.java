@@ -13,7 +13,7 @@ public record GetMemberProfileResponse(
     boolean isMyProfile,
     @Schema(description = "대표스킬", example = "개발")
     String mainSkill,
-    @Schema(description = "지역", example = "서울특별시")
+    @Schema(description = "지역명", example = "서울")
     String livingPlace,
     @Schema(description = "직장명", example = "네이버")
     String workingPlace,

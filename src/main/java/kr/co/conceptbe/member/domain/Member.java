@@ -7,8 +7,6 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,6 +22,7 @@ import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.member.domain.vo.Nickname;
+import kr.co.conceptbe.region.domain.Region;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillLevel;
 import lombok.Getter;
@@ -67,8 +66,8 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = true)
     private String workingPlace;
 
-    @Column(nullable = true)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "living_place_id")
     private Region livingPlace;
 
     @ManyToOne
@@ -133,24 +132,16 @@ public class Member extends BaseTimeEntity {
         String nickname,
         SkillCategory mainSkill,
         String profileImageUrl,
-        String livingPlace,
+        Region livingPlace,
         String from,
         String introduction
     ) {
         this.nickname = Nickname.from(nickname);
         this.mainSkill = mainSkill;
         this.profileImageUrl = profileImageUrl;
-        updateLivingPlace(livingPlace);
+        this.livingPlace = livingPlace;
         this.workingPlace = from;
         this.introduce = introduction;
-    }
-
-    private void updateLivingPlace(String livingPlace) {
-        if (livingPlace != null) {
-            this.livingPlace = Region.from(livingPlace);
-            return;
-        }
-        this.livingPlace = null;
     }
 
     public void updateSkills(Member member, List<SkillCategory> skillCategories,
@@ -164,7 +155,7 @@ public class Member extends BaseTimeEntity {
         this.purposes.addAll(memberPurposes);
     }
 
-    public String getNickname(){
+    public String getNickname() {
         return nickname.getNickname();
     }
 }

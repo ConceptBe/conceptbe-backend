@@ -50,7 +50,7 @@ class IdeaRepositoryTest {
     void Query_DSL_을_적용한_Repository_Method_들이_정상적으로_동작하는지_확인한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
@@ -82,7 +82,7 @@ class IdeaRepositoryTest {
     void 최근_게시글_조회에_페이지네이션을_적용한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
@@ -113,7 +113,7 @@ class IdeaRepositoryTest {
     void 최근_게시글_조회에_필터링을_적용한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Branch branch1 = branchRepository.save(Branch.from("branch1"));
         Branch branch2 = branchRepository.save(Branch.from("branch2"));
         Branch branch3 = branchRepository.save(Branch.from("branch3"));
@@ -158,7 +158,7 @@ class IdeaRepositoryTest {
     void 인기_게시글_조회에_페이지네이션을_적용한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
@@ -190,7 +190,7 @@ class IdeaRepositoryTest {
     void 인기_게시글_조회에_필터링을_적용한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Branch branch1 = branchRepository.save(Branch.from("branch1"));
         Branch branch2 = branchRepository.save(Branch.from("branch2"));
         Branch branch3 = branchRepository.save(Branch.from("branch3"));
@@ -236,7 +236,7 @@ class IdeaRepositoryTest {
     void 인기_게시글_조회_시_최근_게시글이면서_좋아요_개수가_많은_것들을_가져온다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Branch branch1 = branchRepository.save(Branch.from("branch1"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         Idea result1 = ideaRepository.save(IdeaFixture.createIdea(
@@ -272,7 +272,7 @@ class IdeaRepositoryTest {
     void Filtering_조건으로_상관없음을_선택시에_상관없음_온라인_오프라인_모두_조회한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
@@ -307,7 +307,7 @@ class IdeaRepositoryTest {
     void Filtering_조건으로_협업방식을_선택하여_조회한다() {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
-        Member member = memberRepository.save(MemberFixture.createMember());
+        Member member = memberRepository.save(MemberFixture.createMember(region));
         Branch branch = branchRepository.save(Branch.from("branch"));
         Purpose purpose = purposeRepository.save(Purpose.from("purpose"));
         SkillCategory skillCategory = skillCategoryRepository.save(new SkillCategory("skill"));
