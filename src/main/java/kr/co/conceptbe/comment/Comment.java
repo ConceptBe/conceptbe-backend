@@ -51,7 +51,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "idea_id")
     private Idea idea;
 
-    @OneToMany(mappedBy = "comment", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", orphanRemoval = true, cascade = {CascadeType.REMOVE})
     private final List<CommentLike> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "parentComment")
@@ -115,5 +115,10 @@ public class Comment extends BaseTimeEntity {
     public boolean isLike(Long memberId) {
         return likes.stream()
             .anyMatch(like -> like.isLike(memberId));
+    }
+
+    public void deleteWithMember() {
+        this.deleted = true;
+        this.creator = null;
     }
 }

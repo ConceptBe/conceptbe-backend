@@ -19,10 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import kr.co.conceptbe.auth.exception.TokenInvalidException;
 import kr.co.conceptbe.bookmark.Bookmark;
+import kr.co.conceptbe.comment.CommentLike;
 import kr.co.conceptbe.common.entity.base.BaseTimeEntity;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.member.domain.vo.Nickname;
 import kr.co.conceptbe.region.domain.Region;
+import kr.co.conceptbe.idea.domain.IdeaLike;
 import kr.co.conceptbe.skill.domain.SkillCategory;
 import kr.co.conceptbe.skill.domain.SkillLevel;
 import lombok.Getter;
@@ -74,20 +76,26 @@ public class Member extends BaseTimeEntity {
     @JoinColumn(name = "main_skill_id")
     private SkillCategory mainSkill;
 
-    @OneToMany(mappedBy = "creator")
+    @OneToMany(mappedBy = "creator", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private final List<Idea> createdIdea = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private final List<Bookmark> bookmarks = new ArrayList<>();
 
     @Embedded
     private MemberSkills skills;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private final List<MemberBranch> branches = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private final List<MemberPurpose> purposes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    private final List<CommentLike> commentLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    private final List<IdeaLike> ideaLikes = new ArrayList<>();
 
     public Member(
         OauthId oauthId,
@@ -108,7 +116,7 @@ public class Member extends BaseTimeEntity {
     }
 
     public static void validateMember(Long tokenMemberId, Long validateId) {
-        if (tokenMemberId.equals(validateId)) {
+        if(tokenMemberId.equals(validateId)) {
             return;
         }
         throw new TokenInvalidException();
@@ -118,8 +126,7 @@ public class Member extends BaseTimeEntity {
         this.mainSkill = mainSkill;
     }
 
-    public void addSkills(Member member, List<SkillCategory> skillCategories,
-        List<SkillLevel> skillLevels) {
+    public void addSkills(Member member, List<SkillCategory> skillCategories, List<SkillLevel> skillLevels) {
         this.skills = MemberSkills.of(member, skillCategories, skillLevels);
     }
 

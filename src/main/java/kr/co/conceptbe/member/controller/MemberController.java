@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -78,5 +79,14 @@ public class MemberController implements MemberApi {
         List<IdeaResponse> memberBookMarks = memberService.findMemberBookMarks(authCredentials, pageable);
 
         return ResponseEntity.ok(memberBookMarks);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMember(
+        @Auth AuthCredentials authCredentials,
+        @PathVariable Long id
+    ) {
+        memberService.deleteMember(authCredentials, id);
+        return ResponseEntity.noContent().build();
     }
 }

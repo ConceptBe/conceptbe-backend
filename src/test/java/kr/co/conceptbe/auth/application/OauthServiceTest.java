@@ -11,8 +11,10 @@ import kr.co.conceptbe.auth.application.dto.SignUpRequest;
 import kr.co.conceptbe.auth.application.dto.SkillRequest;
 import kr.co.conceptbe.auth.fixture.AuthFixture;
 import kr.co.conceptbe.auth.support.JwtProvider;
+import kr.co.conceptbe.member.application.MemberService;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.persistence.MemberRepository;
+import kr.co.conceptbe.member.persistence.MemberSkillRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
 import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.Region;
@@ -29,6 +31,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 class OauthServiceTest {
+
+    @Autowired
+    private MemberService memberService;
+
+    @Autowired
+    private MemberSkillRepository memberSkillRepository;
+
+
 
     @Autowired
     private OauthService oauthService;

@@ -12,4 +12,6 @@ import kr.co.conceptbe.member.domain.Member;
 @Repository
 public interface HitRepository extends JpaRepository<Hit, Long>, HitRepositoryCustom {
 	Optional<Hit> findFirstByMemberAndIdeaOrderByCreatedAtDesc(Member member, Idea idea);
+
+    void deleteByMemberId(Long memberId);
 }

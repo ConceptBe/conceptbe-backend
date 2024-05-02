@@ -7,7 +7,10 @@ import java.util.stream.Collectors;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.bookmark.repository.BookmarkRepository;
+import kr.co.conceptbe.comment.Comment;
+import kr.co.conceptbe.comment.repository.CommentRepository;
 import kr.co.conceptbe.idea.application.response.IdeaResponse;
+import kr.co.conceptbe.idea.domain.persistence.HitRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
 import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
@@ -40,7 +43,9 @@ public class MemberService {
     private final BookmarkRepository bookmarkRepository;
     private final SkillCategoryRepository skillCategoryRepository;
     private final PurposeRepository purposeRepository;
+    private final CommentRepository commentRepository;
     private final RegionRepository regionRepository;
+    private final HitRepository hitRepository;
 
     public boolean validateDuplicatedNickName(String nickname) {
         return !memberRepository.existsByNickname(Nickname.from(nickname));
@@ -92,11 +97,9 @@ public class MemberService {
         return ideaRepository.findAllByCreatorIdOrderByCreatedAtDesc(id, pageable).stream()
             .map(idea -> {
                 if (guestBookmarkedIdeaIds.contains(idea.getId())) {
-                    return MemberIdeaResponse.ofMember(idea,
-                        MemberIdeaResponseOption.IS_BOOKMARKED);
+                    return MemberIdeaResponse.ofMember(idea, MemberIdeaResponseOption.IS_BOOKMARKED); 
                 }
-                return MemberIdeaResponse.ofMember(idea,
-                    MemberIdeaResponseOption.IS_NOT_BOOKMARKED);
+                return MemberIdeaResponse.ofMember(idea, MemberIdeaResponseOption.IS_NOT_BOOKMARKED);
             }).collect(Collectors.toList());
     }
 
@@ -176,5 +179,21 @@ public class MemberService {
                 return new MemberPurpose(member, purpose);
             })
             .toList();
+    }
+
+    public void deleteMember(AuthCredentials authCredentials, Long id) {
+        if (!Objects.equals(authCredentials.id(), id)) {
+            throw new NotOwnerException(authCredentials.id());
+        }
+
+        Member member = memberRepository.getById(authCredentials.id());
+        List<Comment> comments = commentRepository
+            .findByCreator(member);
+
+        for (Comment comment : comments) {
+            comment.deleteWithMember();
+        }
+        hitRepository.deleteByMemberId(member.getId());
+        memberRepository.delete(member);
     }
 }
