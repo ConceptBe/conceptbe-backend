@@ -56,6 +56,7 @@ public class MemberService {
         return new GetMemberProfileResponse(
             member.getProfileImageUrl(),
             member.getNickname(),
+            member.getEmail(),
             Objects.equals(authCredentials.id(), id),
             member.getMainSkill().getName(),
             member.getLivingPlace().getName(),
