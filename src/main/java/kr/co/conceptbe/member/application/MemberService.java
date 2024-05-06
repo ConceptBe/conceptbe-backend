@@ -20,6 +20,7 @@ import kr.co.conceptbe.member.application.dto.UpdateMemberProfileRequest;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.MemberPurpose;
 import kr.co.conceptbe.member.domain.vo.Nickname;
+import kr.co.conceptbe.member.exception.NotFoundMemberException;
 import kr.co.conceptbe.member.exception.NotOwnerException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
 import kr.co.conceptbe.purpose.domain.Purpose;
@@ -52,12 +53,13 @@ public class MemberService {
     }
 
     public GetMemberProfileResponse getMemberProfileBy(AuthCredentials authCredentials, Long id) {
-        Member member = memberRepository.getById(id);
+        Member authMember = memberRepository.getById(authCredentials.id());
+        Member member = memberRepository.findById(id).orElseThrow(() -> new NotFoundMemberException(id));
         return new GetMemberProfileResponse(
             member.getProfileImageUrl(),
             member.getNickname(),
             member.getEmail(),
-            Objects.equals(authCredentials.id(), id),
+            Objects.equals(authMember.getId(), id),
             member.getMainSkill().getName(),
             member.getLivingPlace().getName(),
             member.getWorkingPlace(),

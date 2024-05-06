@@ -4,7 +4,7 @@ import java.util.Optional;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.domain.OauthId;
 import kr.co.conceptbe.member.domain.vo.Nickname;
-import kr.co.conceptbe.member.exception.NotFoundMemberException;
+import kr.co.conceptbe.member.exception.NotFoundAuthCredentialException;
 import kr.co.conceptbe.member.exception.NotFoundOauthMemberException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -21,7 +21,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     default Member getById(Long memberId) {
         return findById(memberId).orElseThrow(
-            () -> new NotFoundMemberException(memberId));
+            () -> new NotFoundAuthCredentialException(memberId));
     }
 
     boolean existsByNickname(Nickname nickname);
