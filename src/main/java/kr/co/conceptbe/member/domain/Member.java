@@ -165,4 +165,8 @@ public class Member extends BaseTimeEntity {
     public String getNickname() {
         return nickname.getNickname();
     }
+
+    public void deleteProfileImage() {
+        this.profileImageUrl = null;
+    }
 }

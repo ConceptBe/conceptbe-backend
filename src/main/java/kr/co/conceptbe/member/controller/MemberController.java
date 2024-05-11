@@ -56,6 +56,16 @@ public class MemberController implements MemberApi {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{id}/profile-image")
+    public ResponseEntity<Void> deleteMemberProfileImage(
+        @Auth AuthCredentials authCredentials,
+        @PathVariable Long id
+    ) {
+        memberService.deleteMemberProfileImage(authCredentials, id);
+        return ResponseEntity.noContent().build();
+    }
+
+
     @GetMapping("/{id}/ideas")
     public ResponseEntity<List<MemberIdeaResponse>> findMemberIdeas(
         @Auth AuthCredentials authCredentials,

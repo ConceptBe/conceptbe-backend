@@ -48,10 +48,12 @@ public class MemberService {
     private final RegionRepository regionRepository;
     private final HitRepository hitRepository;
 
+    @Transactional(readOnly = true)
     public boolean validateDuplicatedNickName(String nickname) {
         return !memberRepository.existsByNickname(Nickname.from(nickname));
     }
 
+    @Transactional(readOnly = true)
     public GetMemberProfileResponse getMemberProfileBy(AuthCredentials authCredentials, Long id) {
         Member authMember = memberRepository.getById(authCredentials.id());
         Member member = memberRepository.findById(id).orElseThrow(() -> new NotFoundMemberException(id));
@@ -198,5 +200,14 @@ public class MemberService {
         }
         hitRepository.deleteByMemberId(member.getId());
         memberRepository.delete(member);
+    }
+
+    public void deleteMemberProfileImage(AuthCredentials authCredentials, Long id) {
+        if (!Objects.equals(authCredentials.id(), id)) {
+            throw new NotOwnerException(authCredentials.id());
+        }
+
+        Member member = memberRepository.getById(authCredentials.id());
+        member.deleteProfileImage();
     }
 }
