@@ -53,7 +53,7 @@ import org.springframework.transaction.annotation.Transactional;
 class IdeaServiceTest {
 
     private static final String VALID_TITLE = "제목";
-    private static final String INVALID_TITLE = "21글자야야야".repeat(3);
+    private static final String INVALID_TITLE = "40글자".repeat(10) + "!";
     private static final String VALID_INTRODUCE = "소개".repeat(5);
     private static final String INVALID_INTRODUCE = "10글자미만";
     private static final String VALID_COOPERATION = "온라인";
