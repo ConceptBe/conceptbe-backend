@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 public class Title {
 
     private static final int TITLE_LENGTH_LOWER_BOUND_INCLUSIVE = 1;
-    private static final int TITLE_LENGTH_UPPER_BOUND_INCLUSIVE = 20;
+    private static final int TITLE_LENGTH_UPPER_BOUND_INCLUSIVE = 40;
 
-    @Column(nullable = true, length = 20)
+    @Column(nullable = true, length = 40)
     private String title;
 
     private Title(String title) {
