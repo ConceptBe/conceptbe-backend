@@ -5,12 +5,14 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import kr.co.conceptbe.image.domain.IdeaValidator;
 import kr.co.conceptbe.image.domain.Image;
 import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.image.domain.UploadFile;
 import kr.co.conceptbe.image.exception.IdeaNotFoundException;
+import kr.co.conceptbe.image.exception.ImagesEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -28,12 +30,11 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final IdeaValidator ideaValidator;
 
-    public Long save(Long ideaId, MultipartFile multipartFile) {
+    public Long save(Long ideaId, List<MultipartFile> files) {
         validateIdea(ideaId);
-        String imageUrl = upload(multipartFile);
-        Image image = new Image(ideaId, imageUrl);
-        Image savedImage = imageRepository.save(image);
-        return savedImage.getId();
+        validateImagesEmpty(files);
+        uploadImages(ideaId, files);
+        return ideaId;
     }
 
     private void validateIdea(Long ideaId) {
@@ -41,6 +42,20 @@ public class ImageService {
             return;
         }
         throw new IdeaNotFoundException();
+    }
+
+    private void validateImagesEmpty(List<MultipartFile> files) {
+        if (!files.isEmpty()) {
+            return;
+        }
+        throw new ImagesEmptyException();
+    }
+
+    private void uploadImages(Long ideaId, List<MultipartFile> files) {
+        files.stream()
+            .map(this::upload)
+            .map(imageUrl -> new Image(ideaId, imageUrl))
+            .forEach(imageRepository::save);
     }
 
     private String upload(MultipartFile multipartFile) {

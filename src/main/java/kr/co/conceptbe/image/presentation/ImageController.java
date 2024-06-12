@@ -1,5 +1,6 @@
 package kr.co.conceptbe.image.presentation;
 
+import java.util.List;
 import kr.co.conceptbe.image.application.ImageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +26,7 @@ public class ImageController {
     @PostMapping(value = "/{ideaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Long> saveImage(
         @PathVariable Long ideaId,
-        @RequestPart MultipartFile file
+        @RequestPart List<MultipartFile> file
     ) {
         Long savedImageId = imageService.save(ideaId, file);
         return ResponseEntity.status(HttpStatus.CREATED)
