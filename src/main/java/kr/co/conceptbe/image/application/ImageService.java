@@ -30,11 +30,10 @@ public class ImageService {
     private final ImageRepository imageRepository;
     private final IdeaValidator ideaValidator;
 
-    public Long save(Long ideaId, List<MultipartFile> files) {
+    public void save(Long ideaId, List<MultipartFile> files) {
         validateIdea(ideaId);
         validateImagesEmpty(files);
         uploadImages(ideaId, files);
-        return ideaId;
     }
 
     private void validateIdea(Long ideaId) {

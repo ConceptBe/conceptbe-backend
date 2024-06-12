@@ -28,9 +28,9 @@ public class ImageController {
         @PathVariable Long ideaId,
         @RequestPart List<MultipartFile> file
     ) {
-        Long savedImageId = imageService.save(ideaId, file);
+        imageService.save(ideaId, file);
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(savedImageId);
+            .build();
     }
 
     @DeleteMapping("/{imageId}")
