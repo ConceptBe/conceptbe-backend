@@ -2,6 +2,7 @@ package kr.co.conceptbe.image.presentation;
 
 import java.util.List;
 import kr.co.conceptbe.image.application.ImageService;
+import kr.co.conceptbe.image.presentation.doc.ImageApi;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/images")
-public class ImageController {
+public class ImageController implements ImageApi {
 
     private final ImageService imageService;
 
@@ -24,11 +25,11 @@ public class ImageController {
     }
 
     @PostMapping(value = "/{ideaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Long> saveImage(
+    public ResponseEntity<Void> saveImage(
         @PathVariable Long ideaId,
-        @RequestPart List<MultipartFile> file
+        @RequestPart List<MultipartFile> files
     ) {
-        imageService.save(ideaId, file);
+        imageService.save(ideaId, files);
         return ResponseEntity.status(HttpStatus.CREATED)
             .build();
     }
