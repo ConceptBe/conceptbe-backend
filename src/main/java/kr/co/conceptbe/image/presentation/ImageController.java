@@ -2,11 +2,13 @@ package kr.co.conceptbe.image.presentation;
 
 import kr.co.conceptbe.image.application.ImageService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,8 +22,11 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @PostMapping("/{ideaId}")
-    public ResponseEntity<Long> saveImage(@PathVariable Long ideaId, MultipartFile file) {
+    @PostMapping(value = "/{ideaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Long> saveImage(
+        @PathVariable Long ideaId,
+        @RequestPart MultipartFile file
+    ) {
         Long savedImageId = imageService.save(ideaId, file);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(savedImageId);
