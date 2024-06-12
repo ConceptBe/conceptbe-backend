@@ -20,7 +20,7 @@ public class ImageService {
 
     @Value("${s3.bucket}")
     private String bucket;
-//    @Value("${cloud-front-url}")
+    //    @Value("${cloud-front-url}")
 //    private String cloudFrontUrl;
     private final AmazonS3 amazonS3;
     private final ImageRepository imageRepository;
@@ -94,8 +94,10 @@ public class ImageService {
         }
     }
 
-    private void delete(String fileName) {
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    public void delete(Long imageId) {
+        Image image = imageRepository.getById(imageId);
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, image.getImageUrl()));
+        imageRepository.delete(image);
     }
 
 }

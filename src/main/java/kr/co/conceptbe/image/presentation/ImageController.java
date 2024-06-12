@@ -3,6 +3,7 @@ package kr.co.conceptbe.image.presentation;
 import kr.co.conceptbe.image.application.ImageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,12 @@ public class ImageController {
         Long savedImageId = imageService.save(ideaId, file);
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(savedImageId);
+    }
+
+    @DeleteMapping("/{imageId}")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
+        imageService.delete(imageId);
+        return ResponseEntity.noContent().build();
     }
 
 }
