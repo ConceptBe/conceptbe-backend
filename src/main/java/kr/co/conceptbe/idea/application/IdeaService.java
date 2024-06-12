@@ -27,6 +27,8 @@ import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.dto.IdeaHitResponse;
 import kr.co.conceptbe.idea.exception.AlreadyIdeaLikeException;
 import kr.co.conceptbe.idea.exception.NotFoundIdeaLikeException;
+import kr.co.conceptbe.image.domain.Image;
+import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
@@ -52,6 +54,7 @@ public class IdeaService {
     private final HitRepository hitRepository;
     private final SkillCategoryRepository skillCategoryRepository;
     private final CommentRepository commentRepository;
+    private final ImageRepository imageRepository;
 
     public Long save(AuthCredentials authCredentials, IdeaRequest request) {
         validateMember(authCredentials);
@@ -122,11 +125,13 @@ public class IdeaService {
 
     public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea);
+        List<Image> images = imageRepository.findAllByIdeaId(ideaId);
+        IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea, images);
 
         Member member = memberRepository.getById(tokenMemberId);
 
-        Optional<Hit> hitOptional = hitRepository.findFirstByMemberAndIdeaOrderByCreatedAtDesc(member, idea);
+        Optional<Hit> hitOptional = hitRepository.findFirstByMemberAndIdeaOrderByCreatedAtDesc(
+            member, idea);
         if (hitOptional.isEmpty() || hitOptional.get().isBeforeLocalDate()) {
             Hit.ofIdeaAndMember(idea, member);
         }

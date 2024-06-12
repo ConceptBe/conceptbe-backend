@@ -11,30 +11,22 @@ import kr.co.conceptbe.image.domain.Image;
 import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.image.domain.UploadFile;
 import kr.co.conceptbe.image.exception.IdeaNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class ImageService {
 
     @Value("${s3.bucket}")
     private String bucket;
-    //    @Value("${cloud-front-url}")
-//    private String cloudFrontUrl;
     private final AmazonS3 amazonS3;
     private final ImageRepository imageRepository;
     private final IdeaValidator ideaValidator;
-
-    public ImageService(
-        AmazonS3 amazonS3,
-        ImageRepository imageRepository,
-        IdeaValidator ideaValidator
-    ) {
-        this.amazonS3 = amazonS3;
-        this.imageRepository = imageRepository;
-        this.ideaValidator = ideaValidator;
-    }
 
     public Long save(Long ideaId, MultipartFile multipartFile) {
         validateIdea(ideaId);
@@ -60,15 +52,6 @@ public class ImageService {
             throw new RuntimeException(exception);
         }
     }
-
-//    private String getUploadPath(UploadFile uploadFile) {
-//        return String.join(
-//            "/",
-//            cloudFrontUrl,
-//            uploadFile.getOriginalFilename()
-//        );
-//    }
-
 
     private void fileUpload(MultipartFile multipartFile) throws IOException {
         File tempFile = null;

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.idea.domain.Idea;
+import kr.co.conceptbe.image.application.response.ImageResponse;
+import kr.co.conceptbe.image.domain.Image;
 
 public record IdeaDetailResponse(
     Long memberId,
@@ -24,10 +26,11 @@ public record IdeaDetailResponse(
     Integer hits,
     Boolean owner,
     Boolean ownerLike,
-    Boolean ownerScrap
+    Boolean ownerScrap,
+    List<ImageResponse> imageResponses
 ) {
 
-    public static IdeaDetailResponse of(Long tokenMemberId, Idea idea) {
+    public static IdeaDetailResponse of(Long tokenMemberId, Idea idea, List<Image> images) {
         return new IdeaDetailResponse(
             idea.getCreator().getId(),
             idea.getCreator().getProfileImageUrl(),
@@ -48,7 +51,8 @@ public record IdeaDetailResponse(
             idea.getHitsCount(),
             idea.isOwner(tokenMemberId),
             idea.isOwnerLike(tokenMemberId),
-            idea.isOwnerScrap(tokenMemberId)
+            idea.isOwnerScrap(tokenMemberId),
+            images.stream().map(ImageResponse::from).toList()
         );
     }
 }
