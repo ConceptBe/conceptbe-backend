@@ -94,8 +94,8 @@ public class ImageService {
         }
     }
 
-    private void delete(String key) {
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, key));
+    private void delete(String fileName) {
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
 }
