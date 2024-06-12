@@ -35,3 +35,8 @@ oauth:
 jwt:
   secret-key: ${JWT_SECRET_KEY}
   access-token-expiration-time: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME}
+
+s3:
+  bucket: ${BUCKET}
+
+cloud-front-url: ${CLOUD_FRONT_URL}
