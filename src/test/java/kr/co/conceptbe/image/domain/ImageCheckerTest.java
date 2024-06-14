@@ -6,8 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.util.List;
 import java.util.stream.Stream;
-import kr.co.conceptbe.image.exception.ExceedImageSizeException;
-import kr.co.conceptbe.image.exception.ImagesEmptyException;
+import kr.co.conceptbe.image.exception.InvalidImagesSizeException;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -25,25 +24,25 @@ class ImageCheckerTest {
         ImageChecker imageChecker = new ImageChecker();
 
         //when
-        Executable executable = () -> imageChecker.validateAdditionImagesSize(additionImagesSize);
+        Executable executable = () -> imageChecker.validateImagesSize(additionImagesSize);
 
         //then
         assertDoesNotThrow(executable);
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, -1, 4})
+    @ValueSource(ints = {-1, 4})
     void 추가하려는_이미지_개수가_비정상적인_것을_확인한다(int additionImagesSize) {
         //given
         ImageChecker imageChecker = new ImageChecker();
 
         //when
         ThrowingCallable throwingCallable =
-            () -> imageChecker.validateAdditionImagesSize(additionImagesSize);
+            () -> imageChecker.validateImagesSize(additionImagesSize);
 
         //then
         assertThatThrownBy(throwingCallable)
-            .isInstanceOfAny(ImagesEmptyException.class, ExceedImageSizeException.class);
+            .isInstanceOfAny(InvalidImagesSizeException.class);
     }
 
     @Test
@@ -103,7 +102,7 @@ class ImageCheckerTest {
 
         //then
         assertThatThrownBy(throwingCallable)
-            .isInstanceOf(ExceedImageSizeException.class);
+            .isInstanceOf(InvalidImagesSizeException.class);
     }
 
     static Stream<Arguments> validImageUpdate() {
