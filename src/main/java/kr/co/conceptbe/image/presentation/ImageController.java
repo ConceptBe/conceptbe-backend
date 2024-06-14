@@ -42,7 +42,7 @@ public class ImageController implements ImageApi {
         @RequestPart List<MultipartFile> additionFiles
     ) {
         imageService.update(ideaId, imageIds, additionFiles);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 }
