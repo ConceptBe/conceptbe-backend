@@ -7,12 +7,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.image.domain.IdeaValidator;
 import kr.co.conceptbe.image.domain.Image;
 import kr.co.conceptbe.image.domain.ImageChecker;
 import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.image.domain.UploadFile;
-import kr.co.conceptbe.image.exception.IdeaNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,17 +31,10 @@ public class ImageService {
     private final IdeaValidator ideaValidator;
     private final ImageChecker imageChecker;
 
-    public void save(Long ideaId, List<MultipartFile> files) {
-        validateIdea(ideaId);
+    public void save(Long ideaId, AuthCredentials authCredentials, List<MultipartFile> files) {
+        ideaValidator.validateIdea(ideaId, authCredentials.id());
         imageChecker.validateAdditionImagesSize(files.size());
         uploadImages(ideaId, files);
-    }
-
-    private void validateIdea(Long ideaId) {
-        if (ideaValidator.existsIdea(ideaId)) {
-            return;
-        }
-        throw new IdeaNotFoundException();
     }
 
     private void uploadImages(Long ideaId, List<MultipartFile> files) {
@@ -85,8 +78,13 @@ public class ImageService {
         }
     }
 
-    public void update(Long ideaId, List<Long> imageIds, List<MultipartFile> additionFiles) {
-        validateIdea(ideaId);
+    public void update(
+        Long ideaId,
+        AuthCredentials authCredentials,
+        List<Long> imageIds,
+        List<MultipartFile> additionFiles
+    ) {
+        ideaValidator.validateIdea(ideaId, authCredentials.id());
         List<Image> imagesToDeleted = getImagesToDeleted(ideaId, imageIds, additionFiles.size());
         imagesToDeleted.forEach(this::deleteImage);
         additionFiles.forEach(this::upload);

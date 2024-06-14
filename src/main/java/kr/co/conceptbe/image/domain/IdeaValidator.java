@@ -1,10 +1,10 @@
 package kr.co.conceptbe.image.domain;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public interface IdeaValidator {
 
-    boolean existsIdea(Long ideaId);
+    void validateIdea(Long ideaId, Long memberId);
 
 }

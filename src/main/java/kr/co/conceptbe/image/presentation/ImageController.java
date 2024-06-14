@@ -3,6 +3,8 @@ package kr.co.conceptbe.image.presentation;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
+import kr.co.conceptbe.common.auth.Auth;
 import kr.co.conceptbe.image.application.ImageService;
 import kr.co.conceptbe.image.presentation.doc.ImageApi;
 import org.springframework.http.HttpStatus;
@@ -29,22 +31,25 @@ public class ImageController implements ImageApi {
 
     @PostMapping(value = "/{ideaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> saveImage(
+        @Auth AuthCredentials authCredentials,
         @PathVariable Long ideaId,
         @RequestPart List<MultipartFile> files
     ) {
-        imageService.save(ideaId, files);
+        imageService.save(ideaId, authCredentials, files);
         return ResponseEntity.status(HttpStatus.CREATED)
             .build();
     }
 
     @PatchMapping(value = "/{ideaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateImages(
+        @Auth AuthCredentials authCredentials,
         @PathVariable Long ideaId,
         @RequestParam(value = "image-ids", required = false) List<Long> imageIds,
         @RequestPart(required = false) List<MultipartFile> additionFiles
     ) {
         imageService.update(
             ideaId,
+            authCredentials,
             Optional.ofNullable(imageIds)
                 .orElseGet(Collections::emptyList),
             Optional.ofNullable(additionFiles)
