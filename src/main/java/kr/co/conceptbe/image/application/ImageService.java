@@ -12,6 +12,7 @@ import kr.co.conceptbe.image.domain.Image;
 import kr.co.conceptbe.image.domain.ImageChecker;
 import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.image.domain.UploadFile;
+import kr.co.conceptbe.image.exception.IdeaNotFoundException;
 import kr.co.conceptbe.image.exception.ImagesEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,8 +42,7 @@ public class ImageService {
         if (ideaValidator.existsIdea(ideaId)) {
             return;
         }
-        return;
-//        throw new IdeaNotFoundException();
+        throw new IdeaNotFoundException();
     }
 
     private void validateImagesEmpty(List<MultipartFile> files) {
