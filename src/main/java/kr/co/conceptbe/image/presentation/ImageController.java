@@ -35,7 +35,7 @@ public class ImageController implements ImageApi {
             .build();
     }
 
-    @PatchMapping("/{ideaId}")
+    @PatchMapping(value = "/{ideaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateImages(
         @PathVariable Long ideaId,
         @RequestParam("image-ids") List<Long> imageIds,
