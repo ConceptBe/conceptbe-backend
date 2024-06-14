@@ -34,7 +34,7 @@ public class ImageService {
 
     public void save(Long ideaId, List<MultipartFile> files) {
         validateIdea(ideaId);
-        validateImagesEmpty(files);
+        validateImagesSize(files);
         uploadImages(ideaId, files);
     }
 
@@ -45,8 +45,8 @@ public class ImageService {
         throw new IdeaNotFoundException();
     }
 
-    private void validateImagesEmpty(List<MultipartFile> files) {
-        if (!files.isEmpty()) {
+    private void validateImagesSize(List<MultipartFile> files) {
+        if (!files.isEmpty() && files.size() <= ImageChecker.IMAGE_SIZE_UPPER_BOUND_INCLUSIVE) {
             return;
         }
         throw new ImagesEmptyException();

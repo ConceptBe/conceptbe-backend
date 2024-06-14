@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ImageChecker {
 
-    private static final int IMAGE_SIZE_UPPER_BOUND_INCLUSIVE = 3;
+    public static final int IMAGE_SIZE_UPPER_BOUND_INCLUSIVE = 3;
 
     public List<Long> getImageIdsToDeleted(
         List<Long> originalImageIds,
