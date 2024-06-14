@@ -13,7 +13,6 @@ import kr.co.conceptbe.image.domain.ImageChecker;
 import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.image.domain.UploadFile;
 import kr.co.conceptbe.image.exception.IdeaNotFoundException;
-import kr.co.conceptbe.image.exception.ImagesEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class ImageService {
 
     public void save(Long ideaId, List<MultipartFile> files) {
         validateIdea(ideaId);
-        validateImagesSize(files);
+        imageChecker.validateAdditionImagesSize(files.size());
         uploadImages(ideaId, files);
     }
 
@@ -43,13 +42,6 @@ public class ImageService {
             return;
         }
         throw new IdeaNotFoundException();
-    }
-
-    private void validateImagesSize(List<MultipartFile> files) {
-        if (!files.isEmpty() && files.size() <= ImageChecker.IMAGE_SIZE_UPPER_BOUND_INCLUSIVE) {
-            return;
-        }
-        throw new ImagesEmptyException();
     }
 
     private void uploadImages(Long ideaId, List<MultipartFile> files) {

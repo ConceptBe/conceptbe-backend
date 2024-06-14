@@ -1,6 +1,8 @@
 package kr.co.conceptbe.image.presentation;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import kr.co.conceptbe.image.application.ImageService;
 import kr.co.conceptbe.image.presentation.doc.ImageApi;
 import org.springframework.http.HttpStatus;
@@ -38,10 +40,16 @@ public class ImageController implements ImageApi {
     @PatchMapping(value = "/{ideaId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateImages(
         @PathVariable Long ideaId,
-        @RequestParam("image-ids") List<Long> imageIds,
-        @RequestPart List<MultipartFile> additionFiles
+        @RequestParam(value = "image-ids", required = false) List<Long> imageIds,
+        @RequestPart(required = false) List<MultipartFile> additionFiles
     ) {
-        imageService.update(ideaId, imageIds, additionFiles);
+        imageService.update(
+            ideaId,
+            Optional.ofNullable(imageIds)
+                .orElseGet(Collections::emptyList),
+            Optional.ofNullable(additionFiles)
+                .orElseGet(Collections::emptyList)
+        );
         return ResponseEntity.ok().build();
     }
 
