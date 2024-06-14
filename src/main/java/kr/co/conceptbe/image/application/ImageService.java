@@ -2,7 +2,6 @@ package kr.co.conceptbe.image.application;
 
 import java.util.List;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
-import kr.co.conceptbe.image.domain.IdeaValidator;
 import kr.co.conceptbe.image.domain.Image;
 import kr.co.conceptbe.image.domain.ImageChecker;
 import kr.co.conceptbe.image.domain.ImageRepository;
@@ -17,13 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageService {
 
     private final ImageRepository imageRepository;
-    private final IdeaValidator ideaValidator;
     private final ImageChecker imageChecker;
     private final S3Client s3Client;
 
-    public void save(Long ideaId, AuthCredentials authCredentials, List<MultipartFile> files) {
-        ideaValidator.validateIdea(ideaId, authCredentials.id());
-        imageChecker.validateAdditionImagesSize(files.size());
+    public void save(Long ideaId, List<MultipartFile> files) {
+        imageChecker.validateImagesSize(files.size());
         uploadImages(ideaId, files);
     }
 
@@ -36,11 +33,9 @@ public class ImageService {
 
     public void update(
         Long ideaId,
-        AuthCredentials authCredentials,
         List<Long> imageIds,
         List<MultipartFile> additionFiles
     ) {
-        ideaValidator.validateIdea(ideaId, authCredentials.id());
         List<Image> imagesToDeleted = getImagesToDeleted(ideaId, imageIds, additionFiles.size());
         imagesToDeleted.forEach(this::deleteImage);
         additionFiles.forEach(s3Client::upload);

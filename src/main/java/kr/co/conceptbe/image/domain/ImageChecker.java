@@ -1,23 +1,21 @@
 package kr.co.conceptbe.image.domain;
 
 import java.util.List;
-import kr.co.conceptbe.image.exception.ExceedImageSizeException;
-import kr.co.conceptbe.image.exception.ImagesEmptyException;
+import kr.co.conceptbe.image.exception.InvalidImagesSizeException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ImageChecker {
 
-    public static final int ADDITION_IMAGE_SIZE_LOWER_BOUND_INCLUSIVE = 1;
-    public static final int IMAGE_SIZE_UPPER_BOUND_INCLUSIVE = 3;
+    private static final int IMAGE_SIZE_LOWER_BOUND_INCLUSIVE = 0;
+    private static final int IMAGE_SIZE_UPPER_BOUND_INCLUSIVE = 3;
 
-    public void validateAdditionImagesSize(int additionImagesSize) {
-        if (additionImagesSize < ADDITION_IMAGE_SIZE_LOWER_BOUND_INCLUSIVE) {
-            throw new ImagesEmptyException();
+    public void validateImagesSize(int additionImagesSize) {
+        if (IMAGE_SIZE_LOWER_BOUND_INCLUSIVE <= additionImagesSize
+            && additionImagesSize <= IMAGE_SIZE_UPPER_BOUND_INCLUSIVE) {
+            return;
         }
-        if (IMAGE_SIZE_UPPER_BOUND_INCLUSIVE < additionImagesSize) {
-            throw new ExceedImageSizeException(IMAGE_SIZE_UPPER_BOUND_INCLUSIVE);
-        }
+        throw new InvalidImagesSizeException(IMAGE_SIZE_UPPER_BOUND_INCLUSIVE);
     }
 
     public List<Long> getImageIdsToDeleted(
@@ -36,12 +34,7 @@ public class ImageChecker {
     ) {
         int imageSizeAfterDeleted = originalImageSize - deletedImageSize;
         int imageSizeAfterUpdate = imageSizeAfterDeleted + additionImageSize;
-
-        if (imageSizeAfterUpdate <= IMAGE_SIZE_UPPER_BOUND_INCLUSIVE) {
-            return;
-        }
-
-        throw new ExceedImageSizeException(IMAGE_SIZE_UPPER_BOUND_INCLUSIVE);
+        validateImagesSize(imageSizeAfterUpdate);
     }
 
 }

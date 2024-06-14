@@ -18,7 +18,9 @@ public record IdeaUpdateRequest(
     @ArraySchema(arraySchema = @Schema(description = "목적 ID 목록", example = "[\"1\", \"2\"]"))
     List<Long> purposeIds,
     @ArraySchema(arraySchema = @Schema(description = "팀원 ID 목록", example = "[\"1\", \"2\", \"3\", \"4\"]"))
-    List<Long> skillCategoryIds
+    List<Long> skillCategoryIds,
+    @ArraySchema(arraySchema = @Schema(description = "현재 게시글에 포함된 이미지 ID 목록", example = "[\"1\", \"2\", \"3\", \"4\"]"))
+    List<Long> imageIds
 ) {
 
 }
