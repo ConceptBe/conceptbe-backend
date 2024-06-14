@@ -12,11 +12,12 @@ public class ImageChecker {
     public static final int IMAGE_SIZE_UPPER_BOUND_INCLUSIVE = 3;
 
     public void validateAdditionImagesSize(int additionImagesSize) {
-        if (ADDITION_IMAGE_SIZE_LOWER_BOUND_INCLUSIVE <= additionImagesSize
-            && additionImagesSize <= IMAGE_SIZE_UPPER_BOUND_INCLUSIVE) {
-            return;
+        if (additionImagesSize < ADDITION_IMAGE_SIZE_LOWER_BOUND_INCLUSIVE) {
+            throw new ImagesEmptyException();
         }
-        throw new ImagesEmptyException();
+        if (IMAGE_SIZE_UPPER_BOUND_INCLUSIVE < additionImagesSize) {
+            throw new ExceedImageSizeException(IMAGE_SIZE_UPPER_BOUND_INCLUSIVE);
+        }
     }
 
     public List<Long> getImageIdsToDeleted(
