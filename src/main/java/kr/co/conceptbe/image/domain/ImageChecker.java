@@ -9,7 +9,10 @@ public class ImageChecker {
 
     private static final int IMAGE_SIZE_UPPER_BOUND_INCLUSIVE = 3;
 
-    public List<Long> imageIdsToDeleted(List<Long> originalImageIds, List<Long> changedImageIds) {
+    public List<Long> getImageIdsToDeleted(
+        List<Long> originalImageIds,
+        List<Long> changedImageIds
+    ) {
         return originalImageIds.stream()
             .filter(id -> !changedImageIds.contains(id))
             .toList();

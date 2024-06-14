@@ -6,10 +6,11 @@ import kr.co.conceptbe.image.presentation.doc.ImageApi;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,9 +35,13 @@ public class ImageController implements ImageApi {
             .build();
     }
 
-    @DeleteMapping("/{imageId}")
-    public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
-        imageService.delete(imageId);
+    @PatchMapping("/{ideaId}")
+    public ResponseEntity<Void> updateImages(
+        @PathVariable Long ideaId,
+        @RequestParam("image-ids") List<Long> imageIds,
+        @RequestPart List<MultipartFile> additionFiles
+    ) {
+        imageService.update(ideaId, imageIds, additionFiles);
         return ResponseEntity.noContent().build();
     }
 

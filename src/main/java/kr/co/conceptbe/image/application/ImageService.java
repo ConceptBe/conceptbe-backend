@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Objects;
 import kr.co.conceptbe.image.domain.IdeaValidator;
 import kr.co.conceptbe.image.domain.Image;
+import kr.co.conceptbe.image.domain.ImageChecker;
 import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.image.domain.UploadFile;
-import kr.co.conceptbe.image.exception.IdeaNotFoundException;
 import kr.co.conceptbe.image.exception.ImagesEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +29,7 @@ public class ImageService {
     private final AmazonS3 amazonS3;
     private final ImageRepository imageRepository;
     private final IdeaValidator ideaValidator;
+    private final ImageChecker imageChecker;
 
     public void save(Long ideaId, List<MultipartFile> files) {
         validateIdea(ideaId);
@@ -40,7 +41,8 @@ public class ImageService {
         if (ideaValidator.existsIdea(ideaId)) {
             return;
         }
-        throw new IdeaNotFoundException();
+        return;
+//        throw new IdeaNotFoundException();
     }
 
     private void validateImagesEmpty(List<MultipartFile> files) {
@@ -91,8 +93,40 @@ public class ImageService {
         }
     }
 
-    public void delete(Long imageId) {
-        Image image = imageRepository.getById(imageId);
+    public void update(Long ideaId, List<Long> imageIds, List<MultipartFile> additionFiles) {
+        validateIdea(ideaId);
+        List<Image> imagesToDeleted = getImagesToDeleted(ideaId, imageIds, additionFiles.size());
+        imagesToDeleted.forEach(this::deleteImage);
+        additionFiles.forEach(this::upload);
+    }
+
+    private List<Image> getImagesToDeleted(
+        Long ideaId,
+        List<Long> imageIds,
+        int additionFilesSize
+    ) {
+        List<Image> savedImages = imageRepository.findAllByIdeaId(ideaId);
+        List<Long> imageIdsToDeleted = imageChecker.getImageIdsToDeleted(
+            extractIds(savedImages),
+            imageIds
+        );
+        imageChecker.validateTotalImageSize(
+            savedImages.size(),
+            imageIdsToDeleted.size(),
+            additionFilesSize
+        );
+        return savedImages.stream()
+            .filter(image -> imageIdsToDeleted.contains(image.getId()))
+            .toList();
+    }
+
+    private List<Long> extractIds(List<Image> savedImages) {
+        return savedImages.stream()
+            .map(Image::getId)
+            .toList();
+    }
+
+    private void deleteImage(Image image) {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, image.getImageUrl()));
         imageRepository.delete(image);
     }
