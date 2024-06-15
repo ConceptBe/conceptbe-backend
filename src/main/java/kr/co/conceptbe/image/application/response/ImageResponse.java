@@ -1,7 +1,6 @@
 package kr.co.conceptbe.image.application.response;
 
 import kr.co.conceptbe.image.domain.Image;
-import org.springframework.beans.factory.annotation.Value;
 
 public record ImageResponse(
     Long id,
@@ -9,10 +8,7 @@ public record ImageResponse(
     String imageUrl
 ) {
 
-    @Value("${cloud-front-url}")
-    private static String cloudFrontUrl;
-
-    public static ImageResponse from(Image image) {
+    public static ImageResponse of(Image image, String cloudFrontUrl) {
         return new ImageResponse(
             image.getId(),
             image.getIdeaId(),

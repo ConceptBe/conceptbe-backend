@@ -30,7 +30,7 @@ public record IdeaDetailResponse(
     List<ImageResponse> imageResponses
 ) {
 
-    public static IdeaDetailResponse of(Long tokenMemberId, Idea idea, List<Image> images) {
+    public static IdeaDetailResponse of(Long tokenMemberId, Idea idea, List<ImageResponse> imageResponses) {
         return new IdeaDetailResponse(
             idea.getCreator().getId(),
             idea.getCreator().getProfileImageUrl(),
@@ -52,7 +52,7 @@ public record IdeaDetailResponse(
             idea.isOwner(tokenMemberId),
             idea.isOwnerLike(tokenMemberId),
             idea.isOwnerScrap(tokenMemberId),
-            images.stream().map(ImageResponse::from).toList()
+            imageResponses
         );
     }
 }

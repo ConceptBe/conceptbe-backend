@@ -1,11 +1,12 @@
 package kr.co.conceptbe.image.application;
 
 import java.util.List;
-import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
+import kr.co.conceptbe.image.application.response.ImageResponse;
 import kr.co.conceptbe.image.domain.Image;
 import kr.co.conceptbe.image.domain.ImageChecker;
 import kr.co.conceptbe.image.domain.ImageRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ImageService {
 
+    @Value("${cloud-front-url}")
+    private String cloudFrontUrl;
     private final ImageRepository imageRepository;
     private final ImageChecker imageChecker;
     private final S3Client s3Client;
@@ -70,6 +73,13 @@ public class ImageService {
     private void deleteImage(Image image) {
         s3Client.delete(image.getImageUrl());
         imageRepository.delete(image);
+    }
+
+    public List<ImageResponse> getImageResponses(Long ideaId) {
+        return imageRepository.findAllByIdeaId(ideaId)
+            .stream()
+            .map(image -> ImageResponse.of(image, cloudFrontUrl))
+            .toList();
     }
 
 }

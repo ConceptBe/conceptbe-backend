@@ -28,7 +28,6 @@ import kr.co.conceptbe.idea.dto.IdeaHitResponse;
 import kr.co.conceptbe.idea.exception.AlreadyIdeaLikeException;
 import kr.co.conceptbe.idea.exception.NotFoundIdeaLikeException;
 import kr.co.conceptbe.image.application.ImageService;
-import kr.co.conceptbe.image.domain.Image;
 import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
@@ -131,8 +130,11 @@ public class IdeaService {
 
     public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        List<Image> images = imageRepository.findAllByIdeaId(ideaId);
-        IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea, images);
+        IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(
+            tokenMemberId,
+            idea,
+            imageService.getImageResponses(ideaId)
+        );
 
         Member member = memberRepository.getById(tokenMemberId);
 
