@@ -5,7 +5,9 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.comment.dto.CommentParentResponse;
 import kr.co.conceptbe.common.auth.Auth;
@@ -24,16 +26,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,24 +47,35 @@ public class IdeaController implements IdeaApi {
 
     private final IdeaService ideaService;
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> addIdea(
         @Parameter(hidden = true) @Auth AuthCredentials auth,
-        @RequestBody IdeaRequest request
+        @RequestPart IdeaRequest request,
+        @RequestPart List<MultipartFile> files
     ) {
-        Long savedId = ideaService.save(auth, request);
+        Long savedId = ideaService.save(auth, request, files);
 
         return ResponseEntity.created(URI.create("/ideas/" + savedId))
             .build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = {
+        MediaType.APPLICATION_JSON_VALUE,
+        MediaType.MULTIPART_FORM_DATA_VALUE
+    })
     public ResponseEntity<Void> modifyIdea(
         @Parameter(hidden = true) @Auth AuthCredentials auth,
-        @RequestBody IdeaUpdateRequest request,
-        @PathVariable Long id
+        @RequestPart IdeaUpdateRequest request,
+        @PathVariable Long id,
+        @RequestPart(required = false) List<MultipartFile> files
     ) {
-        ideaService.updateIdea(auth, id, request);
+        ideaService.updateIdea(
+            auth,
+            id,
+            request,
+            Optional.ofNullable(files)
+                .orElseGet(Collections::emptyList)
+        );
 
         return ResponseEntity.noContent().build();
     }

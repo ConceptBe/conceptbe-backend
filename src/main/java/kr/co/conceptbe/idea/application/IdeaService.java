@@ -27,6 +27,8 @@ import kr.co.conceptbe.idea.dto.IdeaDetailResponse;
 import kr.co.conceptbe.idea.dto.IdeaHitResponse;
 import kr.co.conceptbe.idea.exception.AlreadyIdeaLikeException;
 import kr.co.conceptbe.idea.exception.NotFoundIdeaLikeException;
+import kr.co.conceptbe.image.application.ImageService;
+import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
@@ -37,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -52,10 +55,15 @@ public class IdeaService {
     private final HitRepository hitRepository;
     private final SkillCategoryRepository skillCategoryRepository;
     private final CommentRepository commentRepository;
+    private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
-    public Long save(AuthCredentials authCredentials, IdeaRequest request) {
+    public Long save(
+        AuthCredentials authCredentials,
+        IdeaRequest request,
+        List<MultipartFile> files
+    ) {
         validateMember(authCredentials);
-
         Idea idea = Idea.of(
             request.title(),
             request.introduce(),
@@ -66,7 +74,7 @@ public class IdeaService {
             purposeRepository.findByIdIn(request.purposeIds()),
             skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
-
+        imageService.save(idea.getId(), files);
         return ideaRepository.save(idea).getId();
     }
 
@@ -122,11 +130,16 @@ public class IdeaService {
 
     public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
-        IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(tokenMemberId, idea);
+        IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(
+            tokenMemberId,
+            idea,
+            imageService.getImageResponses(ideaId)
+        );
 
         Member member = memberRepository.getById(tokenMemberId);
 
-        Optional<Hit> hitOptional = hitRepository.findFirstByMemberAndIdeaOrderByCreatedAtDesc(member, idea);
+        Optional<Hit> hitOptional = hitRepository.findFirstByMemberAndIdeaOrderByCreatedAtDesc(
+            member, idea);
         if (hitOptional.isEmpty() || hitOptional.get().isBeforeLocalDate()) {
             Hit.ofIdeaAndMember(idea, member);
         }
@@ -186,7 +199,12 @@ public class IdeaService {
             .toList();
     }
 
-    public void updateIdea(AuthCredentials auth, Long id, IdeaUpdateRequest request) {
+    public void updateIdea(
+        AuthCredentials auth,
+        Long id,
+        IdeaUpdateRequest request,
+        List<MultipartFile> files
+    ) {
         Idea idea = ideaRepository.getById(id);
         validateWriter(auth, idea);
         idea.update(
@@ -198,6 +216,7 @@ public class IdeaService {
             purposeRepository.findByIdIn(request.purposeIds()),
             skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
+        imageService.update(idea.getId(), request.imageIds(), files);
     }
 
     private void validateWriter(AuthCredentials auth, Idea idea) {

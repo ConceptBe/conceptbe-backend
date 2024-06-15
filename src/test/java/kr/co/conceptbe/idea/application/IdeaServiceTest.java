@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -225,7 +226,7 @@ class IdeaServiceTest {
         );
 
         // when
-        Long savedIdeaId = ideaService.save(authCredentials, ideaRequest);
+        Long savedIdeaId = ideaService.save(authCredentials, ideaRequest, List.of());
         Idea savedIdea = ideaRepository.findById(savedIdeaId).get();
 
         // then
@@ -268,7 +269,8 @@ class IdeaServiceTest {
         // when
         ThrowingCallable throwingCallable = () -> ideaService.save(
             authCredentials,
-            ideaRequest
+            ideaRequest,
+            List.of()
         );
 
         // then
@@ -290,14 +292,16 @@ class IdeaServiceTest {
             region.getId(),
             getBranchesByCount(VALID_BRANCH_COUNT).stream().map(Branch::getId).toList(),
             getPurposesByCount(VALID_PURPOSE_COUNT).stream().map(Purpose::getId).toList(),
-            getSkillCategoriesByCount(VALID_SKILL_COUNT).stream().map(SkillCategory::getId).toList()
+            getSkillCategoriesByCount(VALID_SKILL_COUNT).stream().map(SkillCategory::getId).toList(),
+            Collections.emptyList()
         );
 
         // when
         ideaService.updateIdea(
             authCredentials,
             savedIdea.getId(),
-            ideaUpdateRequest
+            ideaUpdateRequest,
+            Collections.emptyList()
         );
         Idea ideaByFindById = ideaRepository.findById(savedIdea.getId()).get();
 
@@ -336,14 +340,16 @@ class IdeaServiceTest {
             region.getId(),
             getBranchesByCount(branchCount).stream().map(Branch::getId).toList(),
             getPurposesByCount(purposeCount).stream().map(Purpose::getId).toList(),
-            getSkillCategoriesByCount(skillCount).stream().map(SkillCategory::getId).toList()
+            getSkillCategoriesByCount(skillCount).stream().map(SkillCategory::getId).toList(),
+            Collections.emptyList()
         );
 
         // when
         ThrowingCallable throwingCallable = () -> ideaService.updateIdea(
             authCredentials,
             savedIdea.getId(),
-            ideaUpdateRequest
+            ideaUpdateRequest,
+            Collections.emptyList()
         );
 
         // then
@@ -372,7 +378,8 @@ class IdeaServiceTest {
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member = memberRepository.save(MemberFixture.createMember(region));
         Member notCreator = memberRepository.save(
-            MemberFixture.createMemberByOauthId(new OauthId("notAuthor", OauthServerType.KAKAO),region));
+            MemberFixture.createMemberByOauthId(new OauthId("notAuthor", OauthServerType.KAKAO),
+                region));
         Idea idea = ideaRepository.save(createValidIdea(region, member));
         Comment parentComment = Comment.createCommentAssociatedWithIdeaAndCreator("댓글", null, idea,
             member);
@@ -395,9 +402,9 @@ class IdeaServiceTest {
         // given
         Region region = regionRepository.save(Region.from("BUSAN"));
         Member member1 = memberRepository.save(
-            MemberFixture.createMemberByOauthId(new OauthId("1", OauthServerType.KAKAO),region));
+            MemberFixture.createMemberByOauthId(new OauthId("1", OauthServerType.KAKAO), region));
         Member member2 = memberRepository.save(
-            MemberFixture.createMemberByOauthId(new OauthId("2", OauthServerType.KAKAO),region));
+            MemberFixture.createMemberByOauthId(new OauthId("2", OauthServerType.KAKAO), region));
         Idea idea = ideaRepository.save(createValidIdea(region, member1));
 
         // when

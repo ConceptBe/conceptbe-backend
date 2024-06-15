@@ -21,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Idea", description = "게시글 API")
 public interface IdeaApi {
@@ -28,14 +30,16 @@ public interface IdeaApi {
     @Operation(summary = "게시글 작성")
     ResponseEntity<Void> addIdea(
         @Parameter(hidden = true) @Auth AuthCredentials auth,
-        @RequestBody IdeaRequest request
+        @RequestPart IdeaRequest request,
+        @RequestPart(required = false) List<MultipartFile> files
     );
 
     @Operation(summary = "게시글 수정")
     ResponseEntity<Void> modifyIdea(
         @Parameter(hidden = true) @Auth AuthCredentials auth,
-        @RequestBody IdeaUpdateRequest request,
-        @PathVariable Long id
+        @RequestPart IdeaUpdateRequest request,
+        @PathVariable Long id,
+        @RequestPart List<MultipartFile> files
     );
 
     @Operation(summary = "게시글 삭제")
