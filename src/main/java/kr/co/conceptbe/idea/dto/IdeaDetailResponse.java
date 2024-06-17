@@ -5,7 +5,6 @@ import java.util.List;
 import kr.co.conceptbe.comment.Comment;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.image.application.response.ImageResponse;
-import kr.co.conceptbe.image.domain.Image;
 
 public record IdeaDetailResponse(
     Long memberId,
@@ -30,7 +29,8 @@ public record IdeaDetailResponse(
     List<ImageResponse> imageResponses
 ) {
 
-    public static IdeaDetailResponse of(Long tokenMemberId, Idea idea, List<ImageResponse> imageResponses) {
+    public static IdeaDetailResponse of(Long tokenMemberId, Idea idea,
+        List<ImageResponse> imageResponses) {
         return new IdeaDetailResponse(
             idea.getCreator().getId(),
             idea.getCreator().getProfileImageUrl(),
