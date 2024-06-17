@@ -28,7 +28,6 @@ import kr.co.conceptbe.idea.dto.IdeaHitResponse;
 import kr.co.conceptbe.idea.exception.AlreadyIdeaLikeException;
 import kr.co.conceptbe.idea.exception.NotFoundIdeaLikeException;
 import kr.co.conceptbe.image.application.ImageService;
-import kr.co.conceptbe.image.domain.ImageRepository;
 import kr.co.conceptbe.member.domain.Member;
 import kr.co.conceptbe.member.exception.UnAuthorizedMemberException;
 import kr.co.conceptbe.member.persistence.MemberRepository;
@@ -55,13 +54,12 @@ public class IdeaService {
     private final HitRepository hitRepository;
     private final SkillCategoryRepository skillCategoryRepository;
     private final CommentRepository commentRepository;
-    private final ImageRepository imageRepository;
     private final ImageService imageService;
 
     public Long save(
         AuthCredentials authCredentials,
         IdeaRequest request,
-        List<MultipartFile> files
+        List<MultipartFile> images
     ) {
         validateMember(authCredentials);
         Idea idea = Idea.of(
@@ -74,7 +72,7 @@ public class IdeaService {
             purposeRepository.findByIdIn(request.purposeIds()),
             skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
-        imageService.save(idea.getId(), files);
+        imageService.save(idea.getId(), images);
         return ideaRepository.save(idea).getId();
     }
 
@@ -203,7 +201,7 @@ public class IdeaService {
         AuthCredentials auth,
         Long id,
         IdeaUpdateRequest request,
-        List<MultipartFile> files
+        List<MultipartFile> images
     ) {
         Idea idea = ideaRepository.getById(id);
         validateWriter(auth, idea);
@@ -216,7 +214,7 @@ public class IdeaService {
             purposeRepository.findByIdIn(request.purposeIds()),
             skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
-        imageService.update(idea.getId(), request.imageIds(), files);
+        imageService.update(idea.getId(), request.imageIds(), images);
     }
 
     private void validateWriter(AuthCredentials auth, Idea idea) {

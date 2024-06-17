@@ -51,9 +51,14 @@ public class IdeaController implements IdeaApi {
     public ResponseEntity<Void> addIdea(
         @Parameter(hidden = true) @Auth AuthCredentials auth,
         @RequestPart IdeaRequest request,
-        @RequestPart List<MultipartFile> files
+        @RequestPart(required = false) List<MultipartFile> images
     ) {
-        Long savedId = ideaService.save(auth, request, files);
+        Long savedId = ideaService.save(
+            auth,
+            request,
+            Optional.ofNullable(images)
+                .orElseGet(Collections::emptyList)
+        );
 
         return ResponseEntity.created(URI.create("/ideas/" + savedId))
             .build();
@@ -67,13 +72,13 @@ public class IdeaController implements IdeaApi {
         @Parameter(hidden = true) @Auth AuthCredentials auth,
         @RequestPart IdeaUpdateRequest request,
         @PathVariable Long id,
-        @RequestPart(required = false) List<MultipartFile> files
+        @RequestPart(required = false) List<MultipartFile> images
     ) {
         ideaService.updateIdea(
             auth,
             id,
             request,
-            Optional.ofNullable(files)
+            Optional.ofNullable(images)
                 .orElseGet(Collections::emptyList)
         );
 
