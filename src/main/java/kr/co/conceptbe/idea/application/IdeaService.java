@@ -72,8 +72,9 @@ public class IdeaService {
             purposeRepository.findByIdIn(request.purposeIds()),
             skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
-        imageService.save(idea.getId(), images);
-        return ideaRepository.save(idea).getId();
+        Idea savedIdea=ideaRepository.save(idea);
+        imageService.save(savedIdea.getId(), images);
+        return savedIdea.getId();
     }
 
     private void validateMember(AuthCredentials authCredentials) {
