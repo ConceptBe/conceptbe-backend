@@ -41,7 +41,10 @@ public class ImageService {
     ) {
         List<Image> imagesToDeleted = getImagesToDeleted(ideaId, imageIds, additionFiles.size());
         imagesToDeleted.forEach(this::deleteImage);
-        additionFiles.forEach(s3Client::upload);
+        additionFiles.stream()
+            .map(s3Client::upload)
+            .map(imageUrl -> new Image(ideaId, imageUrl))
+            .forEach(imageRepository::save);
     }
 
     private List<Image> getImagesToDeleted(
