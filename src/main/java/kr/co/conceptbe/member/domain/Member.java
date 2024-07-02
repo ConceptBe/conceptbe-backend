@@ -56,7 +56,7 @@ public class Member extends BaseTimeEntity {
     @Embedded
     private Nickname nickname;
 
-    @Column(nullable = false)
+    @Column
     private String profileImageUrl;
 
     @Column(nullable = false)
