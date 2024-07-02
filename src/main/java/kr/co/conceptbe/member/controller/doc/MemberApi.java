@@ -58,7 +58,7 @@ public interface MemberApi {
 
     @Operation(summary = "회원 탈퇴")
     ResponseEntity<Void> deleteMember(
-        @Auth AuthCredentials authCredentials,
+        @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
         @PathVariable Long id
     );
 }
