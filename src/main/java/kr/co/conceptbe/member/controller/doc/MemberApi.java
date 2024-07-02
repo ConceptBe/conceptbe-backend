@@ -12,9 +12,7 @@ import kr.co.conceptbe.member.application.dto.GetMemberProfileResponse;
 import kr.co.conceptbe.member.application.dto.MemberIdeaResponse;
 import kr.co.conceptbe.member.application.dto.UpdateMemberProfileRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -54,7 +52,7 @@ public interface MemberApi {
 
     @Operation(summary = "회원 프로필 이미지 삭제")
     ResponseEntity<Void> deleteMemberProfileImage(
-        @Auth AuthCredentials authCredentials,
+        @Parameter(hidden = true) @Auth AuthCredentials authCredentials,
         @PathVariable Long id
     );
 
