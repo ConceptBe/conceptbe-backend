@@ -20,7 +20,6 @@ public record SignUpRequest(
     Long mainSkillId,
 
     @Schema(description = "프로필 이미지 URL", example = "https://conceptbe.png")
-    @NotBlank(message = "프로필 이미지를 설정해주세요.")
     String profileImageUrl,
 
     @Schema(description = "세부 스킬 리스트")
