@@ -38,4 +38,18 @@ public class IdeaBranch {
         return new IdeaBranch(idea, branch);
     }
 
+    public boolean isParentBranch() {
+        return branch.isParentBranch();
+    }
+
+    public boolean isChildBranch() {
+        return branch.isChildBranch();
+    }
+
+    public IdeaBranch getIdeaParentBranch() {
+        Branch parentBranch = branch.getParentBranch();
+
+        return of(idea, parentBranch);
+    }
+
 }

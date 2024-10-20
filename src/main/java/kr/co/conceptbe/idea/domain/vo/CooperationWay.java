@@ -1,6 +1,7 @@
 package kr.co.conceptbe.idea.domain.vo;
 
 import java.util.Arrays;
+
 import kr.co.conceptbe.idea.exception.NotFoundCooperationWayException;
 
 public enum CooperationWay {
@@ -25,6 +26,14 @@ public enum CooperationWay {
 
     public String getValue() {
         return value;
+    }
+
+    public boolean isInclude(String value) {
+        if (this == NO_MATTER) {
+            return true;
+        }
+
+        return this.value.equals(value);
     }
 
 }
