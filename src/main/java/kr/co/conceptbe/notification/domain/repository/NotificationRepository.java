@@ -9,11 +9,11 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<IdeaNotification, Long> {
 
     @Query(value = """
-            SELECT n
-            FROM notification n
-            WHERE n.userId = :memberId and n.id < :cursorId
+            SELECT *
+            FROM notification
+            WHERE userId = :memberId and id < :cursorId
             LIMIT :limit
-            """)
+            """, nativeQuery = true)
     List<IdeaNotification> findAllNotifications(Long memberId, Long cursorId, Long limit);
 
 }
