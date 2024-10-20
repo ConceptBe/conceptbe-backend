@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import kr.co.conceptbe.auth.presentation.dto.AuthCredentials;
 import kr.co.conceptbe.bookmark.Bookmark;
 import kr.co.conceptbe.branch.domain.persistense.BranchRepository;
@@ -20,6 +21,7 @@ import kr.co.conceptbe.idea.application.response.IdeaResponse;
 import kr.co.conceptbe.idea.domain.Hit;
 import kr.co.conceptbe.idea.domain.Idea;
 import kr.co.conceptbe.idea.domain.IdeaLike;
+import kr.co.conceptbe.idea.domain.event.CreatedIdeaEvent;
 import kr.co.conceptbe.idea.domain.persistence.HitRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaLikesRepository;
 import kr.co.conceptbe.idea.domain.persistence.IdeaRepository;
@@ -35,6 +37,7 @@ import kr.co.conceptbe.purpose.domain.persistence.PurposeRepository;
 import kr.co.conceptbe.region.domain.presentation.RegionRepository;
 import kr.co.conceptbe.skill.domain.SkillCategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,25 +58,27 @@ public class IdeaService {
     private final SkillCategoryRepository skillCategoryRepository;
     private final CommentRepository commentRepository;
     private final ImageService imageService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public Long save(
-        AuthCredentials authCredentials,
-        IdeaRequest request,
-        List<MultipartFile> images
+            AuthCredentials authCredentials,
+            IdeaRequest request,
+            List<MultipartFile> images
     ) {
         validateMember(authCredentials);
         Idea idea = Idea.of(
-            request.title(),
-            request.introduce(),
-            request.cooperationWay(),
-            regionRepository.getById(request.recruitmentPlaceId()),
-            memberRepository.getById(authCredentials.id()),
-            branchRepository.findByIdIn(request.branchIds()),
-            purposeRepository.findByIdIn(request.purposeIds()),
-            skillCategoryRepository.findByIdIn(request.skillCategoryIds())
+                request.title(),
+                request.introduce(),
+                request.cooperationWay(),
+                regionRepository.getById(request.recruitmentPlaceId()),
+                memberRepository.getById(authCredentials.id()),
+                branchRepository.findByIdIn(request.branchIds()),
+                purposeRepository.findByIdIn(request.purposeIds()),
+                skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
-        Idea savedIdea=ideaRepository.save(idea);
+        Idea savedIdea = ideaRepository.save(idea);
         imageService.save(savedIdea.getId(), images);
+        applicationEventPublisher.publishEvent(new CreatedIdeaEvent(savedIdea));
         return savedIdea.getId();
     }
 
@@ -87,18 +92,18 @@ public class IdeaService {
 
     @Transactional(readOnly = true)
     public List<BestIdeaResponse> findAllBestIdea(FilteringRequest filteringRequest,
-        Pageable pageable) {
+                                                  Pageable pageable) {
         return ideaRepository.findAllByOrderByLikesDesc(filteringRequest, pageable)
-            .stream()
-            .map(BestIdeaResponse::from)
-            .toList();
+                .stream()
+                .map(BestIdeaResponse::from)
+                .toList();
     }
 
     @Transactional(readOnly = true)
     public List<IdeaResponse> findAll(
-        AuthCredentials authCredentials,
-        FilteringRequest filteringRequest,
-        Pageable pageable
+            AuthCredentials authCredentials,
+            FilteringRequest filteringRequest,
+            Pageable pageable
     ) {
         if (Objects.isNull(authCredentials)) {
             return findAllOfGuest(filteringRequest, pageable);
@@ -107,38 +112,38 @@ public class IdeaService {
         Member member = memberRepository.getById(authCredentials.id());
         Set<Idea> ideasBookmarkedByMember = getIdeasBookmarkedByMember(member);
         return ideaRepository.findAllByOrderByCreatedAtDesc(filteringRequest, pageable)
-            .stream()
-            .map(idea -> IdeaResponse.ofMember(idea, ideasBookmarkedByMember.contains(idea)))
-            .toList();
+                .stream()
+                .map(idea -> IdeaResponse.ofMember(idea, ideasBookmarkedByMember.contains(idea)))
+                .toList();
     }
 
     private List<IdeaResponse> findAllOfGuest(FilteringRequest filteringRequest,
-        Pageable pageable) {
+                                              Pageable pageable) {
         return ideaRepository.findAllByOrderByCreatedAtDesc(filteringRequest, pageable)
-            .stream()
-            .map(IdeaResponse::ofGuest)
-            .toList();
+                .stream()
+                .map(IdeaResponse::ofGuest)
+                .toList();
     }
 
     private Set<Idea> getIdeasBookmarkedByMember(Member member) {
         return member.getBookmarks()
-            .stream()
-            .map(Bookmark::getIdea)
-            .collect(Collectors.toSet());
+                .stream()
+                .map(Bookmark::getIdea)
+                .collect(Collectors.toSet());
     }
 
     public IdeaDetailResponse getDetailIdeaResponse(Long tokenMemberId, Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
         IdeaDetailResponse ideaDetailResponse = IdeaDetailResponse.of(
-            tokenMemberId,
-            idea,
-            imageService.getImageResponses(ideaId)
+                tokenMemberId,
+                idea,
+                imageService.getImageResponses(ideaId)
         );
 
         Member member = memberRepository.getById(tokenMemberId);
 
         Optional<Hit> hitOptional = hitRepository.findFirstByMemberAndIdeaOrderByCreatedAtDesc(
-            member, idea);
+                member, idea);
         if (hitOptional.isEmpty() || hitOptional.get().isBeforeLocalDate()) {
             Hit.ofIdeaAndMember(idea, member);
         }
@@ -151,9 +156,9 @@ public class IdeaService {
         Idea idea = ideaRepository.getById(ideaId);
 
         ideaLikesRepository.findByMemberAndIdea(member, idea)
-            .ifPresent(ideaLike -> {
-                throw new AlreadyIdeaLikeException();
-            });
+                .ifPresent(ideaLike -> {
+                    throw new AlreadyIdeaLikeException();
+                });
 
         IdeaLike.createAssociatedWithIdeaAndMember(idea, member);
         return idea.getId();
@@ -164,56 +169,56 @@ public class IdeaService {
         Idea idea = ideaRepository.getById(ideaId);
 
         ideaLikesRepository.findByMemberAndIdea(member, idea)
-            .orElseThrow(NotFoundIdeaLikeException::new);
+                .orElseThrow(NotFoundIdeaLikeException::new);
 
         ideaLikesRepository.deleteByMemberAndIdea(member, idea);
     }
 
     public FindIdeaWriteResponse getFindIdeaWriteResponse() {
         return FindIdeaWriteResponse.of(
-            regionRepository.findAll(),
-            branchRepository.findAll(),
-            purposeRepository.findAll(),
-            skillCategoryRepository.findAll()
+                regionRepository.findAll(),
+                branchRepository.findAll(),
+                purposeRepository.findAll(),
+                skillCategoryRepository.findAll()
         );
     }
 
     @Transactional(readOnly = true)
     public List<CommentParentResponse> getIdeaCommentResponse(Long memberId, Long ideaId,
-        Pageable pageable) {
+                                                              Pageable pageable) {
         Idea idea = ideaRepository.getById(ideaId);
         return commentRepository.findByIdea(idea, pageable)
-            .stream()
-            .filter(Comment::isParentComment)
-            .map(comment -> CommentParentResponse.of(comment, memberId))
-            .toList();
+                .stream()
+                .filter(Comment::isParentComment)
+                .map(comment -> CommentParentResponse.of(comment, memberId))
+                .toList();
     }
 
     public List<IdeaHitResponse> getIdeaHitsResponse(Long ideaId) {
         Idea idea = ideaRepository.getById(ideaId);
 
         return idea.getHits().stream()
-            .map(Hit::getMember)
-            .map(IdeaHitResponse::from)
-            .toList();
+                .map(Hit::getMember)
+                .map(IdeaHitResponse::from)
+                .toList();
     }
 
     public void updateIdea(
-        AuthCredentials auth,
-        Long id,
-        IdeaUpdateRequest request,
-        List<MultipartFile> images
+            AuthCredentials auth,
+            Long id,
+            IdeaUpdateRequest request,
+            List<MultipartFile> images
     ) {
         Idea idea = ideaRepository.getById(id);
         validateWriter(auth, idea);
         idea.update(
-            request.title(),
-            request.introduce(),
-            request.cooperationWay(),
-            regionRepository.getById(request.recruitmentPlaceId()),
-            branchRepository.findByIdIn(request.branchIds()),
-            purposeRepository.findByIdIn(request.purposeIds()),
-            skillCategoryRepository.findByIdIn(request.skillCategoryIds())
+                request.title(),
+                request.introduce(),
+                request.cooperationWay(),
+                regionRepository.getById(request.recruitmentPlaceId()),
+                branchRepository.findByIdIn(request.branchIds()),
+                purposeRepository.findByIdIn(request.purposeIds()),
+                skillCategoryRepository.findByIdIn(request.skillCategoryIds())
         );
         imageService.update(idea.getId(), request.imageIds(), images);
     }
