@@ -7,7 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import java.util.Objects;
+
 import kr.co.conceptbe.purpose.exception.EmptyPurposeNameException;
 import kr.co.conceptbe.purpose.exception.InvalidPurposeLengthException;
 import lombok.Getter;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 public class Purpose {
 
+    private static final String CHARACTERS_INCLUDE_DOES_NOT_MATTER_OPTION_EXCEPT_COOPERATION_WAY = "전체";
     private static final int PURPOSE_LENGTH_LOWER_BOUND_INCLUSIVE = 1;
 
     @Id
@@ -52,6 +55,14 @@ public class Purpose {
         }
 
         throw new InvalidPurposeLengthException();
+    }
+
+    public boolean isInclude(Purpose purpose) {
+        if (purpose.name.contains(CHARACTERS_INCLUDE_DOES_NOT_MATTER_OPTION_EXCEPT_COOPERATION_WAY)) {
+            return true;
+        }
+
+        return name.equals(purpose.getName());
     }
 
 }

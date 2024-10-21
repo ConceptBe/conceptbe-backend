@@ -2,12 +2,10 @@ package kr.co.conceptbe.branch.domain;
 
 import static lombok.AccessLevel.PROTECTED;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 import java.util.Objects;
+
 import kr.co.conceptbe.branch.exception.EmptyBranchNameException;
 import kr.co.conceptbe.branch.exception.InvalidBranchLengthException;
 import lombok.Getter;
@@ -19,10 +17,15 @@ import lombok.NoArgsConstructor;
 public class Branch {
 
     private static final int BRANCH_LENGTH_LOWER_BOUND_INCLUSIVE = 1;
+    private static final String CHARACTERS_INCLUDE_DOES_NOT_MATTER_OPTION_EXCEPT_COOPERATION_WAY = "전체";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_branch_id")
+    private Branch parentBranch;
 
     @Column(nullable = false)
     private String name;
@@ -52,6 +55,22 @@ public class Branch {
         }
 
         throw new InvalidBranchLengthException();
+    }
+
+    public boolean isParentBranch() {
+        return Objects.isNull(parentBranch) || id.equals(parentBranch.getId());
+    }
+
+    public boolean isChildBranch() {
+        return !isParentBranch();
+    }
+
+    public boolean isInclude(Branch branch) {
+        if (branch.name.contains(CHARACTERS_INCLUDE_DOES_NOT_MATTER_OPTION_EXCEPT_COOPERATION_WAY)) {
+            return true;
+        }
+
+        return name.equals(branch.getName());
     }
 
 }
