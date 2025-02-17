@@ -12,18 +12,20 @@ public record BranchCategoryResponse(
         @Schema(description = "분야 이름(세부분야)")
         List<BranchResponse> branchResponses
 ) {
+
     public static BranchCategoryResponse of(
-        Branch branch,
-        List<Branch> branches
+            Branch branch,
+            List<Branch> branches
     ) {
-       return new BranchCategoryResponse(
-           branch.getId(),
-           branch.getName(),
-           branches.stream()
-               .filter(childBranch -> !childBranch.isParentBranch())
-               .filter(childBranch -> childBranch.isChildBranch(branch))
-               .map(BranchResponse::from)
-               .toList()
-       );
+        return new BranchCategoryResponse(
+                branch.getId(),
+                branch.getName(),
+                branches.stream()
+                        .filter(childBranch -> !childBranch.isParentBranch())
+                        .filter(childBranch -> childBranch.isChildBranch(branch))
+                        .map(BranchResponse::from)
+                        .toList()
+        );
     }
+
 }
