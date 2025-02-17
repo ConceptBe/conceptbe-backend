@@ -32,25 +32,28 @@ public class MemberController implements MemberApi {
 
     @GetMapping("/nickname")
     public ResponseEntity<Boolean> checkDuplicatedNickName(
-        @RequestParam String nickname
+            @RequestParam String nickname
     ) {
         return ResponseEntity.ok(memberService.validateDuplicatedNickName(nickname));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<GetMemberProfileResponse> getMemberProfile(
-        @Auth AuthCredentials authCredentials,
-        @PathVariable Long id
+            @Auth AuthCredentials authCredentials,
+            @PathVariable Long id
     ) {
-        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(authCredentials, id);
+        GetMemberProfileResponse memberProfileResponse = memberService.getMemberProfileBy(
+                authCredentials,
+                id
+        );
         return ResponseEntity.ok(memberProfileResponse);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateMemberProfile(
-        @RequestBody @Valid UpdateMemberProfileRequest updateMemberProfileRequest,
-        @Auth AuthCredentials authCredentials,
-        @PathVariable Long id
+            @RequestBody @Valid UpdateMemberProfileRequest updateMemberProfileRequest,
+            @Auth AuthCredentials authCredentials,
+            @PathVariable Long id
     ) {
         memberService.updateMemberProfile(updateMemberProfileRequest, authCredentials, id);
         return ResponseEntity.noContent().build();
@@ -58,20 +61,19 @@ public class MemberController implements MemberApi {
 
     @DeleteMapping("/{id}/profile-image")
     public ResponseEntity<Void> deleteMemberProfileImage(
-        @Auth AuthCredentials authCredentials,
-        @PathVariable Long id
+            @Auth AuthCredentials authCredentials,
+            @PathVariable Long id
     ) {
         memberService.deleteMemberProfileImage(authCredentials, id);
         return ResponseEntity.noContent().build();
     }
 
-
     @GetMapping("/{id}/ideas")
     public ResponseEntity<List<MemberIdeaResponse>> findMemberIdeas(
-        @Auth AuthCredentials authCredentials,
-        @PathVariable Long id,
-        @RequestParam int page,
-        @RequestParam int size
+            @Auth AuthCredentials authCredentials,
+            @PathVariable Long id,
+            @RequestParam int page,
+            @RequestParam int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         List<MemberIdeaResponse> memberIdeas = memberService.findMemberIdeas(authCredentials, id, pageable);
@@ -81,9 +83,9 @@ public class MemberController implements MemberApi {
 
     @GetMapping("/{id}/bookmarks")
     public ResponseEntity<List<IdeaResponse>> findMemberBookmarks(
-        @Auth AuthCredentials authCredentials,
-        @RequestParam int page,
-        @RequestParam int size
+            @Auth AuthCredentials authCredentials,
+            @RequestParam int page,
+            @RequestParam int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         List<IdeaResponse> memberBookMarks = memberService.findMemberBookMarks(authCredentials, pageable);
@@ -93,10 +95,11 @@ public class MemberController implements MemberApi {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(
-        @Auth AuthCredentials authCredentials,
-        @PathVariable Long id
+            @Auth AuthCredentials authCredentials,
+            @PathVariable Long id
     ) {
         memberService.deleteMember(authCredentials, id);
         return ResponseEntity.noContent().build();
     }
+
 }

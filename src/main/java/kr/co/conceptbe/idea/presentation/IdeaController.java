@@ -97,7 +97,7 @@ public class IdeaController implements IdeaApi {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("writing")
+    @GetMapping("/writing")
     public ResponseEntity<FindIdeaWriteResponse> getIdeaWriteResponses() {
         FindIdeaWriteResponse response = ideaService.getFindIdeaWriteResponse();
 
@@ -199,4 +199,5 @@ public class IdeaController implements IdeaApi {
         List<IdeaHitResponse> ideaCommentResponse = ideaService.getIdeaHitsResponse(ideaId);
         return ResponseEntity.ok(ideaCommentResponse);
     }
+
 }
