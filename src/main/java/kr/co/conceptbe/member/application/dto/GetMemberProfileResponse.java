@@ -3,6 +3,7 @@ package kr.co.conceptbe.member.application.dto;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import kr.co.conceptbe.idea.application.response.BranchCategoryResponse;
 
 public record GetMemberProfileResponse(
         @Schema(description = "프로필 이미지 URL", example = "https://conceptbe.png")
@@ -30,7 +31,7 @@ public record GetMemberProfileResponse(
         @ArraySchema(arraySchema = @Schema(
                 description = "목적",
                 example = "[\"쇼핑\", \"금융/앱테크\"]"))
-        List<String> branchList
+        List<BranchCategoryResponse> branchList
 ) {
 
 }

@@ -57,14 +57,14 @@ public class NotificationSettingBranches {
 
         notificationSettingBranches.clear();
         notificationSettingBranches.addAll(
-            branches.stream()
-                .map(branch -> NotificationSettingBranch.of(ideaNotificationSetting, branch))
-                .toList()
+                branches.stream()
+                        .map(branch -> NotificationSettingBranch.of(ideaNotificationSetting, branch))
+                        .toList()
         );
     }
 
     private static void validateBranch(HashSet<Branch> branches) {
-        if (branches.isEmpty() || branches.size() > 10) {
+        if (branches.isEmpty()) {
             throw new InvalidBranchException();
         }
     }
